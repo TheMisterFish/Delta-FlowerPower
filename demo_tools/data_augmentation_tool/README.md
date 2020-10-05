@@ -1,7 +1,7 @@
-#Data augmentation tool
+# Data augmentation tool
 In this folder is the data augmentation tool.
 
-##augmentation.py
+## augmentation.py
 The explanation for the augmentation.py file can be found below.
 
 Importing the libraries
