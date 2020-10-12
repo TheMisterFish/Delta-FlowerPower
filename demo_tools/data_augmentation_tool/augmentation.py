@@ -6,14 +6,21 @@ import cv2
 import sys
 import os
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 4:
     print('Not enough arguments!')
-    print('AUGMENTATIONS', 'INPUT_DIRECTORY', 'OUTPUT_DIRECTORY')
+    print('NUMBER OF AUGMENTATIONS', 'INPUT_DIRECTORY', 'OUTPUT_DIRECTORY')
     exit()
 
 AUGMENTATIONS = int(sys.argv[1])
 INPUT_DIRECTORY = sys.argv[2]
 OUTPUT_DIRECTORY = sys.argv[3]
+
+IMAGE_INPUT_DIRECTORY = f'{INPUT_DIRECTORY}/images'
+IMAGE_OUTPUT_DIRECTORY = f'{OUTPUT_DIRECTORY}/images'
+
+if not os.path.exists(IMAGE_OUTPUT_DIRECTORY):
+    os.makedirs(IMAGE_OUTPUT_DIRECTORY)
+
 
 bbox_params = A.BboxParams(
     format='pascal_voc',
@@ -35,16 +42,15 @@ augmentation_arguments = A.Compose([
     A.Blur(p=0.2),
     A.ShiftScaleRotate(p=0.5),
     A.MedianBlur(p=0.2),
-    A.CLAHE(p=0.3),
-    A.Resize(222, 222)
+    A.CLAHE(p=0.3)
 ], bbox_params=bbox_params)
 
-images = os.listdir(f'{INPUT_DIRECTORY}/images')
+images = os.listdir(IMAGE_INPUT_DIRECTORY)
 annotations = pd.read_csv(f'{INPUT_DIRECTORY}/annotations.csv', names=[
                           'class', 'x', 'y', 'w', 'h', 'file', 'width', 'height'], header=None)
 csv_rows = []
 for image in tqdm(images):
-    loaded_image = cv2.imread(f'{INPUT_DIRECTORY}/images/{image}')
+    loaded_image = cv2.imread(f'{IMAGE_INPUT_DIRECTORY}/{image}')
 
     rows = annotations.loc[annotations['file'] == image]
 
@@ -62,10 +68,11 @@ for image in tqdm(images):
             image=loaded_image, bboxes=image_bboxes, class_labels=['flower']*len(image_bboxes))
         file_name = f'{image}_augmented{augmentations}.jpg'
 
-        cv2.imwrite(f'{OUTPUT_DIRECTORY}/images/{file_name}',
+        cv2.imwrite(f'{IMAGE_OUTPUT_DIRECTORY}/{file_name}',
                     augmented['image'])
 
-        height, width, channels = cv2.imread(f'{OUTPUT_DIRECTORY}/images/{file_name}').shape
+        height, width, channels = cv2.imread(
+            f'{IMAGE_OUTPUT_DIRECTORY}/{file_name}').shape
 
         for bbox in augmented['bboxes']:
             x_min, y_min, x_max, y_max = map(lambda v: int(v), bbox)
