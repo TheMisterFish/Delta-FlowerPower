@@ -15,19 +15,25 @@ MAX_HEIGHT = int(sys.argv[2])
 INPUT_DIRECTORY = sys.argv[3]
 OUTPUT_DIRECTORY = sys.argv[4]
 
+IMAGE_INPUT_DIRECTORY = f'{INPUT_DIRECTORY}/images'
+IMAGE_OUTPUT_DIRECTORY = f'{OUTPUT_DIRECTORY}/images'
+
+if not os.path.exists(IMAGE_OUTPUT_DIRECTORY):
+    os.makedirs(IMAGE_OUTPUT_DIRECTORY)
+
 
 def isIn(x1, y1, x2, y2, px, py):
     return px >= x1 and px <= x2 and py >= y1 and py <= y2
 
 
-images = os.listdir(f'{INPUT_DIRECTORY}/images')
+images = os.listdir(IMAGE_INPUT_DIRECTORY)
 
 annotations = pd.read_csv(f'{INPUT_DIRECTORY}/annotations.csv', names=[
                           'class', 'x', 'y', 'w', 'h', 'file', 'width', 'height'], header=None)
 
 csv_rows = []
 for image in tqdm(images):
-    loaded_image = Image.open(f'{INPUT_DIRECTORY}/images/{image}')
+    loaded_image = Image.open(f'{IMAGE_INPUT_DIRECTORY}/{image}')
     image_width = loaded_image.size[0]
     image_height = loaded_image.size[1]
 
