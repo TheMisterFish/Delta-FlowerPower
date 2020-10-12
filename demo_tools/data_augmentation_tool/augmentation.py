@@ -8,7 +8,7 @@ import os
 
 if len(sys.argv) < 4:
     print('Not enough arguments!')
-    print('NUMBER OF AUGMENTATIONS', 'INPUT_DIRECTORY', 'OUTPUT_DIRECTORY')
+    print('NUMBER_OF_AUGMENTATIONS', 'INPUT_DIRECTORY', 'OUTPUT_DIRECTORY')
     exit()
 
 AUGMENTATIONS = int(sys.argv[1])
@@ -37,7 +37,6 @@ augmentation_arguments = A.Compose([
     A.RandomRotate90(p=0.25),
     A.RGBShift(p=0.75),
     A.GaussNoise(p=0.25),
-    A.Crop(192, 192, 352, 352, p=0.25),
     A.JpegCompression(p=0.6),
     A.Blur(p=0.2),
     A.ShiftScaleRotate(p=0.5),
@@ -82,10 +81,10 @@ for image in tqdm(images):
                 'y': y_min,
                 'w': x_max,
                 'h': y_max,
-                'file': image,
+                'file': file_name,
                 'width': width,
                 'height': height
             })
 
 pd.DataFrame(csv_rows).to_csv(
-    f'{OUTPUT_DIRECTORY}/annotations.csv', header=True, index=None)
+    f'{OUTPUT_DIRECTORY}/annotations.csv', header=False, index=None)

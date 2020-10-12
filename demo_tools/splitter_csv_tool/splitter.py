@@ -60,7 +60,7 @@ for image in tqdm(images):
             cropped_image = loaded_image.crop(regio)
             if(show):
                 cropped_image.save(
-                    f'{OUTPUT_DIRECTORY}/images/{new_image_name}')
+                    f'{IMAGE_OUTPUT_DIRECTORY}/{new_image_name}')
                 for cords in this_image_points:
                     csv_rows.append({
                         'class': "Flower",
