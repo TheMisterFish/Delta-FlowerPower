@@ -62,9 +62,9 @@ for image in tqdm(images):
                         'y': int(cords[1]),
                         'w': int(cords[2]),
                         'h': int(cords[3]),
-                        'file_name': cords[4],
-                        'image_width': MAX_WIDTH,
-                        'image_height': MAX_HEIGHT
+                        'file': cords[4],
+                        'width': MAX_WIDTH,
+                        'height': MAX_HEIGHT
                     })
                 sub_image_counter += 1
 

@@ -62,17 +62,23 @@ for image in tqdm(images):
             image=loaded_image, bboxes=image_bboxes, class_labels=['flower']*len(image_bboxes))
         file_name = f'{image}_augmented{augmentations}.jpg'
 
+        cv2.imwrite(f'{OUTPUT_DIRECTORY}/images/{file_name}',
+                    augmented['image'])
+
+        height, width, channels = cv2.imread(f'{OUTPUT_DIRECTORY}/images/{file_name}').shape
+
         for bbox in augmented['bboxes']:
             x_min, y_min, x_max, y_max = map(lambda v: int(v), bbox)
             csv_rows.append({
-                'file_name': image,
-                'x_min': x_min,
-                'y_min': y_min,
-                'x_max': x_max,
-                'y_max': y_max,
-                'class': 'flower'
+                'class': "Flower",
+                'x': x_min,
+                'y': y_min,
+                'w': x_max,
+                'h': y_max,
+                'file': image,
+                'width': width,
+                'height': height
             })
-        cv2.imwrite(f'{OUTPUT_DIRECTORY}/images/{file_name}', augmented['image'])
 
 pd.DataFrame(csv_rows).to_csv(
     f'{OUTPUT_DIRECTORY}/annotations.csv', header=True, index=None)
