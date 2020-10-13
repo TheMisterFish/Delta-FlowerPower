@@ -20,34 +20,31 @@ TRAIN_SIZE = float(sys.argv[3])
 VALIDATION_SIZE = float(sys.argv[4])
 TEST_SIZE = float(sys.argv[5])
 
-
-def create_folder(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-def L(*l):
-   ret = ruamel.yaml.comments.CommentedSeq(l)
-   ret.fa.set_flow_style()
-   return ret 
-
-
 IMAGE_INPUT_DIRECTORY = f'{INPUT_DIRECTORY}/images'
 
 TRAIN_DIRECTORY = f'{OUTPUT_DIRECTORY}/train'
 VALIDATION_DIRECTORY = f'{OUTPUT_DIRECTORY}/validation'
 TEST_DIRECTORY = f'{OUTPUT_DIRECTORY}/test'
 
-create_folder(TRAIN_DIRECTORY)
-create_folder(f'{TRAIN_DIRECTORY}/images')
-create_folder(f'{TRAIN_DIRECTORY}/labels')
 
-create_folder(VALIDATION_DIRECTORY)
-create_folder(f'{VALIDATION_DIRECTORY}/images')
-create_folder(f'{VALIDATION_DIRECTORY}/labels')
+def create_directory(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    if not os.path.exists(f'{path}/images'):
+        os.makedirs(f'{path}/images')
+    if not os.path.exists(f'{path}/labels'):
+        os.makedirs(f'{path}/labels')
 
-create_folder(TEST_DIRECTORY)
-create_folder(f'{TEST_DIRECTORY}/images')
-create_folder(f'{TEST_DIRECTORY}/labels')
+
+def L(*l):
+    ret = ruamel.yaml.comments.CommentedSeq(l)
+    ret.fa.set_flow_style()
+    return ret
+
+
+create_directory(TRAIN_DIRECTORY)
+create_directory(VALIDATION_DIRECTORY)
+create_directory(TEST_DIRECTORY)
 
 images = os.listdir(IMAGE_INPUT_DIRECTORY)
 
@@ -88,19 +85,20 @@ for i in tqdm(range(images_count)):
 
     lines = []
     for index, row in rows.iterrows():
-        lines.append(f"0 {row['x']/width} {row['y']/height} {row['w']/width} {row['h']/height}\n")
+        lines.append(
+            f"0 {row['x']/width} {row['y']/height} {row['w']/width} {row['h']/height}\n")
 
     if len(lines) > 0:
         lines[-1] = lines[-1][:-2]
-    
+
     annotation_file.writelines(lines)
     annotation_file.close()
 
 yaml_data = dict(
-    train = "../train/images",
-    val = "../val/images",
-    nc = 1,
-    names = L(dq("Flower"))
+    train="../train/images",
+    val="../val/images",
+    nc=1,
+    names=L(dq("Flower"))
 )
 
 yaml = ruamel.yaml.YAML()
