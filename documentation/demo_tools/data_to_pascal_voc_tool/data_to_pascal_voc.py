@@ -25,14 +25,13 @@ TRAIN_DIRECTORY = f'{OUTPUT_DIRECTORY}/train'
 VALIDATION_DIRECTORY = f'{OUTPUT_DIRECTORY}/validation'
 TEST_DIRECTORY = f'{OUTPUT_DIRECTORY}/test'
 
-if not os.path.exists(TRAIN_DIRECTORY):
-    os.makedirs(TRAIN_DIRECTORY)
+def create_directory(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-if not os.path.exists(VALIDATION_DIRECTORY):
-    os.makedirs(VALIDATION_DIRECTORY)
-
-if not os.path.exists(TEST_DIRECTORY):
-    os.makedirs(TEST_DIRECTORY)
+create_directory(TRAIN_DIRECTORY)
+create_directory(VALIDATION_DIRECTORY)
+create_directory(TEST_DIRECTORY)
 
 images = os.listdir(IMAGE_INPUT_DIRECTORY)
 
