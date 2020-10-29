@@ -5,6 +5,11 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
+    path: "/",
+    name: "Landing",
+    component: () => import("../views/Landing.vue"),
+  },
+  {
     path: "/dashboard",
     name: "Dashboard",
     component: () => import("../views/Dashboard.vue"),
@@ -23,6 +28,12 @@ const routes: Array<RouteConfig> = [
     path: "/gebruikers",
     name: "Gebruikers",
     component: () => import("../views/Gebruikers.vue"),
+  },
+  {
+    path: "*",
+    redirect: "/",
+    name: "Landing",
+    component: () => import("../views/Landing.vue"),
   },
 ];
 
