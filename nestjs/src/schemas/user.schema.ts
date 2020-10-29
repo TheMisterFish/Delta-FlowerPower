@@ -1,19 +1,21 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsEmail } from 'class-validator';
 
 export type UserDocument = User & Document;
 
 @Schema()
+
 export class User {
   @IsString()
   @Prop()
-  fullname: string;
+  fullname: { type: string, unique: true, dropDups: true };
 
   @IsString()
+  @IsEmail()
   @Prop()
-  email: string;
+  email: { type: string, unique: true };
 
   @IsString()
   @Prop()
