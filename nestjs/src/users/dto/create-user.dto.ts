@@ -1,19 +1,35 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, MaxLength, MinLength, IsEnum } from 'class-validator';
+import { Roles } from '../../interfaces/roles.interface';
+import { prop } from "@typegoose/typegoose";
 
 export class CreateUserDto {
     @IsNotEmpty()
-    readonly fullname: string;
+    @IsString()
+    @MinLength(4)
+    @MaxLength(20)
+    @prop({ unique: true, required: true, lowercase: true })
+    fullname: string;
 
     @IsNotEmpty()
-    readonly email: string;
+    @IsEmail()
+    @IsString()
+    @prop({ unique: true, required: true, })
+    email: string;
 
     @IsNotEmpty()
-    readonly password: string;
+    @IsString()
+    @prop({ required: true })
+    password: string;
 
     @IsNotEmpty()
-    readonly role: { type:  string, enum: ['admin', 'researcher', 'guest'] };
+    @IsEnum(Roles)
+    @prop({ type: String, enum: Roles })
+    role?: Roles
 
-    readonly created_at: Date;
+    @prop()
+    created_at: Date;
 
-    readonly updated_at: Date;
+    @prop()
+    updated_at: Date;
 }
+

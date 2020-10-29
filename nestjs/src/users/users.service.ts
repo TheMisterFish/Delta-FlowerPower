@@ -1,33 +1,32 @@
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../schemas/user.schema';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { InjectModel } from "nestjs-typegoose";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { CreateUserDto, UpdateUserDto, UserDto } from './dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
+  constructor(
+    @InjectModel(CreateUserDto) private readonly userModel: ReturnModelType<typeof CreateUserDto>
+  ) { }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<CreateUserDto> {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserDto[] | null> {
     return this.userModel.find().exec();
   }
   
-  async findOne(username: string): Promise<User> {
-    return this.userModel.find(username).exec();
+  async findOne(username: string): Promise<UserDto> {
+    return this.userModel.findOne({username}).exec();
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<User> {
-    const toUpdate = await this.userModel.findOne(id);
-    delete toUpdate.password;
-    delete toUpdate.favorites;
+  async update(id: string, dto: UpdateUserDto): Promise<UserDto> {
+    const toUpdate = await this.userModel.findOne({id});
 
     const updated = Object.assign(toUpdate, dto);
-    return await this.userModel.save(updated);
+    return await updated.save();
   }
 
 }

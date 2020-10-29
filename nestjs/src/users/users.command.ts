@@ -2,29 +2,35 @@ import { Command } from 'nestjs-command';
 import { Injectable } from '@nestjs/common';
 
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto';
+
+import { Roles } from '../interfaces/roles.interface';
+import { validate } from "class-validator";
 
 @Injectable()
 export class UsersSeed {
-constructor(
+  constructor(
     private readonly usersService: UsersService,
-) { }
+  ) { }
 
-@Command({ command: 'create:user', describe: 'create a user', autoExit: true })
-async create() {
-    enum Roles {
-      admin = 'admin',
-      moderator = 'moderator',
-      guest = 'guest'
-    };
+  @Command({ command: 'create:user', describe: 'create a user', autoExit: true })
+  async create() {
+    
+    const user = new CreateUserDto();
+    user.fullname = 'TEST12'
+    user.email = 'v.test@te.st'
+    user.password = 'xx123123s'
+    user.role = Roles.admin
+    user.created_at = null
+    user.updated_at = null
 
-    const user = await this.usersService.create({
-        fullname: 'Vincent V.',
-        email: 'v.venhuizen@fontys.nl',
-        password: 'test12',
-        role: Roles[0],
-        created_at: null,
-        updated_at: null,
+    await validate(user).then(async (errors) => { // errors is an array of validation errors
+      if (errors.length > 0) {
+        console.log("validation failed. errors: ", errors);
+        return;
+      }
     });
-    console.log(user);
-}
+    const createdUser = await this.usersService.create(user);
+    console.log(createdUser);
+  }
 }
