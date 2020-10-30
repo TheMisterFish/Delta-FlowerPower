@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsEmail, MaxLength, MinLength, IsEnum } from 'class-validator';
+import { Exclude } from 'class-transformer';
 import { Roles } from '../../common/interfaces/roles.interface';
 
 export class CreateUserDto {
@@ -15,6 +16,7 @@ export class CreateUserDto {
 
     @IsNotEmpty()
     @IsString()
+    @Exclude({ toPlainOnly: true })
     password: string;
 
     @IsNotEmpty()

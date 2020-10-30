@@ -19,17 +19,14 @@ export class RolesGuard implements CanActivate {
     const user = request.user;
 
     function hasRole() {
-      if (user.role == Roles['admin']) {
+      if (user.role == Roles.admin) {
         return true;
-      } else if (user.role == Roles['moderator']) {
-        if (role == Roles['admin']) {
+      } else if (user.role == Roles.moderator && (role == Roles.admin)) {
           return false;
-        }
-      } else if (user.role == Roles['guest']) {
-        if (role == Roles['admin'] || role == Roles['moderator']) {
+      } else if (user.role == Roles.guest && (role == Roles.admin || role == Roles.moderator)) {
           return false;
-        }
       }
+      return true;
     }
 
     return user && user.role && hasRole();

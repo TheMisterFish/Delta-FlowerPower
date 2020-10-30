@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
     bcrypt.hash(this.password, 10, (err, encryptedPass) => {
       if (err) return next(err);
       this.password = encryptedPass;
+      this.created_at = new Date();
       return next();
     });
   }
@@ -29,7 +30,7 @@ export class User {
 
   @IsNotEmpty()
   @IsString()
-  @prop({ required: true })
+  @prop({ required: true, select: false })
   password: string;
 
   @IsNotEmpty()
@@ -37,7 +38,7 @@ export class User {
   @prop({ type: String, enum: Roles })
   role?: Roles
 
-  @prop({ required: true })
+  @prop()
   created_at: Date;
 
   @prop()

@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsEmail, MaxLength, MinLength, IsEnum } from 'class-validator';
+import { Exclude } from 'class-transformer';
 import { Roles } from '../../common/interfaces/roles.interface';
 
 export class UserDto {
@@ -6,21 +7,26 @@ export class UserDto {
     @IsString()
     @MinLength(4)
     @MaxLength(20)
-     fullname: string;
+    fullname: string;
 
     @IsNotEmpty()
     @IsEmail()
     @IsString()
-     email: string;
+    email: string;
 
     @IsNotEmpty()
     @IsEnum(Roles)
-     role?: Roles
+    role?: Roles
 
-     password: string;
+    @Exclude({ toPlainOnly: true })
+    password: string;
 
-     created_at: Date;
+    created_at: Date;
 
-     updated_at: Date;
+    updated_at: Date;
+
+    constructor(partial: Partial<UserDto>) {
+        Object.assign(this, partial);
+    }
 }
 

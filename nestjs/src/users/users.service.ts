@@ -1,24 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from "nestjs-typegoose";
 import { ReturnModelType } from "@typegoose/typegoose";
-import { CreateUserDto, UpdateUserDto, LoginUserDto, UserDto } from './dto';
+import { CreateUserDto, UpdateUserDto, UserDto } from './dto';
 import { User } from './users.model';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User) private readonly userModel: ReturnModelType<typeof CreateUserDto>
+    @InjectModel(User) private readonly userModel: ReturnModelType<typeof UserDto>
   ) { }
-  
-  async findEmail(email: string): Promise<UserDto> {
-    return this.userModel.findOne({email: email}).exec();
+
+  async findEmailLogin(email: string): Promise<UserDto> {
+    return this.userModel.findOne({ email: email }).select('+password').exec();
   }
 
-  async findOne(id: string): Promise<UserDto> {
-    return this.userModel.findOne({id}).exec();
+  async findOne(id: string): Promise<UserDto> | null {
+    const user = await this.userModel.findById(id).exec();
+    console.log(user);
+    return null
   }
 
-  async findAll(): Promise<UserDto[] | null> {
+  async findAll(): Promise<User[] | null> {
     return this.userModel.find().exec();
   }
 
@@ -28,10 +30,15 @@ export class UsersService {
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<UserDto> {
-    const toUpdate = await this.userModel.findOne({id});
+    dto.updated_at = new Date();
+    return await this.userModel.findByIdAndUpdate(id, { $set: dto }, { new: true });
+  }
 
-    const updated = Object.assign(toUpdate, dto);
-    return await updated.save();
+  async deleteOne(id: string): Promise<any> {
+    const destroyed: any = await this.userModel.deleteOne({ _id: id });
+    console.log(destroyed);
+    destroyed.id = id;
+    return destroyed;
   }
 
 }
