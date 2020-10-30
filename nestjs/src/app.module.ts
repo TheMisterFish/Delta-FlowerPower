@@ -12,7 +12,8 @@ import { TypegooseModule } from "nestjs-typegoose";
   imports: [
     TypegooseModule.forRoot("mongodb://localhost:27017/flowerpower", {
       useCreateIndex: true,
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     }),
     CommandModule,
     AuthModule, 
