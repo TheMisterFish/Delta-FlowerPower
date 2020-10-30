@@ -30,7 +30,6 @@ export class UsersController {
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<User> {
     return await this.usersService.findOne(id).catch(err => {
-      console.log(err);
       if (err.name === 'CastError')
         err.message = "Could not find " + id;
       throw new HttpException({
@@ -43,7 +42,6 @@ export class UsersController {
   @HasRoles('guest')
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
     return await this.usersService.update(id, updateUserDto).catch(err => {
       if (err.name === 'CastError')
         err.message = "Could not update " + id;

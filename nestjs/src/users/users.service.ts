@@ -11,22 +11,20 @@ export class UsersService {
   ) { }
 
   async findEmailLogin(email: string): Promise<UserDto> {
-    return this.userModel.findOne({ email: email }).select('+password').exec();
+    return await this.userModel.findOne({ email: email }).select('+password').exec();
   }
 
   async findOne(id: string): Promise<UserDto> | null {
-    const user = await this.userModel.findById(id).exec();
-    console.log(user);
-    return null
+    return await this.userModel.findById(id).exec();
   }
 
   async findAll(): Promise<User[] | null> {
-    return this.userModel.find().exec();
+    return await this.userModel.find().exec();
   }
 
   async create(dto: CreateUserDto): Promise<UserDto> {
     const createdUser = new this.userModel(dto);
-    return createdUser.save();
+    return await createdUser.save();
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<UserDto> {
@@ -36,7 +34,6 @@ export class UsersService {
 
   async deleteOne(id: string): Promise<any> {
     const destroyed: any = await this.userModel.deleteOne({ _id: id });
-    console.log(destroyed);
     destroyed.id = id;
     return destroyed;
   }
