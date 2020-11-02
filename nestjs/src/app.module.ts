@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { CommandModule } from 'nestjs-command';
+
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -10,7 +12,8 @@ import { TypegooseModule } from "nestjs-typegoose";
 
 @Module({
   imports: [
-    TypegooseModule.forRoot("mongodb://localhost:27017/flowerpower", {
+    ConfigModule.forRoot(),
+    TypegooseModule.forRoot((process.env.DEBUG_MODE === 'true' ? process.env.MONGO_CONNECTION_STRING_DEBUG : process.env.MONGO_CONNECTION_STRING_PROD), {
       useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -21,4 +24,5 @@ import { TypegooseModule } from "nestjs-typegoose";
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}
