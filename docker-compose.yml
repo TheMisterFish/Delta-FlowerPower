@@ -34,6 +34,8 @@ services:
       MONGO_INITDB_DATABASE: flowerpower
     ports:
       - 27018:27018
+    volumes:
+      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   nginx:
     container_name: "fp_nginx"
     build:
