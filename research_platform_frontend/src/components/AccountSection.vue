@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Link from "@/components/Link.vue";
+import Link from "./Link.vue";
 
 export default Vue.extend({
   name: "AccountSection",

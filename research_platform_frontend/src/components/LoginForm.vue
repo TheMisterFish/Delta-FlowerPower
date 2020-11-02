@@ -19,7 +19,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import Input from "@/components/Input.vue";
+import Input from "./Input.vue";
 
 export default Vue.extend({
   name: "LoginForm",
@@ -33,11 +33,11 @@ export default Vue.extend({
     Input,
   },
   methods: {
-    validateLoginForm(): boolean {
+    validateLoginForm() {
       return Boolean(this.email && this.password);
     },
 
-    login(): void {
+    login() {
       let email = this.email;
       let password = this.password;
       this.$store

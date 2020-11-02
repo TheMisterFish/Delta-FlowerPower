@@ -7,8 +7,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import NavigationSection from "@/components/NavigationSection.vue";
-import AccountSection from "@/components/AccountSection.vue";
+import NavigationSection from "./NavigationSection.vue";
+import AccountSection from "./AccountSection.vue";
 
 export default Vue.extend({
   name: "Navbar",

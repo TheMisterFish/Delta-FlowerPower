@@ -23,11 +23,11 @@ export default Vue.extend({
   },
   computed: {
     inputValue: {
-      get(): string {
+      get() {
         return this.value;
       },
 
-      set(value: string) {
+      set(value) {
         this.$emit("input", value);
       },
     },
