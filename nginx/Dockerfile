@@ -1,6 +1,6 @@
 FROM node:lts-alpine as build-stage
-# WORKDIR /app
-# COPY . .
+WORKDIR /app
+COPY . .
 # WORKDIR /app/research_platform
 # RUN npm install
 # RUN npm run build

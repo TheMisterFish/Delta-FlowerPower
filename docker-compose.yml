@@ -22,10 +22,12 @@ services:
   # MongoDB
   db:
     image: mongo:latest
+    env_file:
+      - .env
     container_name: "fp_mongodb"
     networks:
       - flowerpower_bridge
-    command: [--auth]
+    command: mongod --auth --port 27018
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
