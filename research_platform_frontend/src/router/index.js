@@ -61,7 +61,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     console.log(to, from);
     if (to.matched.some((record) => record.meta.researcher)) {
-        if (localStorage.getItem("jwt") == null) {
+        if (localStorage.getItem("token") == null) {
             next({
                 path: "/landing",
                 params: { nextUrl: to.fullPath },

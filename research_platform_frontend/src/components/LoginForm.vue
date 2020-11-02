@@ -42,7 +42,8 @@ export default Vue.extend({
       let password = this.password;
       this.$store
         .dispatch("login", { email, password })
-        .then(() => this.$router.push("/"))
+        .then(() => {
+          this.$router.push("/")})
         .catch((error) => console.log(error));
     },
   },
