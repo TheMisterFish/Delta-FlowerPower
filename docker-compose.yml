@@ -48,4 +48,4 @@ services:
       # - "82:82"
     restart: on-failure
     depends_on:
-      - fp_restapi
+      - fp_nestjs
