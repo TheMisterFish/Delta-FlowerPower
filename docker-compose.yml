@@ -16,7 +16,7 @@ services:
     networks:
       - flowerpower_bridge
     expose:
-      - "6565"
+      - "7080"
     volumes:
       - ./src:/usr/app/
   # MongoDB
@@ -44,7 +44,7 @@ services:
     networks:
       - flowerpower_bridge
     ports:
-      - "6565:6565"
+      - "7080:7080"
       # - "82:82"
     restart: on-failure
     depends_on:
