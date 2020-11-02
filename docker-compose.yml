@@ -1,0 +1,49 @@
+version: "3.7"
+
+networks:
+  flowerpower_bridge:
+    name: flowerpower_bridge
+    driver: bridge
+
+services:
+  # REST-API in nestjs
+  fp_restapi:
+    build:
+      context: ./nestjs
+    container_name: "fp_nestjs"
+    depends_on:
+      - db
+    networks:
+      - flowerpower_bridge
+    expose:
+      - "6565"
+    command:
+      - npx nestjs-command create:user ${REST_USERNAME} -e ${REST_EMAIL} -p ${REST_PASSWORD} -r ${REST_ROLE}
+  # MongoDB
+  db:
+    image: mongo:latest
+    container_name: "fp_mongodb"
+    networks:
+      - flowerpower_bridge
+    command: [--auth]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: flowerpower
+    ports:
+      - 27017:27017
+  nginx:
+    container_name: "fp_nginx"
+    build:
+      context: ./nginx
+    logging:
+      options:
+        tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
+    networks:
+      - flowerpower_bridge
+    ports:
+      - "6565:6565"
+      # - "82:82"
+    restart: on-failure
+    depends_on:
+      - fp_restapi
