@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from "nestjs-typegoose";
 import { ReturnModelType } from "@typegoose/typegoose";
-import { CreateUserDto, UpdateUserDto, UserDto } from './dto';
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto, UpdateUserDto, UserDto, UpdatePassword } from './dto';
 import { User } from './users.model';
 
 @Injectable()
@@ -36,6 +37,21 @@ export class UsersService {
     const destroyed: any = await this.userModel.deleteOne({ _id: id });
     destroyed.id = id;
     return destroyed;
+  }
+
+  async changePassword(user: any, update: UpdatePassword){
+    await this.userModel.findById(user.id).select('+password').exec(async function(err, doc) {
+      if (err) return err;
+      const valid = await bcrypt.compare(update.password, doc.password);
+      if(valid){
+        doc.password = update.new_password;
+        doc.save();
+      } else {
+        throw new BadRequestException("Bad Password");
+      }
+    });
+    return "Updated Password.";
+
   }
 
 }

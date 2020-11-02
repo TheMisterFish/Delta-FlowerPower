@@ -16,7 +16,8 @@ import { TypegooseModule } from "nestjs-typegoose";
     TypegooseModule.forRoot((process.env.DEBUG_MODE === 'true' ? process.env.MONGO_CONNECTION_STRING_DEBUG : process.env.MONGO_CONNECTION_STRING_PROD), {
       useCreateIndex: true,
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false 
     }),
     CommandModule,
     AuthModule, 

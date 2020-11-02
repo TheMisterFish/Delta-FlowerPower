@@ -5,10 +5,9 @@ import * as bcrypt from 'bcrypt';
 
 @pre<User>('save', function (next) {
   if (this.isModified('password') || this.isNew) {
-    bcrypt.hash(this.password, 10, (err, encryptedPass) => {
+      bcrypt.hash(this.password, 10, (err, encryptedPass) => {
       if (err) return next(err);
       this.password = encryptedPass;
-      this.created_at = new Date();
       return next();
     });
   }
