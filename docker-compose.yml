@@ -7,7 +7,7 @@ networks:
 
 services:
   # REST-API in nestjs
-  fp_restapi:
+  fp_nestjs:
     build:
       context: ./nestjs
     container_name: "fp_nestjs"
