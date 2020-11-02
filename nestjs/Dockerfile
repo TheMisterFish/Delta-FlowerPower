@@ -13,29 +13,10 @@
 # http://goldbergyoni.com/checklist-best-practice-of-node-js-in-production/
 
 FROM node:12-alpine as builder
-
-ENV NODE_ENV build
-
-USER node
-WORKDIR /home/node
-
-COPY . /home/node
-
-RUN npm ci \
-    && npm run build
-
-# ---
-
-FROM node:12-alpine
-
-ENV NODE_ENV production
-
-USER node
-WORKDIR /home/node
-
-COPY --from=builder /home/node/package*.json /home/node/
-COPY --from=builder /home/node/dist/ /home/node/dist/
-
-RUN npm ci
-
-CMD ["node", "dist/server.js"]
+WORKDIR /app
+COPY ./package.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+# EXPOSE 6565
+CMD ["npm", "run", "start:prod"]

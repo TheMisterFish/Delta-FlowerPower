@@ -17,8 +17,8 @@ services:
       - flowerpower_bridge
     expose:
       - "6565"
-    command:
-      - bash -c "npx nestjs-command create:user ${REST_USERNAME} -e ${REST_EMAIL} -p ${REST_PASSWORD} -r ${REST_ROLE}"
+    volumes:
+      - ./src:/usr/app/
   # MongoDB
   db:
     image: mongo:latest
@@ -31,7 +31,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: flowerpower
     ports:
-      - 27017:27017
+      - 27018:27018
   nginx:
     container_name: "fp_nginx"
     build:
