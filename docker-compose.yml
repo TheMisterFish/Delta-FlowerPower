@@ -18,7 +18,7 @@ services:
     expose:
       - "6565"
     command:
-      - npx nestjs-command create:user ${REST_USERNAME} -e ${REST_EMAIL} -p ${REST_PASSWORD} -r ${REST_ROLE}
+      - bash -c "npx nestjs-command create:user ${REST_USERNAME} -e ${REST_EMAIL} -p ${REST_PASSWORD} -r ${REST_ROLE}"
   # MongoDB
   db:
     image: mongo:latest
