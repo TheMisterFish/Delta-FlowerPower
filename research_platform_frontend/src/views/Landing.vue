@@ -25,7 +25,7 @@ export default Vue.extend({
   height: 100vh;
   background-image: linear-gradient(
       to top left,
-      rgba(13, 59, 14, 0.7),
+      rgba(13, 59, 14, 0.8),
       50%,
       rgba(147, 245, 149, 0.4) 100%
     ),
