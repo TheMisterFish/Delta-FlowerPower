@@ -1,5 +1,5 @@
 <template>
-  <router-link :to=to class="link">
+  <router-link :to="to" class="link">
     {{ label }}
   </router-link>
 </template>
@@ -15,9 +15,6 @@ export default {
     to: {
       type: String,
     },
-    active: {
-      type: Boolean
-    }
   },
 };
 </script>

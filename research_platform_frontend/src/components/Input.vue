@@ -1,5 +1,5 @@
 <template>
-  <div class="input">
+  <div ref="inputRef" class="input">
     <input v-model="inputValue" :type="type" placeholder="" />
     <label>{{ label }}</label>
     <fieldset>
@@ -9,9 +9,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-export default Vue.extend({
+export default({
   name: "Input",
   props: {
     label: String,
@@ -20,6 +18,13 @@ export default Vue.extend({
       default: "text",
     },
     value: String,
+  },
+  methods: {
+    jiggle() {
+      this.$refs.inputRef.classList.remove("input-jiggle");
+      this.$refs.inputRef.offsetWidth;
+      this.$refs.inputRef.classList.add("input-jiggle")
+    },
   },
   computed: {
     inputValue: {
@@ -44,6 +49,32 @@ export default Vue.extend({
   margin-bottom: 25px;
 
   width: 70%;
+}
+
+.input-jiggle {
+  animation-name: jiggle;
+  animation-duration: 0.3s;
+}
+
+@keyframes jiggle {
+  0% {
+    transform: translateX(var(--jiggle-distance-small));
+  }
+  20% {
+    transform: translateX(var(--jiggle-distance-big));
+  }
+  40% {
+    transform: translateX(calc(var(--jiggle-distance-big) * -1));
+  }
+  60% {
+    transform: translateX(var(--jiggle-distance-big));
+  }
+  80% {
+    transform: translateX(calc(var(--jiggle-distance-big) * -1));
+  }
+  100% {
+    transform: translateX(var(--jiggle-distance-small));
+  }
 }
 
 .input input {

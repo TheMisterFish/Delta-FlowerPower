@@ -1,42 +1,38 @@
 <template>
   <form id="login-form" @submit.prevent="login">
     <h1 class="title">Flower Power</h1>
-    <Input v-model="email" label="E-mail" />
-    <Input v-model="password" label="Password" type="password" />
+    <Input ref="emailRef" :class="{'input-jiggle': emailError}" v-model="email" label="E-mail" />
+    <Input ref="passwordRef" :class="{'input-jiggle': passwordError}" v-model="password" label="Password" type="password" />
     <button
-      v-if="validateLoginForm()"
+      v-if="validLoginForm"
       class="submit submit-valid"
       type="submit"
     >
       Inloggen
     </button>
-    <button disabled v-else class="submit submit-invalid" type="submit">
+    <button @click.prevent="validateLoginForm()" v-else class="submit submit-invalid" type="submit">
       Voer uw gegevens in
     </button>
   </form>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
 import Input from "./Input.vue";
 
-export default Vue.extend({
+export default ({
   name: "LoginForm",
   data: function() {
     return {
       email: "",
       password: "",
+      emailError: false,
+      passwordError: false
     };
   },
   components: {
     Input,
   },
   methods: {
-    validateLoginForm() {
-      return Boolean(this.email && this.password);
-    },
-
     login() {
       let email = this.email;
       let password = this.password;
@@ -47,7 +43,17 @@ export default Vue.extend({
         })
         .catch((error) => console.log(error));
     },
+
+    validateLoginForm() {
+      if(!this.email) this.$refs.emailRef.jiggle()
+      if(!this.password) this.$refs.passwordRef.jiggle()
+    },
   },
+  computed: {
+    validLoginForm() {
+      return this.email && this.password;
+    }
+  }
 });
 </script>
 

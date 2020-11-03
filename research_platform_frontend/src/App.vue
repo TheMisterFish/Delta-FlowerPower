@@ -8,6 +8,8 @@
 :root {
   --primary-color: #567a58;
   --primary-grey-color: #d4d4d4;
+  --jiggle-distance-big: 4px;
+  --jiggle-distance-small: 2px;
 }
 
 html {
