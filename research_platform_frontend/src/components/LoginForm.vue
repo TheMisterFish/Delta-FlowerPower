@@ -1,32 +1,45 @@
 <template>
   <form id="login-form" @submit.prevent="login">
     <h1 class="title">Flower Power</h1>
-    <Input ref="emailRef" :class="{'input-jiggle': emailError}" v-model="email" label="E-mail" />
-    <Input ref="passwordRef" :class="{'input-jiggle': passwordError}" v-model="password" label="Password" type="password" />
-    <button
-      v-if="validLoginForm"
-      class="submit submit-valid"
-      type="submit"
-    >
+    <Input
+      ref="emailRef"
+      :class="{ 'input-jiggle': emailError }"
+      v-model="email"
+      label="E-mail"
+    />
+    <Input
+      ref="passwordRef"
+      :class="{ 'input-jiggle': passwordError }"
+      v-model="password"
+      label="Password"
+      type="password"
+    />
+    <button v-if="validLoginForm" class="submit submit-valid" type="submit">
       Inloggen
     </button>
-    <button @click.prevent="validateLoginForm()" v-else class="submit submit-invalid" type="submit">
+    <button
+      @click.prevent="validateLoginForm()"
+      v-else
+      class="submit submit-invalid"
+      type="submit"
+    >
       Voer uw gegevens in
     </button>
   </form>
 </template>
 
-<script lang="ts">
+<script>
 import Input from "./Input.vue";
 
-export default ({
+export default {
   name: "LoginForm",
   data: function() {
     return {
       email: "",
       password: "",
       emailError: false,
-      passwordError: false
+      passwordError: false,
+      snackbars: [],
     };
   },
   components: {
@@ -34,6 +47,8 @@ export default ({
   },
   methods: {
     login() {
+      this.$store.dispatch("hideSnackbar");
+
       let email = this.email;
       let password = this.password;
       this.$store
@@ -41,20 +56,22 @@ export default ({
         .then(() => {
           this.$router.push("dashboard");
         })
-        .catch((error) => console.log(error));
+        .catch(() => {
+          this.$store.dispatch("showSnackbar", "Invalid email or password");
+        });
     },
 
     validateLoginForm() {
-      if(!this.email) this.$refs.emailRef.jiggle()
-      if(!this.password) this.$refs.passwordRef.jiggle()
+      if (!this.email) this.$refs.emailRef.jiggle();
+      if (!this.password) this.$refs.passwordRef.jiggle();
     },
   },
   computed: {
     validLoginForm() {
       return this.email && this.password;
-    }
-  }
-});
+    },
+  },
+};
 </script>
 
 <style scoped>

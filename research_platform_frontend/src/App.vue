@@ -1,6 +1,20 @@
 <template>
-  <router-view />
+  <div>
+    <router-view />
+    <Snackbar/>
+  </div>
 </template>
+
+<script>
+import Snackbar from "./components/Snackbar.vue"
+export default {
+  name: "App",
+  components: {
+    Snackbar
+  }
+};
+</script>
+
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
@@ -19,5 +33,16 @@ html {
 
 body {
   margin: 0;
+  overflow: hidden;
+}
+
+#snackbar-container {
+  position: absolute;
+  bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  pointer-events: none;
 }
 </style>
