@@ -32,8 +32,12 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: flowerpower
+      INITIAL_PASSWORD: ${INITIAL_PASSWORD}
     ports:
       - 27018:27018
+    volumes:
+      - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - ./mongodb/home:/home/mongodb
   nginx:
     container_name: "fp_nginx"
     build:
