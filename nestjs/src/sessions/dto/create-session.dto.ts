@@ -27,9 +27,5 @@ export class CreateSessionDto {
   model_id: string;
 
   @IsDate()
-  @IsNotEmpty()
   created_at: Date;
-
-  @IsDate()
-  updated_at: Date;
 }

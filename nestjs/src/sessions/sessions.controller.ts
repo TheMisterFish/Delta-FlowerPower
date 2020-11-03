@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, HttpException, HttpStatus, Request } from '@nestjs/common';
 import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { HasRoles } from '../common/decorators/roles.decorator';
 import { SessionsService } from './sessions.service';
@@ -13,7 +13,8 @@ export class SessionsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @HasRoles('moderator')
   @Post()
-  async create(@Body() createSessionDto: CreateSessionDto) {
+  async create(@Request() req, @Body() createSessionDto: CreateSessionDto) {
+    createSessionDto.made_by = req.id;
     return await this.sessionsService.create(createSessionDto);
   }
 

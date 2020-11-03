@@ -18,8 +18,8 @@ export class SessionsService {
   }
 
   async create(dto: CreateSessionDto): Promise<SessionsDto> {
-    const createdUser = new this.sessionModel(dto);
-    return await createdUser.save();
+    const createdSession = new this.sessionModel(dto);
+    return await createdSession.save();
   }
 
   async update(id: string, dto: UpdateSessionDto): Promise<SessionsDto> {

@@ -16,12 +16,12 @@ export class Session {
 
   @IsString()
   @IsNotEmpty()
-  @prop({ ref: 'Locations' })
+  @prop({ ref: 'Location' })
   location_id: string;
 
   @IsString()
   @IsNotEmpty()
-  @prop({ ref: 'Users' })
+  @prop({ ref: 'User' })
   made_by: string;
 
   @IsJSON()
@@ -30,7 +30,7 @@ export class Session {
 
   @IsString()
   @IsNotEmpty()
-  @prop({ ref: 'Models' })
+  @prop({ ref: 'AIModel' })
   model_id: string;
 
   @IsDate()
