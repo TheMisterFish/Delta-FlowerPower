@@ -43,7 +43,8 @@ export default Vue.extend({
       this.$store
         .dispatch("login", { email, password })
         .then(() => {
-          this.$router.push("/")})
+          this.$router.push("dashboard");
+        })
         .catch((error) => console.log(error));
     },
   },

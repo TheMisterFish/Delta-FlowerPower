@@ -1,6 +1,7 @@
 <template>
   <div id="dashboard">
     <Navbar/>
+    <button @click="logout">Logout!</button>
   </div>
 </template>
 
@@ -13,5 +14,11 @@ export default Vue.extend({
   components: {
     Navbar
   },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout")
+      this.$router.push("landing");
+    }
+  }
 });
 </script>

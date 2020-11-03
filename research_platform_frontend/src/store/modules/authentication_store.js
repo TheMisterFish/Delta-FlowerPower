@@ -1,4 +1,3 @@
-import Vue from "vue";
 import Axios from 'axios';
 import { API_URL } from "../../constants";
 
@@ -10,20 +9,21 @@ export const authentication_store = {
     },
     mutations: {
         auth_request(state) {
-            console.log('loggin in!!')
             state.status = "loading";
         },
         auth_success(state, token, user) {
-            console.log('succesful login')
             localStorage.setItem("token", token);
             state.status = "success";
             state.token = token;
             state.user = user;
         },
         auth_error(state) {
-            console.log('error login')
             state.status = "error";
         },
+        auth_logout(state) {
+            localStorage.removeItem("token");
+            state.token = ""
+        }
     },
     actions: {
         login({ commit }, user) {
@@ -35,10 +35,9 @@ export const authentication_store = {
                         method: "POST",
                     })
                     .then((response) => {
-                        const token = response.data.token;
-                        const user = response.data.user;
-                        localStorage.setItem("token", token);
-                        Vue.prototype.$http.defaults.headers.common[
+                        console.log(response)
+                        const token = response.data.access_token;
+                        Axios.defaults.headers.common[
                             "Authorization"
                         ] = token;
                         commit("auth_success", token, user);
@@ -51,6 +50,9 @@ export const authentication_store = {
                     });
             });
         },
+        logout({ commit }) {
+            commit("auth_logout")
+        }
     },
     modules: {},
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="account-section">
-    <Link label="Gebruiker #129038" />
+    <Link to="me" label="Gebruiker #129038" />
   </div>
 </template>
 
