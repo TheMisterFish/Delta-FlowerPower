@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Axios from 'axios';
+import { API_URL } from "../../constants";
 
 export const authentication_store = {
     state: {
@@ -29,7 +30,7 @@ export const authentication_store = {
             return new Promise((resolve, reject) => {
                 commit("auth_request");
                 Axios({
-                        url: "http://localhost:3000/login",
+                        url: `${API_URL}/auth/login`,
                         data: user,
                         method: "POST",
                     })
