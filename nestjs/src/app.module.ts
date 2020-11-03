@@ -11,6 +11,10 @@ import { UsersModule } from './users/users.module';
 import { TypegooseModule } from "nestjs-typegoose";
 import { SessionsController } from './sessions/sessions.controller';
 import { SessionsModule } from './sessions/sessions.module';
+import { AimodelsController } from './aimodels/aimodels.controller';
+import { AimodelsModule } from './aimodels/aimodels.module';
+import { LocationsController } from './locations/locations.controller';
+import { LocationsModule } from './locations/locations.module';
 
 @Module({
   imports: [
@@ -23,8 +27,8 @@ import { SessionsModule } from './sessions/sessions.module';
     }),
     CommandModule,
     AuthModule, 
-    UsersModule, SessionsModule],
-  controllers: [AppController, SessionsController],
+    UsersModule, SessionsModule, AimodelsModule, LocationsModule],
+  controllers: [AppController, SessionsController, AimodelsController, LocationsController],
   providers: [AppService],
 })
 
