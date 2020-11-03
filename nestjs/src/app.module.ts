@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 import { TypegooseModule } from "nestjs-typegoose";
+import { SessionsController } from './sessions/sessions.controller';
+import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
@@ -21,8 +23,8 @@ import { TypegooseModule } from "nestjs-typegoose";
     }),
     CommandModule,
     AuthModule, 
-    UsersModule],
-  controllers: [AppController],
+    UsersModule, SessionsModule],
+  controllers: [AppController, SessionsController],
   providers: [AppService],
 })
 

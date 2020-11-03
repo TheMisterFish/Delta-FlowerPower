@@ -26,7 +26,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('guest')
+  @HasRoles('moderator')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<User> {
     return await this.usersService.findOne(id).catch(err => {
@@ -39,7 +39,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('guest')
+  @HasRoles('moderator')
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.update(id, updateUserDto).catch(err => {
