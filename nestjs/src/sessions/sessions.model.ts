@@ -1,5 +1,14 @@
-import { prop } from "@typegoose/typegoose";
+import { prop, pre } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
+
+@pre<Session>('save', function (next) {
+  if (!this.isNew) {
+      this.updated_at = new Date();
+  } else {
+    this.created_at = new Date();
+  }
+  return next();
+})
 
 export class Session {
   @IsString()

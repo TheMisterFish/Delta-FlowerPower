@@ -16,7 +16,7 @@ export class CreateSessionDto {
   location_id: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty() 
   made_by: string;
 
   @IsJSON()
@@ -27,5 +27,9 @@ export class CreateSessionDto {
   model_id: string;
 
   @IsDate()
+  @IsNotEmpty()
   created_at: Date;
+
+  @IsDate()
+  updated_at: Date;
 }

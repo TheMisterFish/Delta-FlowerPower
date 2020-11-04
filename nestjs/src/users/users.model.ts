@@ -8,9 +8,11 @@ import * as bcrypt from 'bcrypt';
       bcrypt.hash(this.password, 10, (err, encryptedPass) => {
       if (err) return next(err);
       this.password = encryptedPass;
-      return next();
     });
+  } else if(!this.isNew){
+    this.updated_at = new Date();
   }
+  return next();
 })
 
 export class User {

@@ -25,7 +25,9 @@ export class UsersService {
 
   async create(dto: CreateUserDto): Promise<UserDto> {
     const createdUser = new this.userModel(dto);
-    return await createdUser.save();
+    const user = await createdUser.save();
+    user.password = undefined;
+    return user;
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<UserDto> {

@@ -15,14 +15,22 @@ export class UsersController {
   @HasRoles('admin')
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+    return await this.usersService.create(createUserDto).catch(err => {
+      throw new HttpException({
+        message: err.message
+      }, HttpStatus.BAD_REQUEST);
+    });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @HasRoles('moderator')
   @Get()
   async findAll(): Promise<User[]> {
-      return await this.usersService.findAll();
+      return await this.usersService.findAll().catch(err => {
+        throw new HttpException({
+          message: err.message
+        }, HttpStatus.BAD_REQUEST);
+      });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
