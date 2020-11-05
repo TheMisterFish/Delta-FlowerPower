@@ -21,10 +21,10 @@ export default Vue.extend({
 
 <style scoped>
 #navbar {
+  grid-area: navbar;
   display: flex;
   justify-content: space-between;
   background-color: var(--primary-color);
-  height: 58px;
   padding: 0px 25px;
 }
 </style>

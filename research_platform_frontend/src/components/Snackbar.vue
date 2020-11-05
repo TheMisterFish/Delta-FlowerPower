@@ -48,10 +48,11 @@ export default {
 <style scoped>
 .snackbar-container {
   position: absolute;
+  overflow: hidden;
   bottom: 15px;
   display: flex;
   justify-content: center;
-  width: 100vw;
+  width: 100%;
 }
 
 .snackbar {

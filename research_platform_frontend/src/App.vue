@@ -21,7 +21,9 @@ export default {
 
 :root {
   --primary-color: #567a58;
-  --primary-grey-color: #d4d4d4;
+  --grey-color: #d4d4d4;
+  --grey-dark-color: #646464;
+  --card-box-shadow-color: #bababa;
   --jiggle-distance-big: 4px;
   --jiggle-distance-small: 2px;
 }
@@ -33,16 +35,10 @@ html {
 
 body {
   margin: 0;
-  overflow: hidden;
+  background-color: var(--grey-color);
 }
 
-#snackbar-container {
-  position: absolute;
-  bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100vw;
-  pointer-events: none;
+.page-container {
+  padding: 42px;
 }
 </style>

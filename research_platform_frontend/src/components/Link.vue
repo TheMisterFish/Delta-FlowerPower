@@ -24,7 +24,7 @@ export default {
   text-decoration: none;
   font-size: 1.3rem;
   font-weight: 500;
-  color: var(--primary-grey-color);
+  color: var(--grey-color);
 }
 
 .link:hover {
