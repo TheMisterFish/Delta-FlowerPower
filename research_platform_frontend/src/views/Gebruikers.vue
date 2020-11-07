@@ -46,10 +46,6 @@ export default {
 </script>
 
 <style scoped>
-.page-body {
-  display: flex;
-}
-
 .card {
   display: flex;
   flex: 1;
