@@ -52,6 +52,7 @@ export default {
       this.$store
         .dispatch("login", { email, password })
         .then(() => {
+          this.$store.dispatch("hideSnackbar");
           this.$router.push("dashboard");
         })
         .catch(() => {

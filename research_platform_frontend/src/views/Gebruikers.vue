@@ -1,17 +1,17 @@
 <template>
-  <div id="gebruikers">
-    <Navbar/>
+  <div class="page-container" id="gebruikers">
+    <Navbar />
+    <div class="page-body"></div>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Navbar from "@/components/Navbar.vue";
+<script>
+import Navbar from "../components/Navbar.vue";
 
-export default Vue.extend({
+export default {
   name: "gebruikers",
   components: {
-    Navbar
+    Navbar,
   },
-});
+};
 </script>

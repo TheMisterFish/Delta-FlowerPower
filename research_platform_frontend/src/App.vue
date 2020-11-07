@@ -1,20 +1,19 @@
 <template>
   <div>
     <router-view />
-    <Snackbar/>
+    <Snackbar />
   </div>
 </template>
 
 <script>
-import Snackbar from "./components/Snackbar.vue"
+import Snackbar from "./components/Snackbar.vue";
 export default {
   name: "App",
   components: {
-    Snackbar
-  }
+    Snackbar,
+  },
 };
 </script>
-
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
@@ -39,6 +38,16 @@ body {
 }
 
 .page-container {
+  display: grid;
+  grid-template-areas:
+    "navbar"
+    "page-body";
+  grid-template-rows: 58px auto;
+
+  height: 100vh;
+}
+.page-body {
+  grid-area: page-body;
   padding: 42px;
 }
 </style>

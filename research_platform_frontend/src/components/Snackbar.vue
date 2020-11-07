@@ -34,7 +34,7 @@ export default {
         }, 4000);
       }
 
-      if (mutation.type === "hideSnackbar") {
+      if (mutation.type === "hideSnackbar" && this.visible) {
         clearTimeout(this.snackbarTimeout);
         this.$refs.snackbar.classList.remove("snackbar-animation-in");
         this.$refs.snackbar.classList.add("snackbar-animation-out");
