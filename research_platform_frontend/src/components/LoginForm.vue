@@ -47,8 +47,6 @@ export default {
   },
   methods: {
     login() {
-      this.$store.dispatch("hideSnackbar");
-
       let email = this.email;
       let password = this.password;
       this.$store
