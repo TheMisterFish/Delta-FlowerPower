@@ -1,8 +1,8 @@
 <template>
-  <div class="table">
+  <table class="table">
     <slot name="header"></slot>
     <slot name="row"></slot>
-  </div>
+  </table>
 </template>
 
 <script>
@@ -27,14 +27,16 @@ export default {
 }
 
 .table tr {
-  display: flex;
-  flex: 1;
   justify-content: space-between;
   border-bottom: 1px solid var(--grey-color);
 }
 
 .table tr:first-of-type {
   border-bottom: 2px solid var(--grey-color);
+}
+
+.table tr:last-of-type {
+  border-bottom: none;
 }
 
 .table td {
