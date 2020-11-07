@@ -21,18 +21,18 @@ export default {
 
 <style scoped>
 .link {
-  text-decoration: none;
+  text-decoration: none !important;
   font-size: 1.3rem;
   font-weight: 500;
-  color: var(--grey-color);
+  color: var(--grey-color) !important;
 }
 
 .link:hover {
-  color: white;
+  color: white !important;
   cursor: pointer;
 }
 
 .link.router-link-active {
-  color: white;
+  color: white !important;
 }
 </style>

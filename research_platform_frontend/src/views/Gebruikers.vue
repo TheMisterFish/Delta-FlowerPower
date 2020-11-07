@@ -49,5 +49,6 @@ export default {
 .card {
   display: flex;
   flex: 1;
+  margin-bottom: 25px;
 }
 </style>
