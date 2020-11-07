@@ -19,6 +19,7 @@ export default {
   display: inline-flex;
   flex-direction: column;
   border-radius: 5px;
+  height: max-content;
   padding: 25px;
   background-color: white;
   box-shadow: 0px 0px 5px 1px var(--card-box-shadow-color);

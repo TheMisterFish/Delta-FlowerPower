@@ -4,7 +4,7 @@
   </router-link>
 </template>
 
-<script lang="ts">
+<script>
 export default {
   name: "Link",
   props: {

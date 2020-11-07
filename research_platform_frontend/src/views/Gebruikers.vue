@@ -17,6 +17,7 @@
           </tr>
         </Table>
       </Card>
+      <FloatingActionButton label="Nieuwe gebruiker" />
     </div>
   </div>
 </template>
@@ -25,6 +26,7 @@
 import Navbar from "../components/Navbar.vue";
 import Card from "../components/Card.vue";
 import Table from "../components/Table.vue";
+import FloatingActionButton from "../components/FloatingActionButton.vue";
 import users from "../data/users.json";
 
 export default {
@@ -33,6 +35,7 @@ export default {
     Navbar,
     Table,
     Card,
+    FloatingActionButton
   },
   data: function() {
     return {

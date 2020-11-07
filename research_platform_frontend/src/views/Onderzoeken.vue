@@ -21,6 +21,7 @@
           </tr>
         </Table>
       </Card>
+      <FloatingActionButton label="Nieuw onderzoek"/>
     </div>
   </div>
 </template>
@@ -29,6 +30,7 @@
 import Navbar from "../components/Navbar.vue";
 import Card from "../components/Card.vue";
 import Table from "../components/Table.vue";
+import FloatingActionButton from "../components/FloatingActionButton.vue";
 import researches from "../data/researches.json";
 
 export default {
@@ -37,6 +39,7 @@ export default {
     Navbar,
     Card,
     Table,
+    FloatingActionButton
   },
   data: function() {
     return {

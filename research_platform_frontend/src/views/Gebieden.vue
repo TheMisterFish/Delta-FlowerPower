@@ -13,6 +13,7 @@
           </tr>
         </Table>
       </Card>
+      <FloatingActionButton label="Nieuw gebied" />
     </div>
   </div>
 </template>
@@ -21,6 +22,7 @@
 import Navbar from "../components/Navbar.vue";
 import Card from "../components/Card.vue";
 import Table from "../components/Table.vue";
+import FloatingActionButton from "../components/FloatingActionButton.vue";
 import areas from "../data/areas.json";
 
 export default {
@@ -28,7 +30,8 @@ export default {
   components: {
     Navbar,
     Card,
-    Table
+    Table,
+    FloatingActionButton
   },
   data: function() {
     return {

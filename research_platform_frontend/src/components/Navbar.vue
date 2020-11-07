@@ -25,6 +25,7 @@ export default Vue.extend({
   display: flex;
   justify-content: space-between;
   background-color: var(--primary-color);
+  box-shadow: 0px 2px 5px 2px var(--card-box-shadow-color);
   padding: 0px 25px;
 }
 </style>

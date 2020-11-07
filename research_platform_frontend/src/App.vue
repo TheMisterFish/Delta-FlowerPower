@@ -20,11 +20,13 @@ export default {
 
 :root {
   --primary-color: #567a58;
+  --primary-dark-color: #3f6340;
   --grey-color: #d4d4d4;
   --grey-dark-color: #646464;
   --card-box-shadow-color: #bababa;
   --jiggle-distance-big: 4px;
   --jiggle-distance-small: 2px;
+  --page-padding: 42px;
 }
 
 html {
@@ -48,6 +50,8 @@ body {
 }
 .page-body {
   grid-area: page-body;
-  padding: 42px;
+  position: relative;
+  overflow-y: scroll;
+  padding: var(--page-padding);
 }
 </style>
