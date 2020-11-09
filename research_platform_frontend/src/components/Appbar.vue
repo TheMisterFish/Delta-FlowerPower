@@ -9,8 +9,7 @@
     </v-btn>
     <v-toolbar-title>{{ title }}</v-toolbar-title>
     <v-spacer></v-spacer>
-    <span style="margin-right: 15px;">{{user.email}}</span>
-    <v-menu bottom left>
+    <v-menu v-if="!actionPage" bottom left>
       <template v-slot:activator="{ on, attrs }">
         <v-btn dark icon v-bind="attrs" v-on="on">
           <v-icon>mdi-dots-vertical</v-icon>
@@ -35,7 +34,7 @@
 <script>
 export default {
   name: "Appbar",
-  props: ["title", "toggleDrawer", "user"],
+  props: ["title", "toggleDrawer", "user", "actionPage"],
   methods: {
     openDrawer() {
       this.$emit("open-drawer");

@@ -6,6 +6,7 @@
       :title="title"
       :user="authentication.user"
       :toggleDrawer="toggleDrawer"
+      :actionPage="actionPage"
       v-if="authentication.isAuthenticated"
     />
     <v-main>
@@ -38,6 +39,7 @@ export default {
     message: "",
     drawer: false,
     toggleDrawer: true,
+    actionPage: false,
     title: "",
   }),
 
@@ -52,6 +54,7 @@ export default {
   watch: {
     $route(to) {
       this.toggleDrawer = to.meta.drawer;
+      this.actionPage = to.meta.action;
       this.title = to.meta.title;
       document.title = to.meta.title || "Flower Power";
     },

@@ -40,7 +40,8 @@ export const routes = [{
             component: () =>
                 import ("../views/AddResearch.vue"),
             meta: {
-                title: "Add research"
+                title: "Add research",
+                action: true
             }
         }]
     },
@@ -65,7 +66,8 @@ export const routes = [{
                 component: () =>
                     import ("../views/AddArea.vue"),
                 meta: {
-                    title: "Areas",
+                    title: "Add area",
+                    action: true
                 }
             }
         ]
