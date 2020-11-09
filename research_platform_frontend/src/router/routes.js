@@ -16,36 +16,59 @@ export const routes = [{
             import ("../views/Dashboard.vue"),
         meta: {
             researcher: true,
-            title: "Dashboard"
+            title: "Dashboard",
+            drawer: true
         },
     },
     {
         path: "/researches",
+        component: emptyRouteView,
         meta: {
             researcher: true,
-            title: "Researches"
         },
-        component: emptyRouteView,
         children: [{
             path: "",
             name: "Researches",
             component: () =>
                 import ("../views/Researches.vue"),
+            meta: {
+                title: "Researches",
+                drawer: true
+            }
         }, {
             path: "add",
             component: () =>
-                import ("../views/AddResearch.vue")
+                import ("../views/AddResearch.vue"),
+            meta: {
+                title: "Add research"
+            }
         }]
     },
     {
         path: "/areas",
-        name: "Areas",
-        component: () =>
-            import ("../views/Areas.vue"),
+        component: emptyRouteView,
         meta: {
             researcher: true,
-            title: "Areas"
         },
+        children: [{
+                path: "",
+                name: "Areas",
+                component: () =>
+                    import ("../views/Areas.vue"),
+                meta: {
+                    title: "Areas",
+                    drawer: true
+                },
+            },
+            {
+                path: "add",
+                component: () =>
+                    import ("../views/AddArea.vue"),
+                meta: {
+                    title: "Areas",
+                }
+            }
+        ]
     },
     {
         path: "/users",
@@ -54,7 +77,8 @@ export const routes = [{
             import ("../views/Users.vue"),
         meta: {
             researcher: true,
-            title: "Users"
+            title: "Users",
+            drawer: true
         },
     },
     {
@@ -62,6 +86,12 @@ export const routes = [{
         name: "Logout",
         component: () =>
             import ("../views/Logout.vue")
+    },
+    {
+        path: "/account",
+        name: "Account",
+        component: () =>
+            import ("../views/Account.vue")
     },
     {
         path: "*",

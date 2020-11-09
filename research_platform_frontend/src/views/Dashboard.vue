@@ -1,19 +1,31 @@
 <template>
-  <div class="pa-8" id="dashboard">
-    <v-card flat style="grid-area: flower-map;">
-      <v-card-title>Flower map</v-card-title>
-    </v-card>
-    <v-data-table
-      :headers="recentResearchesHeaders"
-      :items="recentResearches"
-      hide-default-footer
-      style="grid-area: recent-results;"
-    ></v-data-table>
-    <v-data-table
-      hide-default-footer
-      style="grid-area: unfinished-researches;"
-    ></v-data-table>
-  </div>
+  <v-container fill-height fluid class="pa-8 align-start">
+    <v-row>
+      <v-col cols="12" md="6">
+        <v-row>
+          <v-col cols="12">
+            <v-card flat>
+              <v-card-title>Flower map</v-card-title>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-row>
+          <v-col cols="12">
+            <v-data-table
+              :headers="recentResearchesHeaders"
+              :items="recentResearches"
+              hide-default-footer
+            ></v-data-table>
+          </v-col>
+          <v-col cols="12">
+            <v-data-table hide-default-footer></v-data-table>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -30,16 +42,3 @@ export default {
   }),
 };
 </script>
-
-<style scoped>
-#dashboard {
-  display: grid;
-  grid-template-areas:
-    "flower-map recent-results"
-    "flower-map unfinished-researches";
-  grid-template-columns: 2fr 1fr;
-  gap: 29px;
-
-  height: 100%;
-}
-</style>

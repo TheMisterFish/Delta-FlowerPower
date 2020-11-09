@@ -13,6 +13,9 @@ export function isAuthenticated() {
         return false;
     }
 
-
     return true;
+}
+
+export function decodeJWT() {
+    return jwt_decode(localStorage.getItem("token"));
 }

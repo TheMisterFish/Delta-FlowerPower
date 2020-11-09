@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { isAuthenticated } from "./auth.js";
+import { decodeJWT, isAuthenticated } from "./auth.js";
 import { routes } from './routes.js'
 import store from '../store/index.js'
 
@@ -12,6 +12,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     store.state.authentication.isAuthenticated = isAuthenticated();
+
+    if (isAuthenticated()) {
+        store.state.authentication.user = decodeJWT();
+    }
 
     if (to.name === "Landing" && isAuthenticated()) {
         next({

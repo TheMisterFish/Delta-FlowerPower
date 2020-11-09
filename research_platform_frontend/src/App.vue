@@ -2,7 +2,10 @@
   <v-app :style="{background: $vuetify.theme.themes[theme].background}">
     <Appbar
       @open-drawer="openDrawer"
+      @navigate-back="navigateBack"
       :title="title"
+      :user="authentication.user"
+      :toggleDrawer="toggleDrawer"
       v-if="authentication.isAuthenticated"
     />
     <v-main>
@@ -23,6 +26,7 @@
 import Appbar from "./components/Appbar.vue";
 import Drawer from "./components/Drawer.vue";
 import { mapState } from "vuex";
+import router from "./router";
 
 export default {
   name: "App",
@@ -33,6 +37,7 @@ export default {
   data: () => ({
     message: "",
     drawer: false,
+    toggleDrawer: true,
     title: "",
   }),
 
@@ -46,6 +51,7 @@ export default {
 
   watch: {
     $route(to) {
+      this.toggleDrawer = to.meta.drawer;
       this.title = to.meta.title;
       document.title = to.meta.title || "Flower Power";
     },
@@ -55,6 +61,9 @@ export default {
     openDrawer() {
       this.$refs.drawer.visible = true;
     },
+    navigateBack() {
+      router.go(-1);
+    }
   },
 };
 </script>
