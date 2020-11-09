@@ -1,12 +1,23 @@
 <template>
   <v-app-bar id="appbar" dark color="primary">
     <v-app-bar-nav-icon @click="openDrawer"></v-app-bar-nav-icon>
-    <v-toolbar-title>{{title}}</v-toolbar-title>
+    <v-toolbar-title>{{ title }}</v-toolbar-title>
     <v-spacer></v-spacer>
-    <span>Gebruiker 12391203 </span>
-    <v-btn to="/logout" icon>
-      <v-icon>mdi-exit-to-app</v-icon>
-    </v-btn>
+    <span>Gebruiker 12391203</span>
+    <v-menu bottom left>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn dark icon v-bind="attrs" v-on="on">
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item to="/logout">
+          <v-list-item-title>
+            Logout
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 </template>
 
@@ -16,9 +27,9 @@ export default {
   props: ["title"],
   methods: {
     openDrawer() {
-      this.$emit('open-drawer');
-    }
-  }
+      this.$emit("open-drawer");
+    },
+  },
 };
 </script>
 
