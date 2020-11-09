@@ -1,57 +1,78 @@
 <template>
-  <div>
-    <router-view />
-    <Snackbar />
-  </div>
+  <v-app :style="{background: $vuetify.theme.themes[theme].background}">
+    <Appbar
+      @open-drawer="openDrawer"
+      :title="title"
+      v-if="authentication.isAuthenticated"
+    />
+    <v-main>
+      <router-view />
+    </v-main>
+    <Drawer
+      ref="drawer"
+      :visible="drawer"
+      v-if="authentication.isAuthenticated"
+    />
+    <v-snackbar color="error" light v-model="snackbar.visible">{{
+      snackbar.message
+    }}</v-snackbar>
+  </v-app>
 </template>
 
 <script>
-import Snackbar from "./components/Snackbar.vue";
+import Appbar from "./components/Appbar.vue";
+import Drawer from "./components/Drawer.vue";
+import { mapState } from "vuex";
+
 export default {
   name: "App",
   components: {
-    Snackbar,
+    Appbar,
+    Drawer,
+  },
+  data: () => ({
+    message: "",
+    drawer: false,
+    title: "",
+  }),
+
+  computed: {
+    ...mapState(["snackbar"]),
+    ...mapState(["authentication"]),
+    theme() {
+      return this.$vuetify.theme.dark ? "dark" : "light";
+    },
+  },
+
+  watch: {
+    $route(to) {
+      this.title = to.meta.title;
+      document.title = to.meta.title || "Flower Power";
+    },
+  },
+
+  methods: {
+    openDrawer() {
+      this.$refs.drawer.visible = true;
+    },
   },
 };
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
-
 :root {
   --primary-color: #567a58;
-  --primary-dark-color: #3f6340;
   --grey-color: #d4d4d4;
-  --grey-dark-color: #646464;
-  --card-box-shadow-color: #bababa;
-  --jiggle-distance-big: 4px;
-  --jiggle-distance-small: 2px;
-  --page-padding: 42px;
 }
 
 html {
+  overflow-y: auto;
+
   font-size: 16px;
   font-family: "Roboto", sans-serif;
 }
 
 body {
-  margin: 0;
   background-color: var(--grey-color);
-}
-
-.page-container {
-  display: grid;
-  grid-template-areas:
-    "navbar"
-    "page-body";
-  grid-template-rows: 58px auto;
-
-  height: 100vh;
-}
-.page-body {
-  grid-area: page-body;
-  position: relative;
-  overflow-y: scroll;
-  padding: var(--page-padding);
 }
 </style>

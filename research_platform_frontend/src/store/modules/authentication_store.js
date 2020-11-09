@@ -1,10 +1,10 @@
 import Axios from 'axios';
-import { API_URL } from "../../constants";
 
 export const authentication_store = {
     state: {
         status: "",
         token: localStorage.getItem("token") || "",
+        authenticated: false,
         user: {},
     },
     mutations: {
@@ -16,13 +16,16 @@ export const authentication_store = {
             state.status = "success";
             state.token = token;
             state.user = user;
+            state.authenticated = true;
         },
         auth_error(state) {
             state.status = "error";
+            state.authenticated = false;
         },
         auth_logout(state) {
             localStorage.removeItem("token");
             state.token = ""
+            state.authenticated = false;
         }
     },
     actions: {
@@ -30,7 +33,7 @@ export const authentication_store = {
             return new Promise((resolve, reject) => {
                 commit("auth_request");
                 Axios({
-                        url: `${API_URL}/auth/login`,
+                        url: "http://localhost:7080/auth/login",
                         data: user,
                         method: "POST",
                     })
