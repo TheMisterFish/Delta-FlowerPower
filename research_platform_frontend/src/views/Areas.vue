@@ -4,29 +4,41 @@
       :headers="areasHeaders"
       :items="areas"
       hide-default-footer
-      style="grid-area: recent-results;"
-    ></v-data-table>
-    <v-btn
-      to="/areas/add"
-      bottom
-      fixed
-      right
-      color="primary"
-      elevation="2"
-      fab
+      class="area-table"
+      @click:row="openArea"
     >
+    </v-data-table>
+    <v-btn to="/areas/add" bottom fixed right color="primary" elevation="2" fab>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
   </div>
 </template>
 
 <script>
+import areas from "../data/areas.json";
+
 export default {
   name: "Areas",
   data: () => ({
     drawer: false,
-    areas: [],
-    areasHeaders: [{ text: "Area", value: "area" }],
+    areas: areas,
+    areasHeaders: [
+      { text: "Area", value: "area" },
+      { text: "Created at", value: "created_at" },
+      { text: "Updated at", value: "updated_at" },
+      { text: "Made by", value: "made_by" },
+    ],
   }),
+  methods: {
+    openArea(value) {
+      console.log(value);
+    }
+  }
 };
 </script>
+
+<style scoped>
+.area-table >>> tbody tr:hover {
+  cursor: pointer;
+}
+</style>

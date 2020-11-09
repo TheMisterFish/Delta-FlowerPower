@@ -1,9 +1,28 @@
 <template>
   <v-container class="pa-8">
     <v-row>
-      <v-col cols="12">
-        <v-text-field v-model="name" label="Name" required></v-text-field>
+      <v-col cols="12" md="3">
+        <v-text-field
+          background-color="white"
+          filled
+          v-model="name"
+          label="Name"
+          required
+        ></v-text-field>
       </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" md="3">
+        <v-textarea
+          filled
+          label="Description"
+          auto-grow
+          background-color="white"
+        >
+        </v-textarea>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12">
         <AreaMap />
       </v-col>
