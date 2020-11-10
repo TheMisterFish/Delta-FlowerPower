@@ -1,13 +1,12 @@
 pipeline {
   agent any
 
-  tools {nodejs "Jenkins_NodeJS"}
+  tools { nodejs "Jenkins_NodeJS", docker "Jenkins_Docker"}
   
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
       DIS_TITL = "${JOB_NAME} - ${env.BUILD_NUMBER}"
-      PATH = "$PATH:/usr/local/bin"
     }
 
   stages {
@@ -16,9 +15,9 @@ pipeline {
         echo 'Testing nestjs jest'
         sh 'node -v'
         dir("nestjs") {
-          // sh 'npm prune'
-          // sh 'npm install'
-          // sh 'npm test'
+          sh 'npm prune'
+          sh 'npm install'
+          sh 'npm test'
         }
       }
     }
