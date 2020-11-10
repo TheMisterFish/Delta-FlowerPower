@@ -1,6 +1,8 @@
 pipeline {
   agent any
 
+  tools {nodejs "nodejs"}
+  
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
