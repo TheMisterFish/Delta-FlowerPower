@@ -18,6 +18,7 @@ pipeline {
       NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@fp_mongodb:27018/flowerpower"
 
       BROADCAST = false
+      GIT_BRANCH = FULL_PATH_BRANCH.substring(FULL_PATH_BRANCH.lastIndexOf('/') + 1, FULL_PATH_BRANCH.length())
   }
   
   stages {
@@ -25,6 +26,9 @@ pipeline {
     stage("Touch .env file") {
       steps {
         echo 'test...' + env.BRANCH_NAME
+        echo 'test...' + env.GIT_BRANCH
+        echo env.FULL_PATH_BRANCH
+
         writeFile file: '.env', text: ''
       }
     }
