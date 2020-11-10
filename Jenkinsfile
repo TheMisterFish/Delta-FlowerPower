@@ -11,8 +11,12 @@ pipeline {
       MONGO_PASSWORD = "admin"
       INITIAL_PASSWORD  = "somepass"
     }
-
   stages {
+    stage("Touch .env file") {
+      steps {
+        writeFile file: '.env'
+      }
+    }
     stage('NestJS Test') {
       steps { 
         echo 'Testing nestjs jest'
