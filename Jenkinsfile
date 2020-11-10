@@ -2,7 +2,6 @@ pipeline {
   agent any
 
   tools { nodejs "Jenkins_NodeJS" }
-  echo 'test...' + env.BRANCH_NAME
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
@@ -25,6 +24,7 @@ pipeline {
     // Generate empty .env file so we can use our own
     stage("Touch .env file") {
       steps {
+        echo 'test...' + env.BRANCH_NAME
         writeFile file: '.env', text: ''
       }
     }
