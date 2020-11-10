@@ -87,14 +87,15 @@ pipeline {
       }
       success {
         script {
-          if(env.BROADCAST){
+          echo env.BROADCAST
+          if(env.BROADCAST == true){
             discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
           }
         }
       }
       unsuccessful { 
         script {
-          if(env.BROADCAST){
+          if(env.BROADCAST == true){
             discordSend description: env.DIS_DESC + "- FAILED", footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
           }
         }
