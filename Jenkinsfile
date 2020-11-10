@@ -8,8 +8,8 @@ pipeline {
       DIS_TITL = "${JOB_NAME} - ${env.BUILD_NUMBER}"
 
       MONGO_USERNAME = "admin"
-      MONGO_PASSWORD = "admin"
-      INITIAL_PASSWORD  = "admin"
+      MONGO_PASSWORD = "adminpassword"
+      INITIAL_PASSWORD  = "adminpasswordflowerpower"
 
       NESTJS_PORT=7080
       NESTJS_DEBUG_MODE=false
