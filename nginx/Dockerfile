@@ -1,9 +1,10 @@
 FROM nginx
 WORKDIR /app
-COPY . .
-# WORKDIR /app/research_platform
-# RUN npm install
-# RUN npm run build
+
+COPY ../research_platform_frontend .
+WORKDIR /app/research_platform_frontend
+RUN npm install
+RUN npm run build
 
 RUN echo "soft nofile 1024000" >> /etc/security/limits.conf
 RUN echo "hard nofile 1024000" >> /etc/security/limits.conf
