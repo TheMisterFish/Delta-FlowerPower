@@ -1,3 +1,5 @@
+echo "test"
+
 mongo -- "$MONGO_INITDB_DATABASE" <<EOF
     db.createUser({
         user: "$MONGO_INITDB_ROOT_USERNAME",
@@ -15,3 +17,5 @@ mongo -- "$MONGO_INITDB_DATABASE" <<EOF
         password: "$INITIAL_PASSWORD"
     });
 EOF
+
+echo "done?"
