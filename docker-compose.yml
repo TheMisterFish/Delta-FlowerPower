@@ -44,9 +44,9 @@ services:
     ports:
       - 27018:27018
     volumes:
-      - ./mongodb:/docker-entrypoint-initdb.d
-      - ./mongodb/home:/home/mongodb
-      - ./mongodb/data:/data/db
+      - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - mongovol:/home/mongodb
+      - mongovol:/data/db
   nginx:
     container_name: "fp_nginx"
     build:
@@ -62,3 +62,5 @@ services:
     restart: on-failure
     depends_on:
       - fp_nestjs
+volumes:
+  mongovol:
