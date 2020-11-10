@@ -2,7 +2,7 @@ FROM mongo:latest
 
 WORKDIR /usr/src/mongo
 
-COPY ./mongo-init.sh /docker-entrypoint.sh
+ADD ./mongo-init.sh /docker-entrypoint-initdb.d/
 RUN ls
 RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
