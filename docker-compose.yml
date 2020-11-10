@@ -29,8 +29,7 @@ services:
       - ./src:/usr/app/
   # MongoDB
   db:
-    build:
-      context: ./mongodb
+    image: mongo:latest
     env_file:
       - .env
     container_name: "fp_mongodb"
@@ -45,6 +44,7 @@ services:
     ports:
       - 27018:27018
     volumes:
+      - ./mongodb:/docker-entrypoint-initdb.d
       - ./mongodb/home:/home/mongodb
   nginx:
     container_name: "fp_nginx"
