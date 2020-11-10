@@ -29,10 +29,11 @@ services:
       - ./src:/usr/app/
   # MongoDB
   db:
-    image: mongo:latest
+    build:
+      context: ./nestjs
+    container_name: "fp_mongodb"
     env_file:
       - .env
-    container_name: "fp_mongodb"
     networks:
       - flowerpower_bridge
     command: mongod --auth --port 27018
@@ -44,7 +45,6 @@ services:
     ports:
       - 27018:27018
     volumes:
-      - ./mongodb:/docker-entrypoint-initdb.d:ro
       - mongovol:/home/mongodb
       - mongovol:/data/db
   nginx:
