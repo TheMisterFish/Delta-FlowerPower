@@ -16,7 +16,12 @@ pipeline {
     stage('Deploy') {
       steps {
         echo 'Deploying....'
-        discordSend description: "Jenkins Pipeline Build for Flower Power", footer: "(Build number " + env.BUILD_NUMBER +")", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME + " - " + env.BUILD_NUMBER , webhookURL: env.WEBHOOK_URL
+        discordSend 
+          description: "Jenkins Pipeline Build for Flower Power", 
+          footer: "(Build number " + env.BUILD_NUMBER +")", 
+          link: env.BUILD_URL, result: currentBuild.currentResult, 
+          title: JOB_NAME + " - " + env.BUILD_NUMBER , 
+          webhookURL: env.WEBHOOK_URL
         echo 'Discord?'
       }
     }
