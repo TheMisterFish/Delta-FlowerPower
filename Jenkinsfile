@@ -11,7 +11,6 @@ pipeline {
       MONGO_USERNAME = "admin"
       MONGO_PASSWORD = "admin"
       INITIAL_PASSWORD  = "somepass"
-      MONGO_INITDB_DATABASE = "flowerpower"
 
       NESTJS_PORT=7080
       NESTJS_DEBUG_MODE=false
