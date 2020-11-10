@@ -39,9 +39,7 @@ export const authentication_store = {
                     })
                     .then((response) => {
                         const token = response.data.access_token;
-                        Axios.defaults.headers.common[
-                            "Authorization"
-                        ] = token;
+                        Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
                         commit("auth_success", token, user);
                         resolve(response);
                     })

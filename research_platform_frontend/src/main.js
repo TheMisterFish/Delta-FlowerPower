@@ -10,10 +10,8 @@ Vue.config.productionTip = false
 
 const token = localStorage.getItem("token");
 
-console.log(token);
-
 if (token) {
-    Axios.defaults.headers.common["Authorization"] = token;
+    Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
 Vue.use(VueGoogleMaps, {

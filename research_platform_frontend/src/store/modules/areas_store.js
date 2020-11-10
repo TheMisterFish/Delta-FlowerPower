@@ -25,7 +25,8 @@ export const areas_store = {
             commit(GET_AREAS);
             return new Promise((resolve, reject) => {
                 getAreasFunction().then((response) => {
-                        commit(GET_AREAS_SUCCESS, response);
+                        console.log(response.data);
+                        commit(GET_AREAS_SUCCESS, response.data);
                         resolve(response);
                     })
                     .catch((error) => {
