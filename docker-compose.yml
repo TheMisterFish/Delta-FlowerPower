@@ -30,7 +30,7 @@ services:
   # MongoDB
   db:
     build:
-      context: ./nestjs
+      context: ./mongodb
     container_name: "fp_mongodb"
     env_file:
       - .env
