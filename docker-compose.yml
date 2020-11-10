@@ -44,7 +44,7 @@ services:
     ports:
       - 27018:27018
     volumes:
-      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongodb:/docker-entrypoint-initdb.d:ro
       - mongovol:/home/mongodb
       - mongovol:/data/db
   nginx:
