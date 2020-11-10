@@ -1,23 +1,27 @@
 <template>
-  <div class="pa-8">
-    <v-data-table
-      :headers="researchesHeaders"
-      :items="researches"
-      hide-default-footer
-      style="grid-area: recent-results;"
-    ></v-data-table>
-    <v-btn
-      to="/researches/add"
-      bottom
-      fixed
-      right
-      color="primary"
-      elevation="2"
-      fab
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-  </div>
+  <v-container fill-height fluid class="pa-8 align-start">
+    <v-row>
+      <v-col cols="12">
+        <v-data-table
+          :headers="researchesHeaders"
+          :items="researches"
+          hide-default-footer
+          style="grid-area: recent-results;"
+        ></v-data-table>
+        <v-btn
+          to="/researches/add"
+          bottom
+          fixed
+          right
+          color="primary"
+          elevation="2"
+          fab
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

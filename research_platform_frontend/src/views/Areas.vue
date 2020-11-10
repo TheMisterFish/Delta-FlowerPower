@@ -1,17 +1,29 @@
 <template>
-  <div class="pa-8">
-    <v-data-table
-      :headers="areasHeaders"
-      :items="areas"
-      hide-default-footer
-      class="area-table"
-      @click:row="openArea"
-    >
-    </v-data-table>
-    <v-btn to="/areas/add" bottom fixed right color="primary" elevation="2" fab>
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-  </div>
+  <v-container fill-height fluid class="pa-8 align-start">
+    <v-row>
+      <v-col cols="12">
+        <v-data-table
+          :headers="areasHeaders"
+          :items="areas"
+          hide-default-footer
+          class="area-table"
+          @click:row="openArea"
+        >
+        </v-data-table>
+        <v-btn
+          to="/areas/add"
+          bottom
+          fixed
+          right
+          color="primary"
+          elevation="2"
+          fab
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -32,8 +44,8 @@ export default {
   methods: {
     openArea(value) {
       console.log(value);
-    }
-  }
+    },
+  },
 };
 </script>
 

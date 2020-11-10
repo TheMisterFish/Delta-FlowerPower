@@ -3,16 +3,8 @@ import VueRouter from "vue-router";
 import { decodeJWT, isAuthenticated } from "./auth.js";
 import { routes } from './routes.js'
 import store from '../store/index.js'
-import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.use(VueRouter);
-
-Vue.use(VueGoogleMaps, {
-    load: {
-        key: "AIzaSyBc2Pf6i6qNU934cChcEozdBmyFaIvwjSA",
-        libraries: "drawing"
-    }
-});
 
 const router = new VueRouter({
     routes,

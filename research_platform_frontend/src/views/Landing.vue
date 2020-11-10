@@ -1,9 +1,15 @@
 <template>
-  <v-main id="landing">
+  <div id="landing">
     <v-form id="login-form">
       <h1 class="text-h4">Flower Power</h1>
-      <v-text-field v-model="email" label="Email" required></v-text-field>
       <v-text-field
+        class="input"
+        v-model="email"
+        label="Email"
+        required
+      ></v-text-field>
+      <v-text-field
+        class="input"
         type="password"
         v-model="password"
         label="Password"
@@ -21,7 +27,7 @@
         Voer uw gegevens in
       </button>
     </v-form>
-  </v-main>
+  </div>
 </template>
 
 <script>
@@ -42,7 +48,10 @@ export default {
           this.$router.push("dashboard");
         })
         .catch(() => {
-          this.$store.dispatch("showSnackbar", "Onjuist e-mailadres of wachtwoord");
+          this.$store.dispatch(
+            "showSnackbar",
+            "Onjuist e-mailadres of wachtwoord"
+          );
         });
     },
   },
@@ -83,6 +92,10 @@ export default {
 
 #landing #login-form h1 {
   margin: 25px 0px;
+}
+
+#landing #login-form .input {
+  width: 55%;
 }
 
 #landing #login-form .submit {
