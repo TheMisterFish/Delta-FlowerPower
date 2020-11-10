@@ -24,11 +24,6 @@ pipeline {
     // Generate empty .env file so we can use our own
     stage("Touch .env file") {
       steps {
-        echo 'test...' + env.BRANCH_NAME
-        echo 'test.......'+ env.FULL_PATH_BRANCH
-
-        echo env
-
         writeFile file: '.env', text: ''
       }
     }
@@ -84,11 +79,16 @@ pipeline {
   }
   post { 
       always {
-        sh "docker logs fp_nginx"
-        sh "docker logs fp_mongodb"
-        sh "docker logs fp_nestjs"
+        script {
+          echo env.BROADCAST
+          if(env.BROADCAST == true){
+            sh "docker logs fp_nginx"
+            sh "docker logs fp_mongodb"
+            sh "docker logs fp_nestjs"
 
-        echo currentBuild.currentResult
+            echo currentBuild.currentResult
+          }
+        }
       }
       success {
         script {
