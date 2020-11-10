@@ -2,7 +2,6 @@ pipeline {
   agent any
 
   tools { nodejs "Jenkins_NodeJS" }
-  
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
@@ -63,6 +62,7 @@ pipeline {
       stage('Build test') {
         steps {
           script {
+            echo "Current branch: " env.BRANCH_NAME
             if (env.BRANCH_NAME=='master'){
               echo 'Deploying....'
               sh "docker-compose down"
@@ -79,11 +79,16 @@ pipeline {
   }
   post { 
       always {
-        sh "docker logs fp_nginx"
-        sh "docker logs fp_mongodb"
-        sh "docker logs fp_nestjs"
+        script {
+          echo env.BROADCAST
+          if(env.BROADCAST == true){
+            sh "docker logs fp_nginx"
+            sh "docker logs fp_mongodb"
+            sh "docker logs fp_nestjs"
 
-        echo currentBuild.currentResult
+            echo currentBuild.currentResult
+          }
+        }
       }
       success {
         script {
