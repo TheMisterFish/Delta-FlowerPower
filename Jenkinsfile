@@ -1,7 +1,7 @@
 pipeline {
   agent any
 
-  tools {nodejs "nodejs"}
+  tools {nodejs "Jenkins_NodeJS"}
   
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
