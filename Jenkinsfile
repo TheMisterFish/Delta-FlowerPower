@@ -8,10 +8,6 @@ pipeline {
     }
 
   stages {
-    stage('Checkout') {
-      checkout scm
-    }
-
     stage('Test node') {
       steps { 
         echo 'Testing.. 1'
