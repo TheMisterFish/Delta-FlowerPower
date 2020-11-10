@@ -1,5 +1,12 @@
 pipeline {
   agent any
+
+  environment {
+      DIS_DESC = "Jenkins Pipeline Build for Flower Power"
+      DIS_FOOT = "(Build number " + env.BUILD_NUMBER +")"
+      DIS_TITL = JOB_NAME + " - " + env.BUILD_NUMBER
+    }
+
   stages {
     stage('Build') {
       steps {
@@ -14,12 +21,10 @@ pipeline {
     }
 
     stage('Deploy') {
-      _discord.description = "Jenkins Pipeline Build for Flower Power"
-      _discord.footer = "(Build number " + env.BUILD_NUMBER +")"
-      _discord.title = JOB_NAME + " - " + env.BUILD_NUMBER
+      
       steps {
         echo 'Deploying....'
-        discordSend description: _discord.description, footer: _discord.footer, link: env.BUILD_URL, result: currentBuild.currentResult, title: _discord.title, webhookURL: env.WEBHOOK_URL
+        discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
         echo 'Discord?'
       }
     }
