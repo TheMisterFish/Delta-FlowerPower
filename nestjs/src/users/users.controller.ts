@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { Controller, Get, Post, Body, Put, Param, Delete, Request, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import { CreateUserDto, UpdatePassword, UpdateUserDto } from './dto';
 import { User } from './users.model';
 import { UsersService } from './users.service';
 
@@ -15,18 +15,26 @@ export class UsersController {
   @HasRoles('admin')
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+    return await this.usersService.create(createUserDto).catch(err => {
+      throw new HttpException({
+        message: err.message
+      }, HttpStatus.BAD_REQUEST);
+    });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @HasRoles('moderator')
   @Get()
   async findAll(): Promise<User[]> {
-      return await this.usersService.findAll();
+      return await this.usersService.findAll().catch(err => {
+        throw new HttpException({
+          message: err.message
+        }, HttpStatus.BAD_REQUEST);
+      });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('guest')
+  @HasRoles('moderator')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<User> {
     return await this.usersService.findOne(id).catch(err => {
@@ -39,7 +47,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('guest')
+  @HasRoles('moderator')
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.update(id, updateUserDto).catch(err => {
@@ -58,6 +66,18 @@ export class UsersController {
     return await this.usersService.deleteOne(id).catch(err => {
       if (err.name === 'CastError')
         err.message = "Could not remove " + id;
+      throw new HttpException({
+        message: err.message
+      }, HttpStatus.BAD_REQUEST);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/change_password')
+  async changePassword(@Request() req, @Body() updatePasswordDto: UpdatePassword) {
+    return await this.usersService.changePassword(req.user, updatePasswordDto).catch(err => {
+      if (err.name === 'CastError')
+        err.message = "Could not update password";
       throw new HttpException({
         message: err.message
       }, HttpStatus.BAD_REQUEST);
