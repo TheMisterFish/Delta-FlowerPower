@@ -23,6 +23,7 @@
           <v-col cols="12">
             <v-textarea
               filled
+              v-model="description"
               label="Description"
               auto-grow
               background-color="white"
@@ -49,12 +50,14 @@ export default {
   },
   data: () => ({
     name: "",
+    description: "",
   }),
   methods: {
     addArea() {
-      const name = "new area!";
-      const description = "new description ;)";
-      const made_by = "ME!";
+      const name = this.name;
+      const description = this.description;
+
+      //For now this is hardcoded but we are going to fix this!
       const lat_long_point_one = "5.469722, 51.441643";
       const lat_long_point_two = "5.469722, 51.441643";
 
@@ -62,12 +65,11 @@ export default {
         .dispatch("addArea", {
           name: name,
           description: description,
-          made_by: made_by,
           lat_long_point_one: lat_long_point_one,
           lat_long_point_two: lat_long_point_two,
         })
         .then(() => {
-          console.log("fetched!");
+          console.log("added area!");
           this.$router.push({name: "areas"});
         })
         .catch((error) => {

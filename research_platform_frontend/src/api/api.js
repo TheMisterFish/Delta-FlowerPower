@@ -14,3 +14,10 @@ export async function addArea(area) {
         data: area
     })
 }
+
+export async function deleteArea(_id) {
+    return Axios({
+        url: `http://localhost:7080/locations/${_id}`,
+        method: "DELETE",
+    })
+}

@@ -1,5 +1,5 @@
 <template>
-  <v-app :style="{background: $vuetify.theme.themes[theme].background}">
+  <v-app :style="{ background: $vuetify.theme.themes[theme].background }">
     <Appbar
       @open-drawer="openDrawer"
       @navigate-back="navigateBack"
@@ -64,7 +64,17 @@ export default {
     },
     navigateBack() {
       router.go(-1);
-    }
+    },
+  },
+  created: function() {
+    this.$store
+      .dispatch("getAreas")
+      .then(() => {
+        console.log("fetched!");
+      })
+      .catch(() => {
+        console.log("error :-(");
+      });
   },
 };
 </script>

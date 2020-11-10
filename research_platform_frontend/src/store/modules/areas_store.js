@@ -1,5 +1,5 @@
-import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR } from "../mutation_types";
-import { getAreas, addArea } from "../../api/api.js"
+import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR } from "../mutation_types";
+import { getAreas, addArea, deleteArea } from "../../api/api.js"
 
 export const areas_store = {
     state: {
@@ -29,6 +29,16 @@ export const areas_store = {
         [ADD_AREA_ERROR](state) {
             state.status = "error";
         },
+        [DELETE_AREA](state) {
+            state.status = "loading";
+        },
+        [DELETE_AREA_SUCCESS](state, _id) {
+            state.status = "success";
+            state.areas = state.areas.filter(area => area._id != _id);
+        },
+        [DELETE_AREA_ERROR](state) {
+            state.status = "error";
+        }
     },
     actions: {
         getAreas({ commit }) {
@@ -51,6 +61,19 @@ export const areas_store = {
                 addArea(area).then((response) => {
                     commit(ADD_AREA_SUCCESS, response.data);
                     resolve(response);
+                }).catch((error) => {
+                    commit(ADD_AREA_ERROR);
+                    reject(error);
+                })
+            })
+        },
+
+        deleteArea({ commit }, _id) {
+            commit(DELETE_AREA);
+            return new Promise((resolve, reject) => {
+                deleteArea(_id).then((response) => {
+                    commit(DELETE_AREA_SUCCESS);
+                    resolve(response, _id);
                 }).catch((error) => {
                     commit(ADD_AREA_ERROR);
                     reject(error);

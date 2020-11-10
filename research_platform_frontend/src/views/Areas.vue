@@ -14,7 +14,7 @@
         </template>
 
         <template v-slot:[`item.updated_at`]="{item}">
-          <span>{{new Date(item.updated_at).toDateString()}}</span>
+          <span>{{item.updated_at ? new Date(item.updated_at).toDateString() : ""}}</span>
         </template>
         </v-data-table>
         <v-btn
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     openArea(value) {
-      const areaId = value.id;
+      const areaId = value._id;
       const areaName = value.area;
       this.$router.push({
         name: "areas/:id",
