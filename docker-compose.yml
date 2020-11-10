@@ -14,11 +14,11 @@ services:
     env_file:
       - .env
     environment:
-      PORT: $NESTJS_PORT
-      DEBUG_MODE: $NESTJS_DEBUG_MODE
-      NODE_ENV: $NESTJS_NODE_ENV
-      MONGO_CONNECTION_STRING_DEBUG: $NESTJS_MONGO_CONNECTION_STRING_DEBUG
-      MONGO_CONNECTION_STRING_PROD: $NESTJS_MONGO_CONNECTION_STRING_PROD
+      PORT: ${NESTJS_PORT}
+      DEBUG_MODE: ${NESTJS_DEBUG_MODE}
+      NODE_ENV: ${NESTJS_NODE_ENV}
+      MONGO_CONNECTION_STRING_DEBUG: ${NESTJS_MONGO_CONNECTION_STRING_DEBUG}
+      MONGO_CONNECTION_STRING_PROD: ${NESTJS_MONGO_CONNECTION_STRING_PROD}
     depends_on:
       - db
     networks:
@@ -29,7 +29,8 @@ services:
       - ./src:/usr/app/
   # MongoDB
   db:
-    image: mongo:latest
+    build:
+      context: ./mongodb
     env_file:
       - .env
     container_name: "fp_mongodb"
@@ -37,20 +38,14 @@ services:
       - flowerpower_bridge
     command: mongod --auth --port 27018
     environment:
-      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: flowerpower
-      MONGO_DATABASE_USERNAME: $MONGO_USERNAME
-      MONGO_DATABASE_PASSWORD: $MONGO_PASSWORD
-      INITIAL_PASSWORD: $INITIAL_PASSWORD
+      INITIAL_PASSWORD: ${INITIAL_PASSWORD}
     ports:
       - 27018:27018
     volumes:
-      - ./home/mongodb:/home/mongodb
-      - ./mongodb:/docker-entrypoint-initdb.d
-      - ./data/db:/data/db
-      # - /home/mongodb
-      # - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - ./mongodb/home:/home/mongodb
   nginx:
     container_name: "fp_nginx"
     build:
