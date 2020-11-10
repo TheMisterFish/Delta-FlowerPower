@@ -9,6 +9,12 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 import { TypegooseModule } from "nestjs-typegoose";
+import { SessionsController } from './sessions/sessions.controller';
+import { SessionsModule } from './sessions/sessions.module';
+import { AimodelsController } from './aimodels/aimodels.controller';
+import { AimodelsModule } from './aimodels/aimodels.module';
+import { LocationsController } from './locations/locations.controller';
+import { LocationsModule } from './locations/locations.module';
 
 @Module({
   imports: [
@@ -16,12 +22,13 @@ import { TypegooseModule } from "nestjs-typegoose";
     TypegooseModule.forRoot((process.env.DEBUG_MODE === 'true' ? process.env.MONGO_CONNECTION_STRING_DEBUG : process.env.MONGO_CONNECTION_STRING_PROD), {
       useCreateIndex: true,
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false 
     }),
     CommandModule,
     AuthModule, 
-    UsersModule],
-  controllers: [AppController],
+    UsersModule, SessionsModule, AimodelsModule, LocationsModule],
+  controllers: [AppController, SessionsController, AimodelsController, LocationsController],
   providers: [AppService],
 })
 
