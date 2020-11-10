@@ -8,15 +8,14 @@ pipeline {
     }
 
   stages {
-    stage('Build') {
-      steps {
-        echo 'Building..'
-      }
+    stage('Checkout') {
+      checkout scm
     }
 
-    stage('Test') {
+    stage('Test node') {
       steps { 
         echo 'Testing.. 1'
+        sh 'node -v'
       }
     }
 
