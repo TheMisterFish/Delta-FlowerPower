@@ -10,9 +10,9 @@ pipeline {
     }
 
   stages {
-    stage('Test node') {
+    stage('NestJS Test') {
       steps { 
-        echo 'Testing.. 1'
+        echo 'Testing nestjs jest'
         sh 'node -v'
         dir("nestjs") {
           sh 'npm prune'
