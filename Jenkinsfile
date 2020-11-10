@@ -22,9 +22,11 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Build test') {
       steps {
         echo 'Deploying....'
+        sh "docker-compose down"
+        sh "docker-compose up --build --force-recreate -d"
       }
     }
 
