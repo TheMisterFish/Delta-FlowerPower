@@ -7,17 +7,17 @@ pipeline {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
       DIS_TITL = "${JOB_NAME} - ${env.BUILD_NUMBER}"
-      MONGO_USERNAME = "adminx"
-      MONGO_PASSWORD = "adminx"
+      MONGO_USERNAME = "admin"
+      MONGO_PASSWORD = "admin"
       INITIAL_PASSWORD  = "somepass"
 
       NESTJS_PORT=7080
       NESTJS_DEBUG_MODE=false
       NESTJS_NODE_ENV='production'
       NESTJS_MONGO_CONNECTION_STRING_DEBUG="mongodb://localhost:27017/flowerpower"
-      NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@localhost:27018/flowerpower"
-      MY_PROJECT_NAME="fp"
-    }
+      NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@fp_mongodb:27018/flowerpower"
+  }
+  
   stages {
     stage("Touch .env file") {
       steps {
