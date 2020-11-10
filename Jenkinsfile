@@ -13,7 +13,7 @@ pipeline {
       steps { 
         echo 'Testing.. 1'
         sh 'node -v'
-        dir("folder") {
+        dir("nestjs") {
           sh 'npm prune'
           sh 'npm install'
           sh 'npm test'
