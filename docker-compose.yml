@@ -11,6 +11,14 @@ services:
     build:
       context: ./nestjs
     container_name: "fp_nestjs"
+    env_file:
+      - .env
+    environment:
+      PORT: ${NESTJS_PORT}
+      DEBUG_MODE: ${NESTJS_DEBUG_MODE}
+      NODE_ENV: ${NESTJS_NODE_ENV}
+      MONGO_CONNECTION_STRING_DEBUG: ${NESTJS_MONGO_CONNECTION_STRING_DEBUG}
+      MONGO_CONNECTION_STRING_PROD: ${NESTJS_MONGO_CONNECTION_STRING_PROD}
     depends_on:
       - db
     networks:
