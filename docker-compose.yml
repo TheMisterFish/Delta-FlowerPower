@@ -44,7 +44,7 @@ services:
     ports:
       - 27018:27018
     volumes:
-      - ./mongodb:/mongo-init.sh
+      - ./mongodb:/mongodb
       - ./mongodb/home:/home/mongodb
     command: 
       - /mongodb/mongo-init.sh
