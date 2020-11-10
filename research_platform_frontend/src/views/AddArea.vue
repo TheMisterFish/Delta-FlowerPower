@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height fluid class="pa-8 align-start">
+  <v-container fill-height class="pa-8 align-start">
     <v-row style="height: 100%;">
       <v-col cols="12" md="9">
         <v-row style="height: 100%;">
