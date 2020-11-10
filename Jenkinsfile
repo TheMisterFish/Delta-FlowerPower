@@ -14,14 +14,12 @@ pipeline {
     }
 
     stage('Deploy') {
+      _discord.description = "Jenkins Pipeline Build for Flower Power"
+      _discord.footer = "(Build number " + env.BUILD_NUMBER +")"
+      _discord.title = JOB_NAME + " - " + env.BUILD_NUMBER
       steps {
         echo 'Deploying....'
-        discordSend 
-          description: "Jenkins Pipeline Build for Flower Power", 
-          footer: "(Build number " + env.BUILD_NUMBER +")", 
-          link: env.BUILD_URL, result: currentBuild.currentResult, 
-          title: JOB_NAME + " - " + env.BUILD_NUMBER , 
-          webhookURL: env.WEBHOOK_URL
+        discordSend description: _discord.description, footer: _discord.footer, link: env.BUILD_URL, result: currentBuild.currentResult, title: _discord.title, webhookURL: env.WEBHOOK_URL
         echo 'Discord?'
       }
     }
