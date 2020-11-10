@@ -41,8 +41,11 @@ pipeline {
       steps {
         echo 'Deploying....'
         sh "docker-compose down"
+        sh "docker container prune -f"
+        sh "docker volume prune -f"
         sh "docker-compose up --build --force-recreate -d"
         sh "docker ps -a"
+        sh "docker logs fp_mongodb"
       }
     }
 
