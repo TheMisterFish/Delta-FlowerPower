@@ -62,15 +62,6 @@ export const routes = [{
                 },
             },
             {
-                path: ":id",
-                name: "areas/:id",
-                component: () =>
-                    import ("../views/Area.vue"),
-                meta: {
-                    title: "Areas",
-                },
-            },
-            {
                 path: "add",
                 name: "areas/add",
                 component: () =>
@@ -79,7 +70,16 @@ export const routes = [{
                     title: "Add area",
                     action: true
                 }
-            }
+            },
+            {
+                path: ":id",
+                name: "areas/:id",
+                component: () =>
+                    import ("../views/Area.vue"),
+                meta: {
+                    title: "Areas",
+                },
+            },
         ]
     },
     {

@@ -31,7 +31,7 @@
           </v-col>
 
           <v-col cols="3">
-            <v-btn color="primary">Add Area</v-btn>
+            <v-btn @click="addArea" color="primary">Add Area</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -50,5 +50,30 @@ export default {
   data: () => ({
     name: "",
   }),
+  methods: {
+    addArea() {
+      const name = "new area!";
+      const description = "new description ;)";
+      const made_by = "ME!";
+      const lat_long_point_one = "5.469722, 51.441643";
+      const lat_long_point_two = "5.469722, 51.441643";
+
+      this.$store
+        .dispatch("addArea", {
+          name: name,
+          description: description,
+          made_by: made_by,
+          lat_long_point_one: lat_long_point_one,
+          lat_long_point_two: lat_long_point_two,
+        })
+        .then(() => {
+          console.log("fetched!");
+          this.$router.push({name: "areas"});
+        })
+        .catch((error) => {
+          console.log("error :-(", error);
+        });
+    },
+  },
 };
 </script>
