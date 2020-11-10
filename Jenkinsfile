@@ -59,5 +59,4 @@ pipeline {
       unsuccessful { 
         discordSend description: env.DIS_DESC + "- FAILED", footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
       }
-    }
 }
