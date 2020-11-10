@@ -17,19 +17,11 @@ export class LocationsDto {
 
   @IsNotEmpty()
   @IsLatLong()
-  longitude_point_one: number;
+  lat_long_point_one: string;
 
   @IsNotEmpty()
   @IsLatLong()
-  latitude_point_one: number;
-
-  @IsNotEmpty()
-  @IsLatLong()
-  longitude_point_two: number;
-
-  @IsNotEmpty()
-  @IsLatLong()
-  latitude_point_two: number;
+  lat_long_point_two: string;
 
   @IsDate()
   created_at: Date;
