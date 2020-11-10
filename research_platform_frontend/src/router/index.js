@@ -11,9 +11,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.params.title) {
-        store.state.title.title = to.params.title;
-    }
+    store.state.title.title = to.params.title || to.meta.title;
+    document.title = to.params.title || to.meta.title || "Flower Power";
 
     store.state.authentication.isAuthenticated = isAuthenticated();
 

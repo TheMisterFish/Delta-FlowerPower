@@ -55,7 +55,6 @@ export default {
     $route(to) {
       this.toggleDrawer = to.meta.drawer;
       this.actionPage = to.meta.action;
-      document.title = to.meta.title || "Flower Power";
     },
   },
 
