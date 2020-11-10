@@ -41,8 +41,6 @@ pipeline {
       steps {
         echo 'Deploying....'
         sh "docker-compose down"
-        sh "docker container prune -f"
-        sh "docker volume prune -f"
         sh "docker-compose up --build --force-recreate -d"
         sh "docker ps -a"
       }
@@ -51,7 +49,9 @@ pipeline {
   }
   post { 
       always {
+        sh "docker logs fp_nginx"
         sh "docker logs fp_mongodb"
+        sh "docker logs fp_nestjs"
       }
       success { 
         discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
