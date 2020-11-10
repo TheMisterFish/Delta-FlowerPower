@@ -7,6 +7,7 @@ pipeline {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
       DIS_TITL = "${JOB_NAME} - ${env.BUILD_NUMBER}"
+      
       MONGO_USERNAME = "admin"
       MONGO_PASSWORD = "admin"
       INITIAL_PASSWORD  = "somepass"
