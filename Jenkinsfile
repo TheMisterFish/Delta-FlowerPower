@@ -3,8 +3,6 @@ pipeline {
 
   tools { nodejs "Jenkins_NodeJS" }
   
-  def broadcast = false
-
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
@@ -19,6 +17,8 @@ pipeline {
       NESTJS_NODE_ENV='production'
       NESTJS_MONGO_CONNECTION_STRING_DEBUG="mongodb://localhost:27017/flowerpower"
       NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@fp_mongodb:27018/flowerpower"
+
+      BROADCAST = false
   }
   
   stages {
@@ -59,14 +59,19 @@ pipeline {
     }
     */
     // Build & Deploy using docker compose
-    if (env.BRANCH_NAME=='master'){
+    
       stage('Build test') {
         steps {
-          echo 'Deploying....'
-          sh "docker-compose down"
-          sh "docker-compose up --build --force-recreate -d"
-          sh "docker ps -a"
-          broadcast = true
+          script {
+            if (env.BRANCH_NAME=='master'){
+              echo 'Deploying....'
+              sh "docker-compose down"
+              sh "docker-compose up --build --force-recreate -d"
+              sh "docker ps -a"
+              env.BROADCAST = true
+            } else {
+              echo "Not deploying since it's not 'master' branch"
+            }
         }
       }
     }
@@ -81,12 +86,12 @@ pipeline {
         echo currentBuild.currentResult
       }
       success {
-        if(broadcast){
+        if(env.BROADCAST){
           discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
         }
       }
       unsuccessful { 
-        if(broadcast){
+        if(env.BROADCAST){
           discordSend description: env.DIS_DESC + "- FAILED", footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
         }
       }
