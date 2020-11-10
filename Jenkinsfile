@@ -44,9 +44,9 @@ pipeline {
         sh "docker container prune -f"
         sh "docker volume prune -f"
         sh "docker-compose up --build --force-recreate -d"
+        sh "docker exec fp_mongodb cat /docker-entrypoint-initdb.d/mongo-init.sh"
         sh "docker ps -a"
         sh "docker logs fp_mongodb"
-        sh "docker exec fp_mongodb cat /docker-entrypoint-initdb.d/mongo-init.sh"
       }
     }
 
