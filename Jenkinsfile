@@ -15,8 +15,9 @@ pipeline {
       NESTJS_DEBUG_MODE=false
       NESTJS_NODE_ENV='production'
       NESTJS_MONGO_CONNECTION_STRING_DEBUG="mongodb://localhost:27017/flowerpower"
-      NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@fp_mongodb:27018/flowerpower"
-    }
+      NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@localhost:27018/flowerpower"
+  }
+  
   stages {
     stage("Touch .env file") {
       steps {
