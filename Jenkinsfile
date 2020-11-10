@@ -46,6 +46,7 @@ pipeline {
         sh "docker-compose up --build --force-recreate -d"
         sh "docker ps -a"
         sh "docker logs fp_mongodb"
+        sh "docker exec fp_mongodb cat /docker-entrypoint-initdb.d/mongo-init.sh"
       }
     }
 
