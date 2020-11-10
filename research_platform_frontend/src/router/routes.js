@@ -53,7 +53,7 @@ export const routes = [{
         },
         children: [{
                 path: "",
-                name: "Areas",
+                name: "areas",
                 component: () =>
                     import ("../views/Areas.vue"),
                 meta: {
@@ -62,7 +62,17 @@ export const routes = [{
                 },
             },
             {
+                path: ":id",
+                name: "areas/:id",
+                component: () =>
+                    import ("../views/Area.vue"),
+                meta: {
+                    title: "Areas",
+                },
+            },
+            {
                 path: "add",
+                name: "areas/add",
                 component: () =>
                     import ("../views/AddArea.vue"),
                 meta: {

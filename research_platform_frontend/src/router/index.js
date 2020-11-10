@@ -11,6 +11,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    if (to.params.title) {
+        store.state.title.title = to.params.title;
+    }
+
     store.state.authentication.isAuthenticated = isAuthenticated();
 
     if (isAuthenticated()) {

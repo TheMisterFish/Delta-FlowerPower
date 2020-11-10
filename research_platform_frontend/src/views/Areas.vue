@@ -43,7 +43,8 @@ export default {
   }),
   methods: {
     openArea(value) {
-      console.log(value);
+      const areaId = value.id;
+      this.$router.push({ name: "areas/:id", params: { id: areaId, title: areaId } });
     },
   },
 };

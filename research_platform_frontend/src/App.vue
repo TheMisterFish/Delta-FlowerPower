@@ -3,7 +3,7 @@
     <Appbar
       @open-drawer="openDrawer"
       @navigate-back="navigateBack"
-      :title="title"
+      :title="title.title"
       :user="authentication.user"
       :toggleDrawer="toggleDrawer"
       :actionPage="actionPage"
@@ -40,12 +40,12 @@ export default {
     drawer: false,
     toggleDrawer: true,
     actionPage: false,
-    title: "",
   }),
 
   computed: {
     ...mapState(["snackbar"]),
     ...mapState(["authentication"]),
+    ...mapState(["title"]),
     theme() {
       return this.$vuetify.theme.dark ? "dark" : "light";
     },
@@ -55,7 +55,6 @@ export default {
     $route(to) {
       this.toggleDrawer = to.meta.drawer;
       this.actionPage = to.meta.action;
-      this.title = to.meta.title;
       document.title = to.meta.title || "Flower Power";
     },
   },
