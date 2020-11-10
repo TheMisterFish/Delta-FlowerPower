@@ -3,6 +3,8 @@ pipeline {
 
   tools { nodejs "Jenkins_NodeJS" }
   
+  def broadcast = false
+
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
@@ -20,29 +22,52 @@ pipeline {
   }
   
   stages {
+    // Generate empty .env file so we can use our own
     stage("Touch .env file") {
       steps {
         writeFile file: '.env', text: ''
       }
     }
-    stage('NestJS Test') {
+    // Run NestJS jest test
+    stage('NestJS API Test') {
       steps { 
-        echo 'Testing nestjs jest'
+        echo 'Testing NestJS API using Jest'
         sh 'node -v'
         dir("nestjs") {
-          // sh 'npm prune'
-          // sh 'npm install'
-          // sh 'npm test'
+          sh 'npm prune'
+          sh 'npm install'
+          sh 'npm test'
         }
       }
     }
-
-    stage('Build test') {
-      steps {
-        echo 'Deploying....'
-        sh "docker-compose down"
-        sh "docker-compose up --build --force-recreate -d"
-        sh "docker ps -a"
+    // Run Research Platform tests
+    /*
+    stage('Research Platform tests') {
+      steps { 
+        echo 'Testing Research Platform using ...'
+        // code
+      }
+    }
+    */
+    // Run field application tests
+    /*
+    stage('Field Application tests') {
+      steps { 
+        echo 'Testing Field Application using ...'
+        // code
+      }
+    }
+    */
+    // Build & Deploy using docker compose
+    if (env.BRANCH_NAME=='master'){
+      stage('Build test') {
+        steps {
+          echo 'Deploying....'
+          sh "docker-compose down"
+          sh "docker-compose up --build --force-recreate -d"
+          sh "docker ps -a"
+          broadcast = true
+        }
       }
     }
 
@@ -52,12 +77,18 @@ pipeline {
         sh "docker logs fp_nginx"
         sh "docker logs fp_mongodb"
         sh "docker logs fp_nestjs"
+
+        echo currentBuild.currentResult
       }
-      success { 
-        discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
+      success {
+        if(broadcast){
+          discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
+        }
       }
       unsuccessful { 
-        discordSend description: env.DIS_DESC + "- FAILED", footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
+        if(broadcast){
+          discordSend description: env.DIS_DESC + "- FAILED", footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
+        }
       }
   }
 }
