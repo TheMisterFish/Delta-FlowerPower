@@ -11,7 +11,7 @@
         >
         </v-data-table>
         <v-btn
-          to="/areas/add"
+          :to="{ name: 'areas/add' }"
           bottom
           fixed
           right
@@ -50,6 +50,16 @@ export default {
         params: { id: areaId, title: areaName },
       });
     },
+  },
+  created: function() {
+    this.$store
+      .dispatch("getAreas")
+      .then(() => {
+        console.log("fetched!");
+      })
+      .catch(() => {
+        console.log("error :-(");
+      });
   },
 };
 </script>

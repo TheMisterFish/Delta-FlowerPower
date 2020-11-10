@@ -38,7 +38,6 @@ export const authentication_store = {
                         method: "POST",
                     })
                     .then((response) => {
-                        console.log(response)
                         const token = response.data.access_token;
                         Axios.defaults.headers.common[
                             "Authorization"
