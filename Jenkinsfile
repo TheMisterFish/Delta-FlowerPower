@@ -45,12 +45,14 @@ pipeline {
         sh "docker volume prune -f"
         sh "docker-compose up --build --force-recreate -d"
         sh "docker ps -a"
-        sh "docker logs fp_mongodb"
       }
     }
 
   }
   post { 
+      always {
+        sh "docker logs fp_mongodb"
+      }
       success { 
         discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
       }
