@@ -45,7 +45,7 @@ services:
       - 27018:27018
     volumes:
       - ./mongodb:/docker-entrypoint-initdb.d
-      - ./mongodb:/home/mongodb
+      - ./mongodb/home:/home/mongodb
       - ./mongodb/data:/data/db
   nginx:
     container_name: "fp_nginx"
