@@ -44,10 +44,8 @@ services:
     ports:
       - 27018:27018
     volumes:
-      - ./mongodb:/mongodb
+      - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
       - ./mongodb/home:/home/mongodb
-    command: 
-      - /mongodb/mongo-init.sh
   nginx:
     container_name: "fp_nginx"
     build:
