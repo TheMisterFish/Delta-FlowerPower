@@ -41,7 +41,7 @@ pipeline {
       steps {
         echo 'Deploying....'
         sh "docker-compose down"
-        sh "docker image prune -all"
+        sh "docker image prune --all"
         sh "docker-compose up --build --force-recreate -d"
         sh "docker ps -a"
       }
