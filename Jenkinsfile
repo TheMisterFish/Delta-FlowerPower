@@ -63,6 +63,7 @@ pipeline {
       stage('Build test') {
         steps {
           script {
+            echo env.BRANCH_NAME
             if (env.BRANCH_NAME=='master'){
               echo 'Deploying....'
               sh "docker-compose down"
