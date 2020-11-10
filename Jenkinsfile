@@ -14,7 +14,7 @@ pipeline {
   stages {
     stage("Touch .env file") {
       steps {
-        writeFile file: '.env'
+        writeFile file: '.env', text: ''
       }
     }
     stage('NestJS Test') {
