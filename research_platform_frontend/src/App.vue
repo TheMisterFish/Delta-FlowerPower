@@ -27,7 +27,6 @@
 import Appbar from "./components/Appbar.vue";
 import Drawer from "./components/Drawer.vue";
 import { mapState } from "vuex";
-import router from "./router";
 
 export default {
   name: "App",
@@ -63,18 +62,19 @@ export default {
       this.$refs.drawer.visible = true;
     },
     navigateBack() {
-      router.go(-1);
+      console.log(this.$route);
+      this.$router.push({ name: this.$route.meta.from });
     },
   },
   created: function() {
-    this.$store
-      .dispatch("getAreas")
-      .then(() => {
-        console.log("fetched!");
-      })
-      .catch(() => {
-        console.log("error :-(");
-      });
+    // this.$store
+    //   .dispatch("getAreas")
+    //   .then(() => {
+    //     console.log("fetched!");
+    //   })
+    //   .catch(() => {
+    //     console.log("error :-(");
+    //   });
   },
 };
 </script>

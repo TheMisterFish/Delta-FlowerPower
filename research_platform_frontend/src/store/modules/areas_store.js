@@ -1,5 +1,5 @@
-import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR } from "../mutation_types";
-import { getAreas, addArea, deleteArea } from "../../api/api.js"
+import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR, GET_AREA, GET_AREA_ERROR, GET_AREA_SUCCESS } from "../mutation_types";
+import { getAreas, addArea, deleteArea, getArea } from "../../api/api.js"
 
 export const areas_store = {
     state: {
@@ -13,11 +13,24 @@ export const areas_store = {
         },
         [GET_AREAS_SUCCESS](state, areas) {
             state.status = "success";
+            console.log(areas);
             state.areas = areas;
         },
         [GET_AREAS_ERROR](state, message) {
             state.status = "error";
             state.message = message;
+        },
+        [GET_AREA](state) {
+            state.status = "loading";
+        },
+        [GET_AREA_SUCCESS](state, area) {
+            state.status = "success";
+            if (!state.areas.find((a) => a._id === area._id)) {
+                state.areas.push(area);
+            }
+        },
+        [GET_AREA_ERROR](state) {
+            state.status = "error"
         },
         [ADD_AREA](state) {
             state.status = "loading";
@@ -50,6 +63,20 @@ export const areas_store = {
                     })
                     .catch((error) => {
                         commit(GET_AREAS_ERROR);
+                        reject(error);
+                    })
+            })
+        },
+
+        getArea({ commit }, _id) {
+            commit(GET_AREA);
+            return new Promise((resolve, reject) => {
+                getArea(_id).then((response) => {
+                        commit(GET_AREA_SUCCESS, response.data);
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        commit(GET_AREA_ERROR);
                         reject(error);
                     })
             })

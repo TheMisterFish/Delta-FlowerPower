@@ -7,6 +7,13 @@ export async function getAreas() {
     })
 }
 
+export async function getArea(_id) {
+    return Axios({
+        url: `http://localhost:7080/locations/${_id}`,
+        method: "GET"
+    })
+}
+
 export async function addArea(area) {
     return Axios({
         url: "http://localhost:7080/locations",

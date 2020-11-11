@@ -20,9 +20,9 @@ router.beforeEach((to, from, next) => {
         store.state.authentication.user = decodeJWT();
     }
 
-    if (to.name === "Landing" && isAuthenticated()) {
+    if (to.name === "landing" && isAuthenticated()) {
         next({
-            name: "Dashboard"
+            name: "dashboard"
         });
     }
 
@@ -31,7 +31,7 @@ router.beforeEach((to, from, next) => {
             next();
         } else {
             next({
-                name: "Landing"
+                name: "landing"
             });
         }
     } else {

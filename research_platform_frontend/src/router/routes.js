@@ -2,7 +2,7 @@ import emptyRouteView from "../views/EmptyRouteView.vue"
 
 export const routes = [{
         path: "/",
-        name: "Landing",
+        name: "landing",
         component: () =>
             import ("../views/Landing.vue"),
         meta: {
@@ -11,7 +11,7 @@ export const routes = [{
     },
     {
         path: "/dashboard",
-        name: "Dashboard",
+        name: "dashboard",
         component: () =>
             import ("../views/Dashboard.vue"),
         meta: {
@@ -28,7 +28,7 @@ export const routes = [{
         },
         children: [{
             path: "",
-            name: "Researches",
+            name: "researches",
             component: () =>
                 import ("../views/Researches.vue"),
             meta: {
@@ -41,7 +41,8 @@ export const routes = [{
                 import ("../views/AddResearch.vue"),
             meta: {
                 title: "Add research",
-                action: true
+                action: true,
+                from: "researches"
             }
         }]
     },
@@ -55,7 +56,7 @@ export const routes = [{
                 path: "",
                 name: "areas",
                 component: () =>
-                    import ("../views/Areas.vue"),
+                    import ("@/views/Areas/Areas.vue"),
                 meta: {
                     title: "Areas",
                     drawer: true
@@ -65,26 +66,43 @@ export const routes = [{
                 path: "add",
                 name: "areas/add",
                 component: () =>
-                    import ("../views/AddArea.vue"),
+                    import ("@/views/Areas/AddArea.vue"),
                 meta: {
                     title: "Add area",
-                    action: true
+                    action: true,
+                    from: "areas"
                 }
             },
             {
                 path: ":id",
-                name: "areas/:id",
-                component: () =>
-                    import ("../views/Area.vue"),
-                meta: {
-                    title: "Areas",
-                },
+                component: emptyRouteView,
+                children: [{
+                        path: "",
+                        name: "areas/:id",
+                        component: () =>
+                            import ("@/views/Areas/Area.vue"),
+                        meta: {
+                            title: "View Area",
+                            from: "areas"
+                        }
+                    },
+                    {
+                        path: "edit",
+                        name: "areas/:id/edit",
+                        component: () =>
+                            import ("@/views/Areas/EditArea.vue"),
+                        meta: {
+                            title: "Edit Area",
+                            from: "areas/:id"
+                        }
+                    }
+                ]
             },
         ]
     },
     {
         path: "/users",
-        name: "Users",
+        name: "users",
         component: () =>
             import ("../views/Users.vue"),
         meta: {
@@ -95,20 +113,20 @@ export const routes = [{
     },
     {
         path: "/logout",
-        name: "Logout",
+        name: "logout",
         component: () =>
             import ("../views/Logout.vue")
     },
     {
         path: "/account",
-        name: "Account",
+        name: "account",
         component: () =>
             import ("../views/Account.vue")
     },
     {
         path: "*",
         redirect: "/",
-        name: "Landing",
+        name: "landing",
         component: () =>
             import ("../views/Landing.vue"),
     },
