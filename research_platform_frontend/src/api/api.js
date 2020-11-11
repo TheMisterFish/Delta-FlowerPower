@@ -28,3 +28,11 @@ export async function deleteArea(_id) {
         method: "DELETE",
     })
 }
+
+export async function updateArea(_id, area) {
+    return Axios({
+        url: `http://localhost:7080/locations/${_id}`,
+        data: area,
+        method: "PUT"
+    })
+}

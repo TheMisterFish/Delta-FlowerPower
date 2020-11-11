@@ -1,5 +1,5 @@
-import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR, GET_AREA, GET_AREA_ERROR, GET_AREA_SUCCESS } from "../mutation_types";
-import { getAreas, addArea, deleteArea, getArea } from "../../api/api.js"
+import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR, GET_AREA, GET_AREA_ERROR, GET_AREA_SUCCESS, UPDATE_AREA, UPDATE_AREA_SUCCESS, UPDATE_AREA_ERROR } from "../mutation_types";
+import { getAreas, addArea, deleteArea, getArea, updateArea } from "../../api/api.js"
 
 export const areas_store = {
     state: {
@@ -50,6 +50,17 @@ export const areas_store = {
             state.areas = state.areas.filter(area => area._id != _id);
         },
         [DELETE_AREA_ERROR](state) {
+            state.status = "error";
+        },
+        [UPDATE_AREA](state) {
+            state.status = "loading";
+        },
+        [UPDATE_AREA_SUCCESS](state, area) {
+            state.status = "success";
+            state.areas = state.areas.filter(a => a._id !== area._id);
+            state.areas.push(area);
+        },
+        [UPDATE_AREA_ERROR](state) {
             state.status = "error";
         }
     },
@@ -106,7 +117,22 @@ export const areas_store = {
                     reject(error);
                 })
             })
+        },
+
+        updateArea({ commit }, payload) {
+            console.log(payload);
+            commit(UPDATE_AREA);
+            return new Promise((resolve, reject) => {
+                updateArea(payload._id, payload.area).then((response) => {
+                    commit(UPDATE_AREA_SUCCESS, response.data);
+                    resolve(response);
+                }).catch((error) => {
+                    commit(UPDATE_AREA_ERROR);
+                    reject(error);
+                })
+            })
         }
+
     },
     modules: {},
 }

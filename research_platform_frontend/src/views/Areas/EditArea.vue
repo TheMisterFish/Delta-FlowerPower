@@ -21,7 +21,7 @@
             <v-btn @click="cancel" text color="error">
               Cancel
             </v-btn>
-            <v-btn color="primary">Save</v-btn>
+            <v-btn @click="save" color="primary">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -53,6 +53,25 @@ export default {
         name: "areas/:id",
         params: { id: this._id, title: name },
       });
+    },
+    save() {
+      this.$store
+        .dispatch("updateArea", {
+          _id: this._id,
+          area: {
+            name: this.name,
+            description: this.description,
+          },
+        })
+        .then(() => {
+          this.$router.push({
+            name: "areas/:id",
+            params: { id: this._id, title: name },
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   created: function() {
