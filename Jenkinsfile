@@ -25,6 +25,20 @@ pipeline {
         writeFile file: '.env', text: ''
       }
     }
+    // Run field application tests
+    stage('Buid Field Application - Python') {
+      steps { 
+        script {
+          withPythonEnv('System-CPython-3'){
+            echo 'Testing Field Application using ...'
+            dir("field_application") {
+              sh "python -V"
+              sh "npm run make_build"
+            }
+          }
+        }
+      }      
+    }
     // Run NestJS jest test
     stage('NestJS API Test') {
       steps { 
@@ -46,19 +60,6 @@ pipeline {
       }
     }
     */
-    // Run field application tests
-    stage('Buid Field Application - Python') {
-      steps { 
-        script {
-          withPythonEnv('System-CPython-3'){
-            echo 'Testing Field Application using ...'
-            dir("field_application/pycalc") {
-              sh "python -V"
-            }
-          }
-        }
-      }      
-    }
     // Build & Deploy using docker compose
     
       stage('Build test') {
