@@ -48,14 +48,16 @@ pipeline {
     */
     // Run field application tests
     stage('Buid Field Application - Python') {
-      agent { docker { image 'python:3.5.1' } }
-      steps { 
-        echo 'Testing Field Application using ...'
-        dir("field_application/pycalc") {
-          sh "python -V"
-          sh "python3 -V"
+      withPythonEnv('System-CPython-3'){
+        steps { 
+          echo 'Testing Field Application using ...'
+          dir("field_application/pycalc") {
+            sh "python -V"
+            sh "python3 -V"
+          }
         }
       }
+      
     }
     // Build & Deploy using docker compose
     
