@@ -31,14 +31,15 @@ pipeline {
         script {
           withPythonEnv('System-CPython-3'){
             echo 'Installing python requirements'
+            wine  "--version"
             dir("field_application/pycalc") {
-              sh "python -V"
-              sh "python3 -V"
-              sh "pip3 install -r requirements.txt"
+              // sh "python -V"
+              // sh "python3 -V"
+              // sh "pip3 install -r requirements.txst"
             }
             echo 'Building field application'
             dir("field_application") {
-              sh 'pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist'
+              // sh 'pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist'
             }
           }   
         }
@@ -47,12 +48,12 @@ pipeline {
     stage('Buid Field Application - Electron') {
       steps { 
         dir("field_application") {
-          sh 'npm prune'
-          sh 'npm install'
-          sh 'npm run rebuild_electron'
-          sh "npm run electron_build"
-          sh "ls"
-          sh "ls ./release-builds"
+          // sh 'npm prune'
+          // sh 'npm install'
+          // sh 'npm run rebuild_electron'
+          // sh "npm run electron_build"
+          // sh "ls"
+          // sh "ls ./release-builds"
         }
       }      
     }
