@@ -1,7 +1,7 @@
 pipeline {
   agent any
 
-  tools { nodejs "Jenkins_NodeJS", python "System-CPython-3" }
+  tools { nodejs "Jenkins_NodeJS" }
   environment {
       DIS_DESC = "Jenkins Pipeline Build for Flower Power"
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
@@ -48,6 +48,7 @@ pipeline {
     */
     // Run field application tests
     stage('Buid Field Application - Python') {
+      agent { docker { image 'python:3.5.1' } }
       steps { 
         echo 'Testing Field Application using ...'
         dir("field_application/pycalc") {
