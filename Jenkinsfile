@@ -31,9 +31,9 @@ pipeline {
         echo 'Testing NestJS API using Jest'
         sh 'node -v'
         dir("nestjs") {
-          sh 'npm prune'
-          sh 'npm install'
-          sh 'npm test'
+          // sh 'npm prune'
+          // sh 'npm install'
+          // sh 'npm test'
         }
       }
     }
