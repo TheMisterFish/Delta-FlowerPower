@@ -33,15 +33,13 @@ pipeline {
             echo 'Installing python requirements'
             dir("field_application/pycalc") {
               sh "python -V"
-              sh "pip3 -V"
-
-              // sh "pip3 install -r requirements.txt"
+              sh "pip3 install -r requirements.txt"
             }
             echo 'Building field application'
             dir("field_application") {
-              // sh 'npm prune'
-              // sh 'npm install'
-              // sh "npm run make_build"
+              sh 'npm prune'
+              sh 'npm install'
+              sh "npm run make_build"
             }
           }
         }
