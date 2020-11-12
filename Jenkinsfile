@@ -32,6 +32,8 @@ pipeline {
           withPythonEnv('System-CPython-3'){
             echo 'Testing Field Application using ...'
             dir("field_application") {
+              sh 'npm prune'
+              sh 'npm install'
               sh "python -V"
               sh "npm run make_build"
             }
