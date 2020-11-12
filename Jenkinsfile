@@ -7,9 +7,9 @@ pipeline {
       DIS_FOOT = "(Build number ${env.BUILD_NUMBER})"
       DIS_TITL = "${JOB_NAME} - ${env.BUILD_NUMBER}"
 
-      MONGO_USERNAME = "admin"
-      MONGO_PASSWORD = "adminpassword"
-      INITIAL_PASSWORD  = "adminpasswordflowerpower"
+      MONGO_USERNAME = env.FLOWERPOWER_MONGO_USERNAME
+      MONGO_PASSWORD = env.FLOWERPOWER_MONGO_PASSWORD
+      INITIAL_PASSWORD  = env.FLOWERPOWER_INITIAL_PASSWORD
 
       NESTJS_PORT=7080
       NESTJS_DEBUG_MODE=false
@@ -31,9 +31,9 @@ pipeline {
         echo 'Testing NestJS API using Jest'
         sh 'node -v'
         dir("nestjs") {
-          // sh 'npm prune'
-          // sh 'npm install'
-          // sh 'npm test'
+          sh 'npm prune'
+          sh 'npm install'
+          sh 'npm test'
         }
       }
     }
