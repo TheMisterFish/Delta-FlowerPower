@@ -49,7 +49,10 @@ pipeline {
         dir("field_application") {
           sh 'npm prune'
           sh 'npm install'
-          sh "npm run make_build"
+          sh 'npm run rebuild_electron'
+          sh "npm run electron_build"
+          sh "ls"
+          sh "ls ./release-builds"
         }
       }      
     }
