@@ -30,12 +30,16 @@ pipeline {
       steps { 
         script {
           withPythonEnv('System-CPython-3'){
-            echo 'Testing Field Application using ...'
-            dir("field_application") {
-              sh 'npm prune'
-              sh 'npm install'
+            echo 'Installing python requirements'
+            dir("field_application/pycalc") {
               sh "python -V"
-              sh "npm run make_build"
+              sh "pip -V"
+            }
+            echo 'Building field application'
+            dir("field_application") {
+              // sh 'npm prune'
+              // sh 'npm install'
+              // sh "npm run make_build"
             }
           }
         }
