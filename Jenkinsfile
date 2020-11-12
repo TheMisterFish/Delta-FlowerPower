@@ -31,7 +31,11 @@ pipeline {
         script {
           withPythonEnv('System-CPython-3'){
             echo 'Installing python requirements'
-            wine  "--version"
+            // wine  "--version"
+            sh "ls"
+            sh "ls .."
+            sh "ls ../.."
+            sh "ls ../../.."
             dir("field_application/pycalc") {
               // sh "python -V"
               // sh "python3 -V"
@@ -45,18 +49,18 @@ pipeline {
         }
       }   
     }
-    stage('Buid Field Application - Electron') {
-      steps { 
-        dir("field_application") {
-          // sh 'npm prune'
-          // sh 'npm install'
-          // sh 'npm run rebuild_electron'
-          // sh "npm run electron_build"
-          // sh "ls"
-          // sh "ls ./release-builds"
-        }
-      }      
-    }
+    // stage('Buid Field Application - Electron') {
+    //   steps { 
+    //     dir("field_application") {
+    //       // sh 'npm prune'
+    //       // sh 'npm install'
+    //       // sh 'npm run rebuild_electron'
+    //       // sh "npm run electron_build"
+    //       // sh "ls"
+    //       // sh "ls ./release-builds"
+    //     }
+    //   }      
+    // }
     
     // Run NestJS jest test
     stage('NestJS API Test') {
