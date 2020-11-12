@@ -48,12 +48,15 @@ pipeline {
     */
     // Run field application tests
     stage('Buid Field Application - Python') {
-      withPythonEnv('System-CPython-3'){
         steps { 
-          echo 'Testing Field Application using ...'
-          dir("field_application/pycalc") {
-            sh "python -V"
-            sh "python3 -V"
+          script {
+            withPythonEnv('System-CPython-3'){
+              echo 'Testing Field Application using ...'
+              dir("field_application/pycalc") {
+                sh "python -V"
+                sh "python3 -V"
+              }
+            }
           }
         }
       }
