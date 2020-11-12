@@ -52,9 +52,7 @@ pipeline {
         echo 'Testing Field Application using ...'
         dir("field_application/pycalc") {
           sh "python -V"
-          sh "pip -V"
           sh "python3 -V"
-          sh "pip3 -V"
         }
       }
     }
