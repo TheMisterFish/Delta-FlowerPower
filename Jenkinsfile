@@ -47,14 +47,14 @@ pipeline {
     }
     */
     // Run field application tests
-    /*
-    stage('Field Application tests') {
+    stage('Buid Field Application - Python') {
       steps { 
         echo 'Testing Field Application using ...'
-        // code
+        dir("field_application/pycalc") {
+          sh "python -V"
+        }
       }
     }
-    */
     // Build & Deploy using docker compose
     
       stage('Build test') {
