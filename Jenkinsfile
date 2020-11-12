@@ -27,19 +27,22 @@ pipeline {
     }
     // Run field application tests
     stage('Buid Field Application - Python') {
-      agent { docker { image 'python:3.8.5' } }
       steps { 
-        echo 'Installing python requirements'
-        dir("field_application/pycalc") {
-          sh "python -V"
-          sh "python3 -V"
-          sh "pip3 install -r requirements.txt"
+        script {
+          withPythonEnv('System-CPython-3'){
+            echo 'Installing python requirements'
+            dir("field_application/pycalc") {
+              sh "python -V"
+              sh "python3 -V"
+              sh "pip3 install -r requirements.txt"
+            }
+            echo 'Building field application'
+            dir("field_application") {
+              sh 'pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist'
+            }
+          }   
         }
-        echo 'Building field application'
-        dir("field_application") {
-          sh 'pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist'
-        }
-      }      
+      }   
     }
     stage('Buid Field Application - Electron') {
       steps { 
