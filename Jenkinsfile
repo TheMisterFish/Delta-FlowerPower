@@ -41,9 +41,8 @@ pipeline {
         }
       }      
     }
-    stage('Buid Field Application - Python') {
+    stage('Buid Field Application - Electron') {
       steps { 
-        echo 'Installing python requirements'
         dir("field_application") {
           sh 'npm prune'
           sh 'npm install'
