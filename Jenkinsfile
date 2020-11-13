@@ -38,9 +38,9 @@ pipeline {
           sh 'apt-get install -y wine'
           sh 'wget https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
           sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
-          sh 'wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-              ./winetricks -q win10
-              ./winetricks vcrun2015'
+          sh 'wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
+          sh './winetricks -q win10'
+          sh './winetricks vcrun2015'
           sh 'wine ./python-3.8.5.-amd64.exe'
           sh 'wine "C:\\Python3\\python.exe" -m pip --version'
       }
