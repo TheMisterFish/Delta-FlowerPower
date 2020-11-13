@@ -38,6 +38,11 @@ pipeline {
           sh 'apt-get install -y wine'
           sh 'wget https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
           sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
+          
+          sh 'WINEPREFIX=~/.wine64 WINARCH=win64 winetricks \
+                corefonts \
+                win10'
+          
           sh 'DISPLAY=:0.0 WINEPREFIX=~/.wine64 wine cmd /c \
               python-3.8.5-amd64.exe \
               /quiet \
