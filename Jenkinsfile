@@ -29,7 +29,7 @@ pipeline {
     stage('Buid Field Application - Python') {
       agent {
           docker { 
-            image 'scratch'
+            image 'python:3'
             args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
           }
       }
