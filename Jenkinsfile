@@ -27,27 +27,38 @@ pipeline {
     }
     // Run field application tests
     stage('Buid Field Application - Python') {
-      steps { 
-        script {
-          withPythonEnv('System-CPython-3'){
-            echo 'Installing python requirements'
-            // wine  "--version"
-            sh "ls"
-            sh "ls .."
-            sh "ls ../.."
-            sh "ls ../../.."
-            dir("field_application/pycalc") {
-              // sh "python -V"
-              // sh "python3 -V"
-              // sh "pip3 install -r requirements.txst"
-            }
-            echo 'Building field application'
-            dir("field_application") {
-              // sh 'pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist'
-            }
-          }   
-        }
-      }   
+      agent {
+          docker { image 'python:3' }
+      }
+      steps {
+          sh 'apt-get update && pip3 install --upgrade pip'
+          sh 'apt-get install -y wine'
+          sh 'wget https://www.python.org/ftp/python/2.7.9/python-2.7.9.amd64.msi'
+          sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
+          sh 'wine msiexec /i python-2.7.9.amd64.msi /qb'
+          sh 'wine "C:\Python27\python.exe" -m pip --version'
+      }
+      // steps { 
+      //   script {
+      //     withPythonEnv('System-CPython-3'){
+      //       echo 'Installing python requirements'
+      //       // wine  "--version"
+      //       sh "ls"
+      //       sh "ls .."
+      //       sh "ls ../.."
+      //       sh "ls ../../.."
+      //       dir("field_application/pycalc") {
+      //         // sh "python -V"
+      //         // sh "python3 -V"
+      //         // sh "pip3 install -r requirements.txst"
+      //       }
+      //       echo 'Building field application'
+      //       dir("field_application") {
+      //         // sh 'pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist'
+      //       }
+      //     }   
+      //   }
+      // }   
     }
     // stage('Buid Field Application - Electron') {
     //   steps { 
