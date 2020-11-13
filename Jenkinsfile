@@ -28,7 +28,10 @@ pipeline {
     // Run field application tests
     stage('Buid Field Application - Python') {
       agent {
-          docker { image 'python:3' }
+          docker { 
+            image 'python:3'
+            args '-u root:sudo -v $HOME/workspace/myproject:/myproject'
+          }
       }
       steps {
           sh 'apt-get update && pip3 install --upgrade pip'
