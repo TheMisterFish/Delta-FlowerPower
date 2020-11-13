@@ -38,8 +38,10 @@ pipeline {
           sh 'apt-get install -y wine'
           sh 'wget https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
           sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
-          sh 'wine msiexec /i python-3.8.5.amd64.msi /qb'
-          sh 'wine "C:\\Python27\\python.exe" -m pip --version'
+          sh 'wine msiexec /i python-3.8.5.amd64.exe /qb'
+          sh 'sh ls ~/.wine/drive_c/'
+          
+          // sh 'wine "C:\\Python27\\python.exe" -m pip --version'
       }
       // steps { 
       //   script {
