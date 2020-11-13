@@ -38,7 +38,11 @@ pipeline {
           sh 'apt-get install -y wine'
           sh 'wget https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
           sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
-          sh 'wine python-3.8.5-amd64.exe'
+          sh 'DISPLAY=:0.0 WINEPREFIX=~/.wine64 wine cmd /c \
+              python-3.7.6-amd64.exe \
+              /quiet \
+              PrependPath=1 \
+              && echo "Python Installation complete!"'
           sh 'wine "C:\\Python3\\python.exe" -m pip --version'
       }
       // steps { 
