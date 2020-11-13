@@ -36,15 +36,15 @@ pipeline {
       steps {
           sh 'apt-get update && pip3 install --upgrade pip'
           sh 'apt-get install -y wine'
-          sh 'wget -O https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
+          sh 'wget -N https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
           sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
-          sh 'wget -O https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
+          sh 'wget -N https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
           sh 'chmod +x winetricks'
           sh './winetricks -q win10'
           sh 'mkdir ~/.wine/drive_cpython'
           sh 'cp python-3.8.5.-amd64.exe ~/.wine/drive_c/'
           sh 'ls ~/.wine/drive_c/'
-          
+
           sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe'
           sh 'wine "C:\\Python3\\python.exe" -m pip --version'
       }
