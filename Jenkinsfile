@@ -42,7 +42,8 @@ pipeline {
           sh 'chmod +x winetricks'
           sh './winetricks -q win10'
           sh 'mkdir ~/.wine/drive_cpython'
-          sh 'cp python-3.8.5.-amd64.exe ~/.wine/drive_c/'
+          sh 'ls ~/'
+          sh 'cp ~/python-3.8.5.-amd64.exe ~/.wine/drive_c/'
           sh 'ls ~/.wine/drive_c/'
 
           sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe'
