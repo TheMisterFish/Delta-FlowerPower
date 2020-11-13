@@ -42,9 +42,9 @@ pipeline {
           //Need at least wine 4.14 to install python 3.8.5
           sh 'dpkg --add-architecture i386'
           sh 'wget -nc https://dl.winehq.org/wine-builds/winehq.key'
-          sh '1apt-key add winehq.key'
-          sh 'apt-1add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main''
-          sh 'apt 1update'
+          sh 'apt-key add winehq.key'
+          sh 'apt-add-repository "deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main"'
+          sh 'apt update'
 
           // Add repo for faudio package.  Required for winedev
           sh 'add-apt-repository -y ppa:cybermax-dexter/sdl2-backport'
