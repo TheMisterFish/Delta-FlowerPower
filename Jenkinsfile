@@ -66,8 +66,7 @@ pipeline {
               win10'
 
           // Setup dummy screen
-          sh 'Xvfb :0 -screen 0 1024x768x16 &
-          jid=$!'
+          sh 'Xvfb :0 -screen 0 1024x768x16 & jid=$!'
 
           echo "------ Install python ------"
           sh 'DISPLAY=:0.0 WINEPREFIX=~/.wine64 wine cmd /c \
