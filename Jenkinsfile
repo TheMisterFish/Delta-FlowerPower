@@ -41,8 +41,9 @@ pipeline {
           sh 'wget -N https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
 
           // Make dir
-          sh 'ls .wine/'
-          sh 'ls .wine/drive_c/'
+          sh 'ls ./'
+          sh 'ls ~/'
+          sh 'ls ~/.wine/'
           sh 'mkdir .wine/drive_c/python'
           sh 'wget -O .wine/drive_c/python/python-3.8.5.-amd64.exe https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
 
