@@ -29,13 +29,16 @@ pipeline {
     stage('Buid Field Application - Python') {
       agent {
           docker { 
-            image 'python:3'
+            image 'scratch'
             args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
           }
       }
       steps {
-          sh 'apt-get update && pip3 install --upgrade pip'
-          sh 'apt-get install -y wine'
+          sh 'apt-get update'
+          sh 'apt install -y \
+              winehq-devel \
+              winetricks \
+              xvfb'
           sh 'wget https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
           sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
           
