@@ -34,20 +34,44 @@ pipeline {
           }
       }
       steps {
-          sh 'apt-get update'
+          echo "------ Installing required apt packages ------"
+          sh 'apt update'
+          sh 'apt install -y wget gnupg software-properties-common apt-utils'
+
+          echo "------ Add latest wine repo ------"
+          //Need at least wine 4.14 to install python 3.8.5
+          sh 'dpkg --add-architecture i386'
+          sh 'wget -nc https://dl.winehq.org/wine-builds/winehq.key'
+          sh '1apt-key add winehq.key'
+          sh 'apt-1add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main''
+          sh 'apt 1update'
+
+          // Add repo for faudio package.  Required for winedev
+          sh 'add-apt-repository -y ppa:cybermax-dexter/sdl2-backport'
+
+          echo "-------- Install wine-dev ------"
+
           sh 'apt install -y \
               winehq-devel \
               winetricks \
               xvfb'
+
+          echo "------ Download python ------"
           sh 'wget https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
-          sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
-          
+          //wget https://www.python.org/ftp/python/3.7.6/python-3.7.6.exe
+
+          echo "------ Init wine prefix ------"
           sh 'WINEPREFIX=~/.wine64 WINARCH=win64 winetricks \
-                corefonts \
-                win10'
-          
+              corefonts \
+              win10'
+
+          // Setup dummy screen
+          sh 'Xvfb :0 -screen 0 1024x768x16 &
+          jid=$!'
+
+          echo "------ Install python ------"
           sh 'DISPLAY=:0.0 WINEPREFIX=~/.wine64 wine cmd /c \
-              python-3.8.5-amd64.exe \
+              python-3.7.6-amd64.exe \
               /quiet \
               PrependPath=1 \
               && echo "Python Installation complete!"'
