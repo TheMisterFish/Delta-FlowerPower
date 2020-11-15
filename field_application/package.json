@@ -1,11 +1,11 @@
 {
-  "name": "pretty-calculator",
+  "name": "flowerpower-field-application",
   "version": "1.0.0",
   "description": "A minimal Electron and Python - based calculator ",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "install": "electron-rebuild",
+    "rebuild_electron": "electron-rebuild",
     "python_build": "pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist",
     "electron_build": "electron-packager . --overwrite --ignore='pycalc$' --ignore='\\.venv' --out=release-builds",
     "make_build": "npm run install && npm run python_build && npm run electron_build"
