@@ -66,16 +66,6 @@ export default {
       this.$router.push({ name: this.$route.meta.from });
     },
   },
-  created: function() {
-    // this.$store
-    //   .dispatch("getAreas")
-    //   .then(() => {
-    //     console.log("fetched!");
-    //   })
-    //   .catch(() => {
-    //     console.log("error :-(");
-    //   });
-  },
 };
 </script>
 

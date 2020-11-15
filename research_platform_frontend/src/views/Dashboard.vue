@@ -29,16 +29,10 @@
 </template>
 
 <script>
-import recentResearches from "../data/recentResearches.json";
 export default {
   name: "Dashboard",
   data: () => ({
     drawer: false,
-    recentResearches: recentResearches,
-    recentResearchesHeaders: [
-      { text: "Research", value: "research" },
-      { text: "Flower count", value: "flower_count" },
-    ],
   }),
 };
 </script>
