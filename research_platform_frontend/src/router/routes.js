@@ -30,7 +30,7 @@ export const routes = [{
             path: "",
             name: "researches",
             component: () =>
-                import ("../views/Researches.vue"),
+                import ("@/views/Researches/Researches.vue"),
             meta: {
                 title: "Researches",
                 drawer: true
@@ -38,7 +38,7 @@ export const routes = [{
         }, {
             path: "add",
             component: () =>
-                import ("../views/AddResearch.vue"),
+                import ("@/views/Researches/AddResearch.vue"),
             meta: {
                 title: "Add research",
                 action: true,

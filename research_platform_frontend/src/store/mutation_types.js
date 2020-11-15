@@ -5,6 +5,15 @@ export const LOGIN_ERROR = "LOGGIN_ERROR";
 
 export const LOGOUT = "LOGOUT";
 
+//researches_store
+export const GET_RESEARCHES = "GET_RESEARCHES";
+export const GET_RESEARCHES_SUCCESS = "GET_RESEARCHES_SUCCESS";
+export const GET_RESEARCHES_ERROR = "GET_RESEARCHES_ERROR";
+
+export const ADD_RESEARCH = "ADD_RESEARCH";
+export const ADD_RESEARCH_SUCCESS = "ADD_RESEARCH_SUCCESS";
+export const ADD_RESEARCH_ERROR = "ADD_RESEARCH_ERROR";
+
 //areas_store
 export const GET_AREAS = "GET_AREAS";
 export const GET_AREAS_SUCCESS = "GET_AREAS_SUCCESS";

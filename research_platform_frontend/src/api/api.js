@@ -1,5 +1,6 @@
 import Axios from 'axios';
 
+//authentication_store
 export function login(user) {
     return Axios({
         url: "http://localhost:7080/auth/login",
@@ -8,6 +9,23 @@ export function login(user) {
     })
 }
 
+//researches_store
+export function getResearches() {
+    return Axios({
+        url: "http://localhost:7080/sessions",
+        method: "GET",
+    })
+}
+
+export function addResearch(research) {
+    return Axios({
+        url: "http://localhost:7080/sessions",
+        method: "POST",
+        data: research
+    })
+}
+
+//areas_store
 export function getAreas() {
     return Axios({
         url: "http://localhost:7080/locations",
@@ -22,7 +40,7 @@ export function getArea(_id) {
     })
 }
 
-export async function addArea(area) {
+export function addArea(area) {
     return Axios({
         url: "http://localhost:7080/locations",
         method: "POST",
@@ -30,14 +48,14 @@ export async function addArea(area) {
     })
 }
 
-export async function deleteArea(_id) {
+export function deleteArea(_id) {
     return Axios({
         url: `http://localhost:7080/locations/${_id}`,
         method: "DELETE",
     })
 }
 
-export async function updateArea(_id, area) {
+export function updateArea(_id, area) {
     return Axios({
         url: `http://localhost:7080/locations/${_id}`,
         data: area,

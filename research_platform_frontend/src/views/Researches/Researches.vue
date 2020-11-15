@@ -25,19 +25,18 @@
 </template>
 
 <script>
-import researches from "../data/researches.json";
+import { STATUS } from '../../store/storeResponse';
 export default {
   name: "Researches",
   data: () => ({
     drawer: false,
-    researches: researches,
-    researchesHeaders: [
-      { text: "Research", value: "research" },
-      { text: "Area", value: "area" },
-      { text: "Flower count", value: "flower_count" },
-      { text: "Created", value: "created" },
-      { text: "Updated", value: "updated" },
-    ],
   }),
+  created: async function() {
+    const response = await this.$store.dispatch("getResearches");
+
+    if(response.status === STATUS.SUCCESS) {
+      console.log(response);
+    }
+  }
 };
 </script>
