@@ -1,13 +1,21 @@
 import Axios from 'axios';
 
-export async function getAreas() {
+export function login(user) {
+    return Axios({
+        url: "http://localhost:7080/auth/login",
+        method: "POST",
+        data: user
+    })
+}
+
+export function getAreas() {
     return Axios({
         url: "http://localhost:7080/locations",
         method: "GET",
     })
 }
 
-export async function getArea(_id) {
+export function getArea(_id) {
     return Axios({
         url: `http://localhost:7080/locations/${_id}`,
         method: "GET"

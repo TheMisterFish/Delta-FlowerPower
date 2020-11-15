@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { STATUS } from "../store/storeResponse";
 export default {
   name: "Dashboard",
   data: () => ({
@@ -38,21 +39,16 @@ export default {
     password: "",
   }),
   methods: {
-    login() {
+    async login() {
       let email = this.email;
       let password = this.password;
-      this.$store
-        .dispatch("login", { email, password })
-        .then(() => {
-          this.$store.dispatch("hideSnackbar");
-          this.$router.push("dashboard");
-        })
-        .catch(() => {
-          this.$store.dispatch(
-            "showSnackbar",
-            "Onjuist e-mailadres of wachtwoord"
-          );
-        });
+      const response = await this.$store.dispatch("login", { email, password });
+
+      if (response.status === STATUS.SUCCESS) {
+        this.$router.push({ name: "dashboard" });
+      } else {
+        this.$store.dispatch("showSnackbar", response.message);
+      }
     },
   },
   computed: {

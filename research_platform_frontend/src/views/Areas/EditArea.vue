@@ -32,6 +32,7 @@
 <script>
 import { mapState } from "vuex";
 import AreaMap from "../../components/AreaMap.vue";
+import { STATUS } from '../../store/storeResponse';
 export default {
   name: "Area",
   components: {
@@ -54,24 +55,17 @@ export default {
         params: { id: this._id, title: name },
       });
     },
-    save() {
-      this.$store
-        .dispatch("updateArea", {
-          _id: this._id,
-          area: {
-            name: this.name,
-            description: this.description,
-          },
+    async save() {
+      const response = await this.$store.dispatch("updateArea", {_id: this._id, area: {name: this.name, description: this.description}});
+
+      if(response.status === STATUS.SUCCESS) {
+        this.$router.push({
+          name: "areas/:id",
+          params: { id: this._id, title: name}
         })
-        .then(() => {
-          this.$router.push({
-            name: "areas/:id",
-            params: { id: this._id, title: name },
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      } else {
+        console.log(response);
+      }
     },
   },
   created: function() {

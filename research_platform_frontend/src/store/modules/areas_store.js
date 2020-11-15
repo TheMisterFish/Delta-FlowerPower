@@ -1,5 +1,6 @@
 import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR, GET_AREA, GET_AREA_ERROR, GET_AREA_SUCCESS, UPDATE_AREA, UPDATE_AREA_SUCCESS, UPDATE_AREA_ERROR } from "../mutation_types";
 import { getAreas, addArea, deleteArea, getArea, updateArea } from "../../api/api.js"
+import { STATUS, StoreResponse } from "../storeResponse";
 
 export const areas_store = {
     state: {
@@ -13,12 +14,10 @@ export const areas_store = {
         },
         [GET_AREAS_SUCCESS](state, areas) {
             state.status = "success";
-            console.log(areas);
             state.areas = areas;
         },
-        [GET_AREAS_ERROR](state, message) {
+        [GET_AREAS_ERROR](state) {
             state.status = "error";
-            state.message = message;
         },
         [GET_AREA](state) {
             state.status = "loading";
@@ -65,72 +64,64 @@ export const areas_store = {
         }
     },
     actions: {
-        getAreas({ commit }) {
+        async getAreas({ commit }) {
             commit(GET_AREAS);
-            return new Promise((resolve, reject) => {
-                getAreas().then((response) => {
-                        commit(GET_AREAS_SUCCESS, response.data);
-                        resolve(response);
-                    })
-                    .catch((error) => {
-                        commit(GET_AREAS_ERROR);
-                        reject(error);
-                    })
-            })
+            try {
+                const response = await getAreas();
+                commit(GET_AREAS_SUCCESS, response.data);
+                return new StoreResponse(STATUS.SUCCESS, "Succesfully fetched areas")
+            } catch (error) {
+                commit(GET_AREAS_ERROR);
+                return new StoreResponse(STATUS.SUCCESS, "Error fetching areas")
+            }
         },
 
-        getArea({ commit }, _id) {
+        async getArea({ commit }, _id) {
             commit(GET_AREA);
-            return new Promise((resolve, reject) => {
-                getArea(_id).then((response) => {
-                        commit(GET_AREA_SUCCESS, response.data);
-                        resolve(response);
-                    })
-                    .catch((error) => {
-                        commit(GET_AREA_ERROR);
-                        reject(error);
-                    })
-            })
+            try {
+                const response = await getArea(_id);
+                commit(GET_AREA_SUCCESS, response.data);
+                return new StoreResponse(STATUS.SUCCESS, "Succesfully fetched area", response.data);
+            } catch (error) {
+                commit(GET_AREA_ERROR);
+                return new StoreResponse(STATUS.ERROR, "Error fetching area");
+            }
         },
 
-        addArea({ commit }, area) {
+        async addArea({ commit }, area) {
             commit(ADD_AREA);
-            return new Promise((resolve, reject) => {
-                addArea(area).then((response) => {
-                    commit(ADD_AREA_SUCCESS, response.data);
-                    resolve(response);
-                }).catch((error) => {
-                    commit(ADD_AREA_ERROR);
-                    reject(error);
-                })
-            })
+            try {
+                const response = await addArea(area);
+                commit(ADD_AREA_SUCCESS, response.data);
+                return new StoreResponse(STATUS.SUCCESS, "Succesfully added area", response.data);
+            } catch (error) {
+                commit(ADD_AREA_ERROR);
+                return new StoreResponse(STATUS.ERROR, "Error adding area");
+            }
         },
 
-        deleteArea({ commit }, _id) {
+        async deleteArea({ commit }, _id) {
             commit(DELETE_AREA);
-            return new Promise((resolve, reject) => {
-                deleteArea(_id).then((response) => {
-                    commit(DELETE_AREA_SUCCESS);
-                    resolve(response, _id);
-                }).catch((error) => {
-                    commit(ADD_AREA_ERROR);
-                    reject(error);
-                })
-            })
+            try {
+                const response = await deleteArea(_id);
+                commit(DELETE_AREA_SUCCESS, _id);
+                return new StoreResponse(STATUS.SUCCESS, "Succesfully deleted area", response.data);
+            } catch (error) {
+                commit(DELETE_AREA_ERROR);
+                return new StoreResponse(STATUS.ERROR, "Error deleting area");
+            }
         },
 
-        updateArea({ commit }, payload) {
-            console.log(payload);
+        async updateArea({ commit }, payload) {
             commit(UPDATE_AREA);
-            return new Promise((resolve, reject) => {
-                updateArea(payload._id, payload.area).then((response) => {
-                    commit(UPDATE_AREA_SUCCESS, response.data);
-                    resolve(response);
-                }).catch((error) => {
-                    commit(UPDATE_AREA_ERROR);
-                    reject(error);
-                })
-            })
+            try {
+                const response = await updateArea(payload._id, payload.area);
+                commit(UPDATE_AREA_SUCCESS, response.data);
+                return new StoreResponse(STATUS.SUCCESS, "Succesfully updated area", response.data);
+            } catch (error) {
+                commit(UPDATE_AREA_ERROR);
+                return new StoreResponse(STATUS.ERROR, "Error updating area", error);
+            }
         }
 
     },

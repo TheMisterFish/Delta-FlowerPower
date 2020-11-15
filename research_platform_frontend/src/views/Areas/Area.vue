@@ -24,6 +24,7 @@
 <script>
 import { mapState } from "vuex";
 import AreaMap from "../../components/AreaMap.vue";
+import { STATUS } from '../../store/storeResponse';
 export default {
   name: "Area",
   components: {
@@ -62,17 +63,16 @@ export default {
       });
     },
   },
-  created: function() {
+  created: async function() {
     if (!this.area) {
-      this.$store
-        .dispatch("getArea", this._id)
-        .then((response) => {
-          this.name = response.data.name;
-          this.description = response.data.description;
-        })
-        .catch((error) => {
-          console.log("error:", error);
-        });
+      const response = await this.$store.dispatch("getArea");
+
+      if(response.status === STATUS.SUCCESS) {
+        this.name = response.data.name;
+        this.description = response.data.description;
+      } else {
+        this.$store.dispatch("showSnackbar", response.message);
+      }
     }
   },
 };

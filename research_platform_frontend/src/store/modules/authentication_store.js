@@ -1,4 +1,7 @@
 import Axios from 'axios';
+import { login } from '../../api/api';
+import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESSS, LOGOUT } from '../mutation_types';
+import { STATUS, StoreResponse } from '../storeResponse';
 
 export const authentication_store = {
     state: {
@@ -8,50 +11,42 @@ export const authentication_store = {
         user: {},
     },
     mutations: {
-        auth_request(state) {
+        [LOGIN](state) {
             state.status = "loading";
         },
-        auth_success(state, token, user) {
+        [LOGIN_SUCCESSS](state, token, user) {
+            Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             localStorage.setItem("token", token);
             state.status = "success";
             state.token = token;
             state.user = user;
             state.authenticated = true;
         },
-        auth_error(state) {
+        [LOGIN_ERROR](state) {
             state.status = "error";
             state.authenticated = false;
         },
-        auth_logout(state) {
+        [LOGOUT](state) {
             localStorage.removeItem("token");
             state.token = ""
             state.authenticated = false;
         }
     },
     actions: {
-        login({ commit }, user) {
-            return new Promise((resolve, reject) => {
-                commit("auth_request");
-                Axios({
-                        url: "http://localhost:7080/auth/login",
-                        data: user,
-                        method: "POST",
-                    })
-                    .then((response) => {
-                        const token = response.data.access_token;
-                        Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-                        commit("auth_success", token, user);
-                        resolve(response);
-                    })
-                    .catch((error) => {
-                        commit("auth_error");
-                        localStorage.removeItem("token");
-                        reject(error);
-                    });
-            });
+        async login({ commit }, user) {
+            commit(LOGIN);
+            try {
+                const response = await login(user);
+                commit(LOGIN_SUCCESSS, response.data.access_token, user);
+                return new StoreResponse(STATUS.SUCCESS, "Succesful login");
+            } catch (error) {
+                commit(LOGIN_ERROR)
+                return new StoreResponse(STATUS.ERROR, "Incorrect email or password");
+            }
         },
         logout({ commit }) {
-            commit("auth_logout")
+            commit(LOGOUT);
+            return new StoreResponse(STATUS.SUCCESS, "Succesful logout");
         }
     },
     modules: {},

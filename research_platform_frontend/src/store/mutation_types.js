@@ -1,3 +1,10 @@
+//authentication_store
+export const LOGIN = "LOGIN";
+export const LOGIN_SUCCESSS = "LOGIN_SUCCESS";
+export const LOGIN_ERROR = "LOGGIN_ERROR";
+
+export const LOGOUT = "LOGOUT";
+
 //areas_store
 export const GET_AREAS = "GET_AREAS";
 export const GET_AREAS_SUCCESS = "GET_AREAS_SUCCESS";

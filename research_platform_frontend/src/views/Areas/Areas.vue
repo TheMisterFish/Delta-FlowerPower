@@ -9,13 +9,15 @@
           class="area-table"
           @click:row="openArea"
         >
-        <template v-slot:[`item.created_at`]="{item}">
-          <span>{{new Date(item.created_at).toDateString()}}</span>
-        </template>
+          <template v-slot:[`item.created_at`]="{ item }">
+            <span>{{ new Date(item.created_at).toDateString() }}</span>
+          </template>
 
-        <template v-slot:[`item.updated_at`]="{item}">
-          <span>{{item.updated_at ? new Date(item.updated_at).toDateString() : ""}}</span>
-        </template>
+          <template v-slot:[`item.updated_at`]="{ item }">
+            <span>{{
+              item.updated_at ? new Date(item.updated_at).toDateString() : ""
+            }}</span>
+          </template>
         </v-data-table>
         <v-btn
           :to="{ name: 'areas/add' }"
@@ -34,7 +36,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
+import { STATUS } from "../../store/storeResponse";
 
 export default {
   name: "Areas",
@@ -61,15 +64,12 @@ export default {
       });
     },
   },
-  created: function() {
-    this.$store
-      .dispatch("getAreas")
-      .then(() => {
-        console.log("fetched!");
-      })
-      .catch(() => {
-        console.log("error :-(");
-      });
+  created: async function() {
+    const response = await this.$store.dispatch("getAreas");
+
+    if (response.status === STATUS.ERROR) {
+      this.$store.dispatch("showSnackbar", response.message);
+    }
   },
 };
 </script>
