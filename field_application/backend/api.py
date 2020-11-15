@@ -1,5 +1,5 @@
 from __future__ import print_function
-# from yolov5 import simple_detect as detect
+from yolov5 import simple_detect as detect
 import sys
 import zerorpc
 

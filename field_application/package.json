@@ -1,7 +1,7 @@
 {
   "name": "flowerpower-field-application",
   "version": "1.0.0",
-  "description": "A minimal Electron and Python - based calculator ",
+  "description": "A Electron and Python FlowerPower field application",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
