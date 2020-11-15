@@ -1,4 +1,4 @@
-export const snackbar_store = {
+export const snackbarStore = {
     state: {
         message: "",
         visible: false,

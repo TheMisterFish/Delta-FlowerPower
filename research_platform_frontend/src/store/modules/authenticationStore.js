@@ -1,9 +1,9 @@
 import Axios from 'axios';
 import { login } from '../../api/api';
-import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESSS, LOGOUT } from '../mutation_types';
+import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESSS, LOGOUT } from '../mutationTypes';
 import { STATUS, StoreResponse } from '../storeResponse';
 
-export const authentication_store = {
+export const authenticationStore = {
     state: {
         status: "",
         token: localStorage.getItem("token") || "",

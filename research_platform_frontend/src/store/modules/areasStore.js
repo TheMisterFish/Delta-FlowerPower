@@ -1,8 +1,8 @@
-import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR, GET_AREA, GET_AREA_ERROR, GET_AREA_SUCCESS, UPDATE_AREA, UPDATE_AREA_SUCCESS, UPDATE_AREA_ERROR } from "../mutation_types";
+import { GET_AREAS, GET_AREAS_SUCCESS, GET_AREAS_ERROR, ADD_AREA, ADD_AREA_SUCCESS, ADD_AREA_ERROR, DELETE_AREA, DELETE_AREA_SUCCESS, DELETE_AREA_ERROR, GET_AREA, GET_AREA_ERROR, GET_AREA_SUCCESS, UPDATE_AREA, UPDATE_AREA_SUCCESS, UPDATE_AREA_ERROR } from "../mutationTypes";
 import { getAreas, addArea, deleteArea, getArea, updateArea } from "../../api/api.js"
 import { STATUS, StoreResponse } from "../storeResponse";
 
-export const areas_store = {
+export const areasStore = {
     state: {
         areas: [],
         status: "",

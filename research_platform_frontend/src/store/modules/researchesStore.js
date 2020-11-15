@@ -1,8 +1,8 @@
 import { addResearch, getResearches } from "../../api/api";
-import { ADD_RESEARCH, ADD_RESEARCH_ERROR, ADD_RESEARCH_SUCCESS, GET_RESEARCHES, GET_RESEARCHES_ERROR, GET_RESEARCHES_SUCCESS } from "../mutation_types";
+import { ADD_RESEARCH, ADD_RESEARCH_ERROR, ADD_RESEARCH_SUCCESS, GET_RESEARCHES, GET_RESEARCHES_ERROR, GET_RESEARCHES_SUCCESS } from "../mutationTypes";
 import { STATUS, StoreResponse } from "../storeResponse";
 
-export const researches_store = {
+export const researchesStore = {
     state: {
         researches: [],
         status: ""

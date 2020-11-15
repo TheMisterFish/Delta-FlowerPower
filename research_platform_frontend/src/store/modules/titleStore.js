@@ -1,4 +1,4 @@
-export const title_store = {
+export const titleStore = {
     state: {
         title: ""
     },
