@@ -7,7 +7,7 @@ class Router(object):
     def calc(self, text):
         """based on the input text, return the int result"""
         try:
-            return "test" 
+            return detect.test()
         except Exception as e:
             return 0.0   
     def echo(self, text):

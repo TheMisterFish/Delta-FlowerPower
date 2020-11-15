@@ -5,7 +5,8 @@ import cv2
 from numpy import random
 import sys
 
-sys.path.insert(0, './yolov5')
+sys.path.insert(0, './backend/yolov5')
+
 import torch
 import torch.backends.cudnn as cudnn
 
