@@ -110,7 +110,7 @@ The structure of this project is
 |-- package.json
 |-- renderer.js
 |
-|-- pycalc
+|-- backend
 |   |-- api.py
 |   |-- calc.py
 |   `-- requirements.txt
@@ -119,7 +119,7 @@ The structure of this project is
 `-- README.md
 ```
 
-As shown above, the Python application is wrapped in a subfolder. In this example, Python application `pycalc/calc.py` provides a function: `calc(text)` that could take a text like `1 + 1 / 2` and return the result like `1.5` (assuming it be like `eval()`). The `pycalc/api.py` is what we are going to figure out.
+As shown above, the Python application is wrapped in a subfolder. In this example, Python application `backend/calc.py` provides a function: `calc(text)` that could take a text like `1 + 1 / 2` and return the result like `1.5` (assuming it be like `eval()`). The `backend/api.py` is what we are going to figure out.
 
 And the `index.html`, `main.js`, `package.json` and `renderer.js` are modified from [`electron-quick-start`](https://github.com/electron/electron-quick-start).
 
@@ -264,7 +264,7 @@ npm install
 
 We want to build up a ZeroMQ server in Python end.
 
-Put `calc.py` into folder `pycalc/`. Then create another file `pycalc/api.py`. Check [`zerorpc-python`](https://github.com/0rpc/zerorpc-python) for reference.
+Put `calc.py` into folder `backend/`. Then create another file `backend/api.py`. Check [`zerorpc-python`](https://github.com/0rpc/zerorpc-python) for reference.
 
 ```python
 from __future__ import print_function
@@ -297,7 +297,7 @@ if __name__ == '__main__':
     main()
 ```
 
-To test the correctness, run `python pycalc/api.py` in one terminal. Then **open another terminal**, run this command and see the result:
+To test the correctness, run `python backend/api.py` in one terminal. Then **open another terminal**, run this command and see the result:
 
 ```bash
 zerorpc tcp://localhost:4242 calc "1 + 1"
@@ -364,7 +364,7 @@ const selectPort = () => {
 
 const createPyProc = () => {
   let port = '' + selectPort()
-  let script = path.join(__dirname, 'pycalc', 'api.py')
+  let script = path.join(__dirname, 'backend', 'api.py')
   pyProc = require('child_process').spawn('python', [script, port])
   if (pyProc != null) {
     console.log('child process success')
@@ -458,13 +458,13 @@ User [PyInstaller](http://www.pyinstaller.org/).
 Run the following in the terminal:
 
 ```bash
-pyinstaller pycalc/api.py --distpath pycalcdist
+pyinstaller backend/api.py --distpath backenddist
 
 rm -rf build/
 rm -rf api.spec
 ```
 
-If everything goes well, the `pycalcdist/api/` folder should show up, as well as the executable inside that folder. This is the complete independent Python executable that could be moved to somewhere else.
+If everything goes well, the `backenddist/api/` folder should show up, as well as the executable inside that folder. This is the complete independent Python executable that could be moved to somewhere else.
 
 **Attention: the independent Python executable has to be generated!** Because the target machine we want to distribute to may not have correct Python shell and/or required Python libraries. It's almost impossible to just copy the Python source codes.
 
@@ -476,7 +476,7 @@ In the above example code, I write
 
 ```js
   // part of main.js
-  let script = path.join(__dirname, 'pycalc', 'api.py')
+  let script = path.join(__dirname, 'backend', 'api.py')
   pyProc = require('child_process').spawn('python', [script, port])
 ```
 
@@ -489,8 +489,8 @@ In `main.js`, add the following functions:
 ```js
 // main.js
 
-const PY_DIST_FOLDER = 'pycalcdist'
-const PY_FOLDER = 'pycalc'
+const PY_DIST_FOLDER = 'backenddist'
+const PY_FOLDER = 'backend'
 const PY_MODULE = 'api' // without .py suffix
 
 const guessPackaged = () => {
@@ -533,7 +533,7 @@ const createPyProc = () => {
 
 The key point is, check whether the `*dist` folder has been generated or not. If generated, it means we are in "production" mode, `execFile` the executable directly; otherwise, `spawn` the script using a Python shell.
 
-In the end, run [`electron-packager`](https://github.com/electron-userland/electron-packager) to generate the bundled application. We also want to exclude some folders (For example, `pycalc/` is no longer needed to be bundled), **using regex** (instead of glob, surprise!). The name, platform, and arch are inferred from `package.json`. For more options, check out the docs.
+In the end, run [`electron-packager`](https://github.com/electron-userland/electron-packager) to generate the bundled application. We also want to exclude some folders (For example, `backend/` is no longer needed to be bundled), **using regex** (instead of glob, surprise!). The name, platform, and arch are inferred from `package.json`. For more options, check out the docs.
 
 ```bash
 # we need to make sure we have bundled the latest Python code
@@ -541,7 +541,7 @@ In the end, run [`electron-packager`](https://github.com/electron-userland/elect
 # Or, actually, we could bundle the Python executable later,
 # and copy the output into the correct distributable Electron folder...
 
-./node_modules/.bin/electron-packager . --overwrite --ignore="pycalc$" --ignore="\.venv" --ignore="old-post-backup"
+./node_modules/.bin/electron-packager . --overwrite --ignore="backend$" --ignore="\.venv" --ignore="old-post-backup"
 ## Packaging app for platform win32 x64 using electron v1.7.6
 ## Wrote new app to ./pretty-calculator-win32-x64
 ```

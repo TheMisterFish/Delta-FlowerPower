@@ -6,8 +6,8 @@
   "scripts": {
     "start": "electron .",
     "rebuild_electron": "electron-rebuild",
-    "python_build": "pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist",
-    "electron_build": "electron-packager . --overwrite --ignore='pycalc$' --ignore='\\.venv' --out=release-builds",
+    "python_build": "pyinstaller backend/api.py --noconfirm --distpath backenddist",
+    "electron_build": "electron-packager . --overwrite --ignore='backend$' --ignore='\\.venv' --out=release-builds",
     "make_build": "npm run install && npm run python_build && npm run electron_build"
   },
   "repository": "https://github.com/fyears/electron-python-example",

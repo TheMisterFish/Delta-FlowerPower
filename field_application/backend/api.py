@@ -10,6 +10,9 @@ class Router(object):
             return "test" 
         except Exception as e:
             return 0.0   
+    def echo(self, text):
+        """echo any text"""
+        return text
 
 def parse_port():
     port = 4242
