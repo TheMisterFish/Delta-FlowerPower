@@ -1,4 +1,4 @@
-# flowerpower-field-application
+# field_application
 
 ## Project setup
 ```
