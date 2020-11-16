@@ -1,30 +1,61 @@
 {
   "name": "flowerpower-field-application",
   "version": "1.0.0",
+  "private": true,
   "description": "A Electron and Python FlowerPower field application",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "rebuild_electron": "electron-rebuild",
-    "python_build": "pyinstaller backend/api.py --noconfirm --distpath backenddist",
-    "electron_build": "electron-packager . --overwrite --ignore='backend$' --ignore='\\.venv' --out=release-builds",
-    "make_build": "npm run install && npm run python_build && npm run electron_build"
+  "author": {
+    "name": "fyears"
   },
-  "repository": "https://github.com/fyears/electron-python-example",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "electron_build": "electron-packager . --overwrite --ignore='backend$' --ignore='\\.venv' --out=release-builds",
+    "make_build": "npm run install && npm run python_build && npm run electron_build",
+    "python_build": "pyinstaller backend/api.py --noconfirm --distpath backenddist",
+    "rebuild_electron": "electron-rebuild",
+    "start": "electron ."
+  },
+  "main": "main.js",
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "electron-packager": "^15.1.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0",
+    "windows-build-tools": "^5.2.2",
+    "zeromq": "^6.0.0-beta.6",
+    "zerorpc": "git+https://github.com/0rpc/zerorpc-node.git"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "^10.1.0",
+    "electron": "^1.7.6",
+    "electron-rebuild": "^2.3.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-cli-plugin-electron": "0.0.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "_id": "flowerpower-field-application@1.0.0",
+  "bugs": {
+    "url": "https://github.com/fyears/electron-python-example/issues"
+  },
+  "homepage": "https://github.com/fyears/electron-python-example#readme",
   "keywords": [
     "Electron",
     "Python",
     "zerorpc",
     "demo"
   ],
-  "author": "fyears",
   "license": "MIT",
-  "dependencies": {
-    "electron-packager": "^15.1.0",
-    "zerorpc": "git+https://github.com/0rpc/zerorpc-node.git"
-  },
-  "devDependencies": {
-    "electron": "^1.7.6",
-    "electron-rebuild": "^2.3.2"
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fyears/electron-python-example.git"
   }
 }
