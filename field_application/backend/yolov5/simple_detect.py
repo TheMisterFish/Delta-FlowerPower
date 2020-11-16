@@ -93,8 +93,8 @@ def detect(save_img=False):
 
     print('Done. (%.3fs)' % (time.time() - t0))
 
-def calcBox(xywh):
-    dh,dw = 419,419
+def calcBox(xywh, width, height):
+    dh,dw = width,height
     x, y, w, h = map(float, xywh)
     print(x,y,w,h)
 
