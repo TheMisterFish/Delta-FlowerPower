@@ -3,7 +3,58 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import * as path from 'path';
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+const PY_DIST_FOLDER = 'backenddist'
+const PY_FOLDER = 'backend'
+const PY_MODULE = 'api' // without .py suffix
+
+let pyProc = null
+let pyPort = null
+
+const guessPackaged = () => {
+  const fullPath = path.join(__dirname, PY_DIST_FOLDER)
+  return require('fs').existsSync(fullPath)
+}
+
+const getScriptPath = () => {
+  if (!guessPackaged()) {
+    return path.join(__dirname, PY_FOLDER, PY_MODULE + '.py')
+  }
+  if (process.platform === 'win32') {
+    return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
+  }
+  return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
+}
+
+const selectPort = () => {
+  pyPort = 4242
+  return pyPort
+}
+
+const createPyProc = () => {
+  let script = getScriptPath()
+  let port = '' + selectPort()
+
+  if (guessPackaged()) {
+    pyProc = require('child_process').execFile(script, [port])
+  } else {
+    pyProc = require('child_process').spawn('python', [script, port])
+  }
+ 
+  if (pyProc != null) {
+    //console.log(pyProc)
+    console.log('child process success on port ' + port)
+  }
+}
+
+const exitPyProc = () => {
+  pyProc.kill()
+  pyProc = null
+  pyPort = null
+}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -33,11 +84,14 @@ async function createWindow() {
   }
 }
 
+app.on('will-quit', exitPyProc)
+
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
+    exitPyProc();
     app.quit()
   }
 })
@@ -52,6 +106,7 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  createPyProc();
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
