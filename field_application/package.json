@@ -3,19 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "rebuild": "electron-rebuild",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "python_build": "pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist",
+    "electron_build": "electron-packager . --overwrite --ignore='pycalc$' --ignore='\\.venv' --out=release-builds"
   },
+  "keywords": [
+    "Electron",
+    "Python",
+    "zerorpc",
+    "FlowerPower",
+    "Python AI"
+  ],
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "electron-packager": "^9.1.0",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "zeromq": "^6.0.0-beta.6",
+    "zerorpc": "^0.9.8"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -29,6 +42,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "electron-rebuild": "^2.3.2"
   }
 }

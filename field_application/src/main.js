@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import zeropc from 'zeropc';
+import zerorpc from 'zerorpc';
 
-const zeropc_client = zeropc;
+const zeropc_client = zerorpc;
 
 Vue.config.productionTip = false
 
