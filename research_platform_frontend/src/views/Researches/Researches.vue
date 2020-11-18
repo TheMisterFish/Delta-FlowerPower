@@ -4,7 +4,7 @@
       <v-col cols="12">
         <v-data-table
           :headers="researchesHeaders"
-          :items="researches"
+          :items="researches.researches"
           hide-default-footer
           style="grid-area: recent-results;"
         ></v-data-table>
@@ -25,18 +25,28 @@
 </template>
 
 <script>
-import { STATUS } from '../../store/storeResponse';
+import { mapState } from "vuex";
+import { STATUS } from "../../store/storeResponse";
 export default {
   name: "Researches",
   data: () => ({
-    drawer: false,
+    researchesHeaders: [
+      { text: "Research", value: "name" },
+      { text: "Description", value: "description" },
+      { text: "Created at", value: "created_at" },
+      { text: "Updated at", value: "updated_at" },
+      { text: "Made by", value: "made_by" },
+    ],
   }),
+  computed: {
+    ...mapState(["researches"]),
+  },
   created: async function() {
     const response = await this.$store.dispatch("getResearches");
 
-    if(response.status === STATUS.SUCCESS) {
+    if (response.status === STATUS.SUCCESS) {
       console.log(response);
     }
-  }
+  },
 };
 </script>

@@ -23,12 +23,24 @@
             </v-col>
             <v-col cols="12">
               <v-autocomplete
-                v-model="area_ids"
-                :items="areas.areas"
+                v-model="mlitems[0]"
                 chips
-                multiple
+                label="Model"
+                :items="mlitems"
                 item-text="name"
                 item-value="_id"
+                disabled
+              >
+              </v-autocomplete>
+            </v-col>
+            <v-col cols="12">
+              <v-autocomplete
+                v-model="area_id"
+                :items="areas.areas"
+                chips
+                item-text="name"
+                item-value="_id"
+                label="Area"
               >
               </v-autocomplete>
             </v-col>
@@ -44,26 +56,32 @@
 
 <script>
 import { mapState } from "vuex";
-import { STATUS } from '../../store/storeResponse';
+import { STATUS } from "../../store/storeResponse";
 export default {
   name: "AddResearch",
   data: () => ({
     name: "",
     description: "",
-    area_ids: [],
+    model_id: "",
+    area_id: "",
+    mlitems: [{ name: "Yolo V5", _id: "0" }],
   }),
   computed: {
     ...mapState(["areas"]),
   },
   methods: {
     async addResearch() {
-      const response = await this.$store.dispatch("addResearch", {name: this.name, description: this.description});
-      console.log(response);
+      const response = await this.$store.dispatch("addResearch", {
+        name: this.name,
+        description: this.description,
+        location_id: this.area_id,
+        model_id: this.mlitems[0]._id,
+      });
 
-      if(response.status === STATUS.SUCCESS) {
-        console.log("YEAH!");
+      if (response.status === STATUS.SUCCESS) {
+        this.$router.push({ name: "researches" });
       } else {
-        console.log("WE GOT AN ERRROR");
+        this.$store.dispatch("showSnackbar", response.message);
       }
     },
   },

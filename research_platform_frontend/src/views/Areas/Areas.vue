@@ -42,7 +42,6 @@ import { STATUS } from "../../store/storeResponse";
 export default {
   name: "Areas",
   data: () => ({
-    drawer: false,
     areasHeaders: [
       { text: "Area", value: "name" },
       { text: "Description", value: "description" },
