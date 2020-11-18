@@ -15,21 +15,15 @@ export class CreateSessionDto {
   @IsNotEmpty()
   location_id: string;
 
-  @IsString()
-  @IsNotEmpty() 
   made_by: string;
 
-  @IsJSON()
   flower_count: JSON;
 
   @IsString()
   @IsNotEmpty()
   model_id: string;
 
-  @IsDate()
-  @IsNotEmpty()
   created_at: Date;
 
-  @IsDate()
   updated_at: Date;
 }
