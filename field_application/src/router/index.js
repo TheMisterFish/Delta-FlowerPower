@@ -1,29 +1,50 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+const routes = [{
+        path: "/",
+        name: "Landing",
+        component: () =>
+            import ("../views/Landing.vue"),
+    },
+    {
+        path: "/dashboard",
+        name: "Dashboard",
+        component: () =>
+            import ("../views/Dashboard.vue"),
+        meta: {
+            researcher: true,
+        },
+    },
+    {
+        path: "*",
+        redirect: "/",
+        name: "Landing",
+        component: () =>
+            import ("../views/Landing.vue"),
+    },
+];
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+    routes,
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+    console.log(to, from);
+    if (to.matched.some((record) => record.meta.researcher)) {
+        if (localStorage.getItem("token") == null) {
+            next({
+                path: "/landing",
+                params: { nextUrl: to.fullPath },
+            });
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
+
+export default router;

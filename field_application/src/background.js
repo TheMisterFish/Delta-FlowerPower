@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict'
 
 import { app, protocol, BrowserWindow } from 'electron'
@@ -81,8 +82,8 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 550,
+        height: 800,
         webPreferences: {
             // enableRemoteModule: true,
             // Use pluginOptions.nodeIntegration, leave this alone
