@@ -12,11 +12,11 @@ export class LocationsService {
   ) { }
 
   async findOne(id: string): Promise<LocationsDto> | null {
-    return await this.locationModel.findById(id).exec();
+    return await this.locationModel.findById(id).populate('made_by').exec();
   }
 
   async findAll(): Promise<Location[] | null> {
-    return await this.locationModel.find().exec();
+    return await this.locationModel.find().populate('made_by').exec();
   }
 
   async create(dto: CreateLocationDto): Promise<LocationsDto> {

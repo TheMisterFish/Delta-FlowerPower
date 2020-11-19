@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
+import { Location } from 'src/locations/locations.model';
 
 export class UpdateSessionDto {
   @IsString()
@@ -13,11 +14,7 @@ export class UpdateSessionDto {
 
   @IsString()
   @IsNotEmpty()
-  location_id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  made_by: string;
+  location_id: Location;
 
   @IsJSON()
   flower_count: JSON;

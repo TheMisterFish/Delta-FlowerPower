@@ -3,6 +3,7 @@ import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { HasRoles } from '../common/decorators/roles.decorator';
 import { SessionsService } from './sessions.service';
 import { CreateSessionDto, UpdateSessionDto, SessionsDto } from "./dto";
+import { Session } from "./sessions.model";
 
 @Controller('sessions')
 export class SessionsController {
@@ -13,14 +14,15 @@ export class SessionsController {
   @HasRoles('moderator')
   @Post()
   async create(@Request() req, @Body() createSessionDto: CreateSessionDto) {
-    createSessionDto.made_by = req.id;
+    console.log(createSessionDto);
+    createSessionDto.made_by = req.user._id;
     return await this.sessionsService.create(createSessionDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @HasRoles('moderator')
   @Get()
-  async findAll(): Promise<SessionsDto[]> {
+  async findAll(): Promise<Session[]> {
     return await this.sessionsService.findAll();
   }
 

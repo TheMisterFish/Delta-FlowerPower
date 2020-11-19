@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsDate, IsLatLong, MinLength } from 'class-validator';
+import { User } from 'src/users/users.model';
 
 export class LocationsDto {
   @IsString()
@@ -13,7 +14,7 @@ export class LocationsDto {
 
   @IsString()
   @IsNotEmpty()
-  made_by: string;
+  made_by: User;
 
   @IsNotEmpty()
   @IsLatLong()
