@@ -1,12 +1,7 @@
 .DS_Store
 node_modules
 /dist
-/release-builds
-/release-builds/*
-/testimgs
-/testimgs/*
-/backenddist
-/backenddist/*
+
 
 # local env files
 .env.local
