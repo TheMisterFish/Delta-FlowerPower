@@ -7,13 +7,22 @@ const routes = [{
         path: "/",
         name: "Landing",
         component: () =>
-            import ("../views/Landing.vue"),
+            import ("../views/CreateResearch.vue"),
     },
     {
         path: "/dashboard",
         name: "Dashboard",
         component: () =>
             import ("../views/Dashboard.vue"),
+        meta: {
+            researcher: true,
+        },
+    },
+    {
+        path: "/create_research",
+        name: "CreateResearch",
+        component: () =>
+            import ("../views/CreateResearch.vue"),
         meta: {
             researcher: true,
         },

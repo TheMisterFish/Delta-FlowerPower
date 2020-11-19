@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 Vue.use(Vuex);
-var t;
+
 const alerts_store = {
   state: {
     alert_active: false,
@@ -10,11 +10,10 @@ const alerts_store = {
   },
   mutations: {
     alert(state, payload) {
-      payload.text ?  : 
       if(payload.text) {
         state.alert_text = payload.text
       } else {
-        state.alert_text = "Onbekende error"
+        state.alert_text = "Onbekende bericht"
       }   
       state.alert_active = true;
     },
