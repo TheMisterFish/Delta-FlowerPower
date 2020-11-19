@@ -8,10 +8,6 @@ import '@mdi/font/css/materialdesignicons.css'
 
 Vue.config.productionTip = false
 
-console.log('testing?')
-console.log(window.ipcRenderer);
-console.log('success!')
-
 new Vue({
     router,
     store,

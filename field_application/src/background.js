@@ -84,10 +84,11 @@ async function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
+            // enableRemoteModule: true,
             // Use pluginOptions.nodeIntegration, leave this alone
             // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
             nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-            preload: path.join(__static, 'preload.js')
+            preload: path.join(__dirname, 'preload.js')
         }
     })
 
