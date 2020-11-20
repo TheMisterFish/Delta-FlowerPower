@@ -17,6 +17,13 @@ export function getUsers() {
     })
 }
 
+export function addUser(user) {
+    return Axios({
+        url: "http://localhost:7080/users",
+        method: "POST",
+        data: user
+    })
+}
 //researches_store
 export function getResearches() {
     return Axios({

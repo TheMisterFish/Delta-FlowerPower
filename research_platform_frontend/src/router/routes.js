@@ -107,15 +107,27 @@ export const routes = [{
             researcher: true,
         },
         children: [{
-            path: "",
-            name: "users",
-            component: () =>
-                import ("@/views/Users/Users.vue"),
-            meta: {
-                title: "Users",
-                drawer: true
+                path: "",
+                name: "users",
+                component: () =>
+                    import ("@/views/Users/Users.vue"),
+                meta: {
+                    title: "Users",
+                    drawer: true
+                }
+            },
+            {
+                path: "add",
+                name: "users/add",
+                component: () =>
+                    import ("@/views/Users/AddUser.vue"),
+                meta: {
+                    title: "Add user",
+                    action: true,
+                    from: "users"
+                }
             }
-        }]
+        ]
     },
     {
         path: "/logout",
