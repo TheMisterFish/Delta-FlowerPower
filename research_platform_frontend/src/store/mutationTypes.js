@@ -5,6 +5,11 @@ export const LOGIN_ERROR = "LOGGIN_ERROR";
 
 export const LOGOUT = "LOGOUT";
 
+//users_store
+export const GET_USERS = "GET_USERS";
+export const GET_USERS_SUCCESS = "GET_USERS_SUCCESS";
+export const GET_USERS_ERROR = "GET_USERS_ERROR";
+
 //researches_store
 export const GET_RESEARCHES = "GET_RESEARCHES";
 export const GET_RESEARCHES_SUCCESS = "GET_RESEARCHES_SUCCESS";

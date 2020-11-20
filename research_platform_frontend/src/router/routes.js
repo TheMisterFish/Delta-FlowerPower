@@ -102,14 +102,20 @@ export const routes = [{
     },
     {
         path: "/users",
-        name: "users",
-        component: () =>
-            import ("../views/Users.vue"),
+        component: emptyRouteView,
         meta: {
             researcher: true,
-            title: "Users",
-            drawer: true
         },
+        children: [{
+            path: "",
+            name: "users",
+            component: () =>
+                import ("@/views/Users/Users.vue"),
+            meta: {
+                title: "Users",
+                drawer: true
+            }
+        }]
     },
     {
         path: "/logout",

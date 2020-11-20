@@ -9,6 +9,14 @@ export function login(user) {
     })
 }
 
+//users_store
+export function getUsers() {
+    return Axios({
+        url: "http://localhost:7080/users",
+        method: "GET"
+    })
+}
+
 //researches_store
 export function getResearches() {
     return Axios({
