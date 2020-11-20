@@ -14,7 +14,6 @@ export class SessionsController {
   @HasRoles('moderator')
   @Post()
   async create(@Request() req, @Body() createSessionDto: CreateSessionDto) {
-    console.log(createSessionDto);
     createSessionDto.made_by = req.user._id;
     return await this.sessionsService.create(createSessionDto);
   }

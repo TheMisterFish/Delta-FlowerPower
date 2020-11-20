@@ -15,7 +15,7 @@ export class LocationsService {
     return await this.locationModel.findById(id).populate('made_by').exec();
   }
 
-  async findAll(): Promise<Location[] | null> {
+  async findAll(): Promise<LocationsDto[] | null> {
     return await this.locationModel.find().populate('made_by').exec();
   }
 
