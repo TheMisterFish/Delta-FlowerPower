@@ -46,7 +46,6 @@ export default {
     openResearch(value) {
       const researchId = value._id;
       const researchName = value.research;
-      console.log(value);
       this.$router.push({
         name: "research/:id",
         params: { id: researchId, title: researchName },

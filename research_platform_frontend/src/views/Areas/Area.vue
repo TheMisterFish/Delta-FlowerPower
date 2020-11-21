@@ -7,7 +7,9 @@
             >{{ area && area.name }}
             <v-spacer></v-spacer>
           </v-card-title>
-          <v-card-subtitle class="pl-0">{{ area && area.description }}</v-card-subtitle>
+          <v-card-subtitle class="pl-0">{{
+            area && area.description
+          }}</v-card-subtitle>
           <AreaMap class="my-4" style="min-height: 500px" />
           <v-card-actions class="d-flex justify-space-between">
             <v-btn @click="deleteArea" text color="error">
@@ -24,7 +26,7 @@
 <script>
 import { mapState } from "vuex";
 import AreaMap from "../../components/AreaMap.vue";
-import { STATUS } from '../../store/storeResponse';
+import { STATUS } from "../../store/storeResponse";
 export default {
   name: "Area",
   components: {
@@ -41,17 +43,14 @@ export default {
     },
   },
   methods: {
-    deleteArea() {
-      const _id = this.area._id;
-      this.$store
-        .dispatch("deleteArea", _id)
-        .then(() => {
-          console.log("area deleted!");
-          this.$router.push({ name: "areas" });
-        })
-        .catch((error) => {
-          console.log("error :-(", error);
-        });
+    async deleteArea() {
+      const response = await this.$store.dispatch("deleteArea", this._id);
+
+      if (response.status === STATUS.SUCCESS) {
+        this.$router.push({ name: "areas" });
+      } else {
+        this.$store.dispatch("showSnackbar", response.message);
+      }
     },
 
     editArea() {
@@ -67,7 +66,7 @@ export default {
     if (!this.area) {
       const response = await this.$store.dispatch("getArea", this._id);
 
-      if(response.status === STATUS.SUCCESS) {
+      if (response.status === STATUS.SUCCESS) {
         this.name = response.data.name;
         this.description = response.data.description;
       } else {

@@ -69,7 +69,7 @@ export const areasStore = {
             try {
                 const response = await getAreas();
                 commit(GET_AREAS_SUCCESS, response.data);
-                return new StoreResponse(STATUS.SUCCESS, "Succesfully fetched areas")
+                return new StoreResponse(STATUS.SUCCESS, "Succesfully fetched areas", response.data)
             } catch (error) {
                 commit(GET_AREAS_ERROR);
                 return new StoreResponse(STATUS.SUCCESS, "Error fetching areas")

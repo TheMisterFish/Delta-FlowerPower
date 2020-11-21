@@ -46,6 +46,7 @@
 
 <script>
 import AreaMap from "../../components/AreaMap.vue";
+import { STATUS } from "../../store/storeResponse";
 
 export default {
   name: "AddArea",
@@ -57,7 +58,7 @@ export default {
     description: "",
   }),
   methods: {
-    addArea() {
+    async addArea() {
       const name = this.name;
       const description = this.description;
 
@@ -65,20 +66,18 @@ export default {
       const lat_long_point_one = "5.469722, 51.441643";
       const lat_long_point_two = "5.469722, 51.441643";
 
-      this.$store
-        .dispatch("addArea", {
-          name: name,
-          description: description,
-          lat_long_point_one: lat_long_point_one,
-          lat_long_point_two: lat_long_point_two,
-        })
-        .then(() => {
-          console.log("added area!");
-          this.$router.push({ name: "areas" });
-        })
-        .catch((error) => {
-          console.log("error :-(", error);
-        });
+      const response = await this.$store.dispatch("addArea", {
+        name: name,
+        description: description,
+        lat_long_point_one: lat_long_point_one,
+        lat_long_point_two: lat_long_point_two,
+      });
+
+      if (response.status === STATUS.SUCCESS) {
+        this.$router.push({ name: "areas" });
+      } else {
+        this.$store.dispatch("showSnackbar", response.message);
+      }
     },
   },
 };

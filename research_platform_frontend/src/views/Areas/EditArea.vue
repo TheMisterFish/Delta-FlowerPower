@@ -32,7 +32,7 @@
 <script>
 import { mapState } from "vuex";
 import AreaMap from "../../components/AreaMap.vue";
-import { STATUS } from '../../store/storeResponse';
+import { STATUS } from "../../store/storeResponse";
 export default {
   name: "Area",
   components: {
@@ -47,6 +47,9 @@ export default {
     _id() {
       return this.$route.params.id;
     },
+    area: function() {
+      return this.areas.areas.find((area) => area._id === this._id);
+    },
   },
   methods: {
     cancel() {
@@ -56,36 +59,34 @@ export default {
       });
     },
     async save() {
-      const response = await this.$store.dispatch("updateArea", {_id: this._id, area: {name: this.name, description: this.description}});
+      const response = await this.$store.dispatch("updateArea", {
+        _id: this._id,
+        area: { name: this.name, description: this.description },
+      });
 
-      if(response.status === STATUS.SUCCESS) {
+      if (response.status === STATUS.SUCCESS) {
         this.$router.push({
           name: "areas/:id",
-          params: { id: this._id, title: name}
-        })
+          params: { id: this._id, title: name },
+        });
       } else {
-        console.log(response);
+        this.$store.dispatch("showSnackbar", response.message);
       }
     },
   },
-  created: function() {
-    const _id = this._id;
+  created: async function() {
+    if (!this.area) {
+      const response = await this.$store.dispatch("editArea", this._id);
 
-    const area = this.areas.areas.find((a) => a._id === _id);
-
-    if (!area) {
-      this.$store
-        .dispatch("getArea", _id)
-        .then((response) => {
-          this.name = response.data.name;
-          this.description = response.data.description;
-        })
-        .catch((error) => {
-          console.log("error:", error);
-        });
+      if (response.status === STATUS.SUCCESS) {
+        this.name = response.data.name;
+        this.description = response.data.description;
+      } else {
+        this.$store.dispatch("showSnackbar", response.message);
+      }
     } else {
-      this.name = area.name;
-      this.description = area.description;
+      this.name = this.area.name;
+      this.description = this.area.description;
     }
   },
 };

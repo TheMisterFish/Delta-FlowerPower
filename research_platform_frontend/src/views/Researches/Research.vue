@@ -37,17 +37,14 @@ export default {
     },
   },
   methods: {
-    deleteResearch() {
-      const _id = this.research._id;
-      this.$store
-        .dispatch("deleteArea", _id)
-        .then(() => {
-          console.log("area deleted!");
-          this.$router.push({ name: "areas" });
-        })
-        .catch((error) => {
-          console.log("error :-(", error);
-        });
+    async deleteResearch() {
+      const response = await this.$store.dispatch("deleteArea", this._id);
+
+      if (response.status === STATUS.SUCCESS) {
+        this.$router.push({ name: "areas" });
+      } else {
+        this.$store.dispatch("showSnackbar", response.message);
+      }
     },
   },
 
