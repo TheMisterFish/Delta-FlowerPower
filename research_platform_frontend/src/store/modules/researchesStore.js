@@ -1,5 +1,5 @@
-import { addResearch, getResearches } from "../../api/api";
-import { ADD_RESEARCH, ADD_RESEARCH_ERROR, ADD_RESEARCH_SUCCESS, GET_RESEARCHES, GET_RESEARCHES_ERROR, GET_RESEARCHES_SUCCESS } from "../mutationTypes";
+import { addResearch, getResearch, getResearches } from "../../api/api";
+import { ADD_RESEARCH, ADD_RESEARCH_ERROR, ADD_RESEARCH_SUCCESS, GET_RESEARCH, GET_RESEARCHES, GET_RESEARCHES_ERROR, GET_RESEARCHES_SUCCESS, GET_RESEARCH_ERROR, GET_RESEARCH_SUCCESS } from "../mutationTypes";
 import { STATUS, StoreResponse } from "../storeResponse";
 
 export const researchesStore = {
@@ -26,7 +26,19 @@ export const researchesStore = {
             state.status = "success";
         },
         [ADD_RESEARCH_ERROR](state) {
-            state.status = "errror";
+            state.status = "error";
+        },
+        [GET_RESEARCH](state) {
+            state.status = "loading";
+        },
+        [GET_RESEARCH_SUCCESS](state, research) {
+            if (!state.researches.find((r) => r._id === research._id)) {
+                state.researches.push(research);
+            }
+            state.status = "success";
+        },
+        [GET_RESEARCH_ERROR](state) {
+            state.status = "error";
         }
     },
     actions: {
@@ -51,6 +63,18 @@ export const researchesStore = {
             } catch (error) {
                 commit(ADD_RESEARCH_ERROR);
                 return new StoreResponse(STATUS.ERROR, "Error adding research", error);
+            }
+        },
+
+        async getResearch({ commit }, _id) {
+            commit(GET_RESEARCH);
+            try {
+                const response = await getResearch(_id);
+                commit(GET_RESEARCH_SUCCESS, response.data);
+                return new StoreResponse(STATUS.SUCCESS, "Succesfully added research", response.data);
+            } catch (error) {
+                commit(GET_RESEARCH_ERROR);
+                return new StoreResponse(STATUS.ERROR, "Error getting research", error);
             }
         }
     }

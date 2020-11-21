@@ -6,7 +6,8 @@
           :headers="researchesHeaders"
           :items="researches.researches"
           hide-default-footer
-          style="grid-area: recent-results;"
+          class="research-table"
+          @click:row="openResearch"
         ></v-data-table>
         <v-btn
           to="/researches/add"
@@ -41,12 +42,29 @@ export default {
   computed: {
     ...mapState(["researches"]),
   },
+  methods: {
+    openResearch(value) {
+      const researchId = value._id;
+      const researchName = value.research;
+      console.log(value);
+      this.$router.push({
+        name: "research/:id",
+        params: { id: researchId, title: researchName },
+      });
+    },
+  },
   created: async function() {
     const response = await this.$store.dispatch("getResearches");
 
-    if (response.status === STATUS.SUCCESS) {
-      console.log(response);
+    if (response.status === STATUS.ERROR) {
+      this.$store.dispatch("showSnackbar", response.message);
     }
   },
 };
 </script>
+
+<style scoped>
+.research-table >>> tbody tr:hover {
+  cursor: pointer;
+}
+</style>

@@ -65,7 +65,7 @@ export default {
   },
   created: async function() {
     if (!this.area) {
-      const response = await this.$store.dispatch("getArea");
+      const response = await this.$store.dispatch("getArea", this._id);
 
       if(response.status === STATUS.SUCCESS) {
         this.name = response.data.name;

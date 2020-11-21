@@ -33,6 +33,8 @@ export default {
   name: "Dashboard",
   data: () => ({
     drawer: false,
+    recentResearches: [],
+    recentResearchesHeaders: []
   }),
 };
 </script>

@@ -40,6 +40,13 @@ export function addResearch(research) {
     })
 }
 
+export function getResearch(_id) {
+    return Axios({
+        url: `http://localhost:7080/sessions/${_id}`,
+        method: "GET"
+    })
+}
+
 //areas_store
 export function getAreas() {
     return Axios({

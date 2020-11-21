@@ -62,7 +62,6 @@ export default {
       this.$refs.drawer.visible = true;
     },
     navigateBack() {
-      console.log(this.$route);
       this.$router.push({ name: this.$route.meta.from });
     },
   },

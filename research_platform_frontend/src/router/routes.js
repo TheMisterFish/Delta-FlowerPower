@@ -27,24 +27,40 @@ export const routes = [{
             researcher: true,
         },
         children: [{
-            path: "",
-            name: "researches",
-            component: () =>
-                import ("@/views/Researches/Researches.vue"),
-            meta: {
-                title: "Researches",
-                drawer: true
+                path: "",
+                name: "researches",
+                component: () =>
+                    import ("@/views/Researches/Researches.vue"),
+                meta: {
+                    title: "Researches",
+                    drawer: true
+                }
+            }, {
+                path: "add",
+                component: () =>
+                    import ("@/views/Researches/AddResearch.vue"),
+                meta: {
+                    title: "Add research",
+                    action: true,
+                    from: "researches"
+                }
+            },
+            {
+
+                path: ":id",
+                component: emptyRouteView,
+                children: [{
+                    path: "",
+                    name: "research/:id",
+                    component: () =>
+                        import ("@/views/Researches/Research.vue"),
+                    meta: {
+                        title: "View Research",
+                        from: "researches"
+                    }
+                }, ]
             }
-        }, {
-            path: "add",
-            component: () =>
-                import ("@/views/Researches/AddResearch.vue"),
-            meta: {
-                title: "Add research",
-                action: true,
-                from: "researches"
-            }
-        }]
+        ]
     },
     {
         path: "/areas",
