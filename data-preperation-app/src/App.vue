@@ -4,6 +4,21 @@
   </v-app>
 </template>
 
+<script>
+export default {
+  name: "app",
+  created: async function() {
+    const webSocket = await this.$store.dispatch("connectWebSocket");
+
+    const self = this;
+
+    webSocket.onmessage = function(event) {
+      self.$store.dispatch("onWebSocketMessage", event.data);
+    };
+  },
+};
+</script>
+
 <style>
 :root {
   --primary-color: #567a58;

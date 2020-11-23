@@ -13,6 +13,11 @@ contextBridge.exposeInMainWorld(
         },
         receive: (channel, func) => {
             ipcRenderer.on(channel, (event, ...args) => func(...args));
+        },
+        invoke: async(channel, data) => {
+            const result = await ipcRenderer.invoke(channel, data);
+            console.log(result);
+            return result;
         }
     }
 )

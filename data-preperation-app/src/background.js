@@ -5,7 +5,80 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
 import { FILESYSTEM } from '../constants'
+import { PYTHON, SELECT_FOLDER, SPLIT_IMAGES } from './constants'
+import rpc from 'json-rpc2';
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+//--------------------------------------- NODE CLIENT ---------------------------------------//
+let nodeClient = null;
+
+function createNodeClient() {
+    nodeClient = rpc.Client.$create(4242, 'localhost');
+}
+
+app.on('ready', createNodeClient);
+
+//--------------------------------------- PYTHON SERVER ---------------------------------------//
+
+let pythonProcess = null;
+const PYTHON_DIST_FOLDER = 'backend_dist';
+const PYTHON_FOLDER = 'backend';
+const PYTHON_MODULE = 'api';
+
+function packaged() {
+    return require('fs').existsSync(path.join(__static, PYTHON_DIST_FOLDER));
+}
+
+function getPythonScriptPath() {
+    if (!packaged()) {
+        return path.join(__static, PYTHON_FOLDER, `${PYTHON_MODULE}.py`);
+    }
+
+    if (process.platform === 'win32') {
+        return path.join(__static, PYTHON_DIST_FOLDER, PYTHON_MODULE, `${PYTHON_MODULE}.exe`);
+    }
+
+    return path.join(__static, PYTHON_DIST_FOLDER, PYTHON_MODULE, PYTHON_MODULE);
+}
+
+function createPythonProcess() {
+    const script = getPythonScriptPath();
+
+    console.log('---------------------------creating python process---------------------------')
+
+    console.log(script);
+
+    console.log('packaged', packaged())
+
+    if (packaged()) {
+        pythonProcess = require('child_process').execFile(script);
+    } else {
+        pythonProcess = require('child_process').spawn('python', [script]);
+    }
+
+    console.log('---------------------------python process created---------------------------')
+
+    pythonProcess.stdout.on('data', function(data) {
+        console.log('PYTHON: stdout:', data.toString());
+    })
+
+    pythonProcess.stderr.on('data', function(data) {
+        //Here is where the error output goes
+        console.log('PYTON: stderr:', data.toString());
+    });
+}
+
+function exitPythonProcess() {
+    pythonProcess.kill()
+}
+
+app.on('ready', createPythonProcess)
+app.on('will-quit', exitPythonProcess)
+
+
+//--------------------------------------- ELECTRON WINDOW ---------------------------------------//
+
+let window = null;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -14,7 +87,7 @@ protocol.registerSchemesAsPrivileged([
 
 async function createWindow() {
     // Create the browser window.
-    const win = new BrowserWindow({
+    window = new BrowserWindow({
         width: 1200,
         height: 800,
         webPreferences: {
@@ -28,12 +101,12 @@ async function createWindow() {
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
         // Load the url of the dev server if in development mode
-        await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-        if (!process.env.IS_TEST) win.webContents.openDevTools()
+        await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+        if (!process.env.IS_TEST) window.webContents.openDevTools()
     } else {
         createProtocol('app')
             // Load the index.html when not in development
-        win.loadURL('app://./index.html')
+        window.loadURL('app://./index.html')
     }
 }
 
@@ -83,10 +156,13 @@ if (isDevelopment) {
 }
 
 //--------------------------------------- IPC MAIN PROCESS ---------------------------------------//
-ipcMain.on(FILESYSTEM, (event, args) => {
-    dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] }).then((response) => {
-        console.log(response);
-    }).catch((error) => {
-        console.log(error);
-    })
+ipcMain.handle(FILESYSTEM, async(event, args) => {
+    if (args === SELECT_FOLDER) {
+        try {
+            const response = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+            return response.filePaths[0];
+        } catch (error) {
+            console.error(error);
+        }
+    }
 })
