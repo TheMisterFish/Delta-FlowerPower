@@ -29,7 +29,9 @@ import com.MAVLink.enums.MAV_PROTOCOL_CAPABILITY;
 import com.MAVLink.enums.MAV_RESULT;
 import com.MAVLink.common.msg_set_position_target_local_ned;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -486,21 +488,79 @@ public class MAVLinkReceiver {
             case MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL:
                 parent.logMessageDJI("Received MAV: MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL");
                 msg_file_transfer_protocol msg_ftp_item = (msg_file_transfer_protocol) msg;
-                parent.logMessageDJI(msg_ftp_item.toString());
-                parent.logMessageDJI(msg_ftp_item.payload.toString());
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[0]));
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[1]));
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[2]));
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[3]));
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[4]));
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[5]));
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[6]));
-                parent.logMessageDJI(String.valueOf(msg_ftp_item.payload[7]));
-                parent.logMessageDJI("Read till 7, gl");
+
+//                ByteBuffer buffer = ByteBuffer.allocate(msg_ftp_item.payload.length * 2);
+//                buffer.asShortBuffer().put(msg_ftp_item.payload);
+//                byte[] bytes = buffer.array();
+
+                parent.logMessageDJI(msg_ftp_item.payload.length + "");
 
 
+//                byte[] bytes = new byte[8];
+//                ByteBuffer.wrap(bytes).putLong(value);
+//                Arrays.copy
+//                parent.logMessageDJI();
 
 
+                int sessionId = new Short(msg_ftp_item.payload[2]).intValue();
+                int opCode = new Short(msg_ftp_item.payload[3]).intValue();
+
+                String offsetNumberString = "";
+                for(int i = 0; i <= 3; i++){
+                    int added = 8 + i;
+                    offsetNumberString += new Short(msg_ftp_item.payload[added]).intValue();
+                };
+                int offset = Integer.parseInt(offsetNumberString.replaceAll( "^0+", ""));
+
+                parent.logMessageDJI("opCode: " + opCode);
+                parent.logMessageDJI("Offset: " + offset);
+
+//                TODO Fix this so it F* works T>T
+                String commandInfo = "";
+                for (int x = 0; x < 251; x ++){
+                    try {
+                        commandInfo += new Short(msg_ftp_item.payload[x]).intValue();
+                    } catch (Exception e) {
+                        parent.logMessageDJI(e.toString());
+                    }
+                }
+                parent.logMessageDJI(commandInfo);
+                parent.logMessageDJI(String.valueOf(opCode));
+                parent.logMessageDJI("code was " + opCode);
+//                TODO add download function, add delete function
+                switch (opCode) {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3: //return list
+                        parent.logMessageDJI("Getting files");
+                        parent.getFilesDir();
+                        String dir_items = "";
+                        String add_dir = "";
+                        for(int i = 0; i < parent.mediaFileList.size(); i++){
+                            add_dir = parent.mediaFileList.get(i).getFileName() + "\\" + parent.mediaFileList.get(i).getFileSize() + "\\0";
+                            if(dir_items.length() + add_dir.length() < 254) {
+                                dir_items = dir_items + add_dir;
+                            }
+                        }
+                        parent.logMessageDJI("total: " + dir_items.length() + ": " + dir_items);
+
+                        mModel.send_command_ack(MAV_PROTOCOL_CAPABILITY_FTP, MAV_RESULT.MAV_RESULT_ACCEPTED);
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                }
                 break;
             default:
                 parent.logMessageDJI("Received (unkown) message");

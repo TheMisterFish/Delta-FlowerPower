@@ -2,18 +2,18 @@
   "buildFiles": [
     "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\build\\cmake\\platforms.cmake",
     "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
-    "D:\\git_repos\\rosettadrone\\app\\CMakeLists.txt"
+    "D:\\git_repos\\flowerpower\\droneapp\\app\\CMakeLists.txt"
   ],
   "cleanCommands": [
-    "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\arm64-v8a\" clean"
+    "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\arm64-v8a\" clean"
   ],
-  "buildTargetsCommand": "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\arm64-v8a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "buildTargetsCommand": "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\arm64-v8a\" {LIST_OF_TARGETS_TO_BUILD}",
   "libraries": {
     "djivideojni-Debug-arm64-v8a": {
       "artifactName": "djivideojni",
-      "buildCommand": "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\arm64-v8a\" djivideojni",
+      "buildCommand": "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\arm64-v8a\" djivideojni",
       "abi": "arm64-v8a",
-      "output": "D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\arm64-v8a\\libdjivideojni.so"
+      "output": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\arm64-v8a\\libdjivideojni.so"
     }
   }
 }

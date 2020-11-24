@@ -1,2 +1,2 @@
-ninja: Entering directory `D:\git_repos\rosettadrone\app\.cxx\cmake\debug\armeabi-v7a'
+ninja: Entering directory `D:\git_repos\flowerpower\droneapp\app\.cxx\cmake\debug\armeabi-v7a'
 ninja: no work to do.

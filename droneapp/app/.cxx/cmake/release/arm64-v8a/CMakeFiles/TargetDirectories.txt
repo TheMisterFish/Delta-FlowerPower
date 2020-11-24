@@ -1,3 +1,3 @@
-D:/git_repos/rosettadrone/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/edit_cache.dir
-D:/git_repos/rosettadrone/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/djivideojni.dir
-D:/git_repos/rosettadrone/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/rebuild_cache.dir
+D:/git_repos/flowerpower/droneapp/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/git_repos/flowerpower/droneapp/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/djivideojni.dir
+D:/git_repos/flowerpower/droneapp/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/rebuild_cache.dir

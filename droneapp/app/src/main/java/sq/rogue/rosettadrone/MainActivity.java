@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
     protected SharedPreferences sharedPreferences;
 
     // Custom added
-    private List<MediaFile> mediaFileList = new ArrayList<MediaFile>();
+    public List<MediaFile> mediaFileList = new ArrayList<MediaFile>();
     private MediaManager mMediaManager;
     private MediaManager.FileListState currentFileListState = MediaManager.FileListState.UNKNOWN;
     private FetchMediaTaskScheduler scheduler;
@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
                 }
             }
         }
-
+        logMessageDJI("Init media manager");
         initMediaManager();
     }
 
@@ -1626,10 +1626,10 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
                         public void onResult(DJIError error) {
                             if (error == null) {
                                 DJILog.e(TAG, "Set cameraMode success");
-                                getFileList();
                             } else {
                                 logMessageDJI("Set cameraMode failed");
                             }
+                            getFileList();
                         }
                     });
                     if (mMediaManager.isVideoPlaybackSupported()) {
@@ -1680,7 +1680,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
         }
     }
 
-    private void getFileList() {
+    public void getFileList() {
         mMediaManager = RDApplication.getCameraInstance().getMediaManager();
         if (mMediaManager != null) {
 

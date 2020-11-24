@@ -42,7 +42,7 @@ rule C_SHARED_LIBRARY_LINKER__djivideojni
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = D:\Java\ANDROID_SDK_11.0\cmake\3.10.2.4988404\bin\cmake.exe -HD:\git_repos\rosettadrone\app -BD:\git_repos\rosettadrone\app\.cxx\cmake\debug\x86
+  command = D:\Java\ANDROID_SDK_11.0\cmake\3.10.2.4988404\bin\cmake.exe -HD:\git_repos\flowerpower\droneapp\app -BD:\git_repos\flowerpower\droneapp\app\.cxx\cmake\debug\x86
   description = Re-running CMake...
   generator = 1
 

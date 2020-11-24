@@ -1,2 +1,0 @@
-ninja: Entering directory `D:\git_repos\rosettadrone\app\.cxx\cmake\debug\x86'
-ninja: no work to do.

@@ -32,6 +32,9 @@ import com.MAVLink.common.msg_statustext;
 import com.MAVLink.common.msg_sys_status;
 import com.MAVLink.common.msg_vfr_hud;
 import com.MAVLink.common.msg_vibration;
+// CUSTOM
+import com.MAVLink.common.msg_file_transfer_protocol;
+
 import com.MAVLink.enums.GPS_FIX_TYPE;
 import com.MAVLink.enums.MAV_AUTOPILOT;
 import com.MAVLink.enums.MAV_FRAME;
@@ -1017,6 +1020,18 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
         msg.result = (short) result;
         sendMessage(msg);
     }
+
+//    void send_command_ackdata(int message_id, int result, String data) {
+//        msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
+////        msg.command = message_id;
+////        msg.result = (short) result;
+//        msg.
+//
+//        byte[] payload = data.getBytes();
+//        msg.payload = payload;
+//
+//        sendMessage(msg);
+//    }
 
     private void send_global_position_int() {
         msg_global_position_int msg = new msg_global_position_int();
