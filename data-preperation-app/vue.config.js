@@ -7,7 +7,7 @@ module.exports = {
             preload: 'public/preload.js',
             externals: ['dialog'],
             builderOptions: {
-                extraResources: ['public/preload.js']
+                extraResources: [{ "from": 'public/backend_dist', "to": 'backend_dist' }]
             }
         }
     }

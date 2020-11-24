@@ -5,18 +5,8 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
 import { FILESYSTEM } from '../constants'
-import { PYTHON, SELECT_FOLDER, SPLIT_IMAGES } from './constants'
-import rpc from 'json-rpc2';
+import { SELECT_FOLDER } from './constants'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
-//--------------------------------------- NODE CLIENT ---------------------------------------//
-let nodeClient = null;
-
-function createNodeClient() {
-    nodeClient = rpc.Client.$create(4242, 'localhost');
-}
-
-app.on('ready', createNodeClient);
 
 //--------------------------------------- PYTHON SERVER ---------------------------------------//
 
@@ -26,7 +16,7 @@ const PYTHON_FOLDER = 'backend';
 const PYTHON_MODULE = 'api';
 
 function packaged() {
-    return require('fs').existsSync(path.join(__static, PYTHON_DIST_FOLDER));
+    return process.env.VUE_APP_MODE === "PRODUCTION"
 }
 
 function getPythonScriptPath() {
@@ -35,10 +25,10 @@ function getPythonScriptPath() {
     }
 
     if (process.platform === 'win32') {
-        return path.join(__static, PYTHON_DIST_FOLDER, PYTHON_MODULE, `${PYTHON_MODULE}.exe`);
+        return path.join(__static, '..', PYTHON_DIST_FOLDER, PYTHON_MODULE, `${PYTHON_MODULE}.exe`);
     }
 
-    return path.join(__static, PYTHON_DIST_FOLDER, PYTHON_MODULE, PYTHON_MODULE);
+    return path.join(__static, PYTHON_DIST_FOLDER, PYTHON_MODULE, `${PYTHON_MODULE}.exe`);
 }
 
 function createPythonProcess() {
@@ -48,7 +38,12 @@ function createPythonProcess() {
 
     console.log(script);
 
-    console.log('packaged', packaged())
+    console.log("STATIC", __static)
+    console.log("DIRNAME", __dirname)
+    console.log('huh')
+    console.log("APP_PATH", app.getAppPath())
+
+    console.log('PACKAGED', packaged())
 
     if (packaged()) {
         pythonProcess = require('child_process').execFile(script);
@@ -90,6 +85,7 @@ async function createWindow() {
     window = new BrowserWindow({
         width: 1200,
         height: 800,
+        title: app.getAppPath(),
         webPreferences: {
             // Use pluginOptions.nodeIntegration, leave this alone
             // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

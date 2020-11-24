@@ -20,7 +20,7 @@ def split_images(self, INPUT_DIRECTORY, OUTPUT_DIRECTORY, MAX_WIDTH, MAX_HEIGHT)
     annotations = pd.read_csv(f'{INPUT_DIRECTORY}/annotations.csv', names=[
                               'class', 'x', 'y', 'w', 'h', 'file', 'width', 'height'], header=None)
 
-    self.sendMessage(str.encode("Created directories"), fragmentSize=len(str.encode("Created directories!")))
+    self.sendSocketMessage("Created directories")
 
     current_index = 0
 
@@ -34,7 +34,7 @@ def split_images(self, INPUT_DIRECTORY, OUTPUT_DIRECTORY, MAX_WIDTH, MAX_HEIGHT)
         w_divider = round(image_width/MAX_WIDTH)
         h_divider = round(image_height/MAX_HEIGHT)
         sub_image_counter = 0
-        self.sendMessage(str.encode("Encoding image..." + str(current_index)), fragmentSize=len(str.encode("Encoding image..." + str(current_index))))
+        self.sendSocketMessage("Encoding image..." + str(current_index))
         for h_d in range(h_divider):
             for w_d in range(w_divider):
                 regio = (float(w_d * MAX_WIDTH), float(h_d * MAX_HEIGHT), float(w_d *
@@ -69,5 +69,6 @@ def split_images(self, INPUT_DIRECTORY, OUTPUT_DIRECTORY, MAX_WIDTH, MAX_HEIGHT)
                         })
                     sub_image_counter += 1
 
+    self.sendSocketMessage("Writing data to csv")
     pd.DataFrame(csv_rows).to_csv(
         f'{OUTPUT_DIRECTORY}/annotations.csv', header=False, index=None)

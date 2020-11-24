@@ -12,9 +12,14 @@ log.startLogging(sys.stdout)
 
 
 def split_images(self, input_directory, output_directory):
-    self.sendMessage(str.encode("Opening script..."),
-                     fragmentSize=len(str.encode("Opening script...")))
-    splitter.split_images(self, input_directory, output_directory, 512, 512)
+    #Sending opening script message
+    self.sendSocketMessage("Opening script...")
+    #Execute the splitter script on a new thread, this way we can wait for the thread to be finished (thread.join())
+    thread = threading.Thread(target=splitter.split_images, args=(self, input_directory, output_directory, 512, 512))
+    thread.start()
+    thread.join()
+    #At the end of the script send the finished message
+    self.sendSocketMessage("Finished succesfully!")
 
 
 class MyServerProtocol(WebSocketServerProtocol):
@@ -24,13 +29,16 @@ class MyServerProtocol(WebSocketServerProtocol):
     def onOpen(self):
         print("WebSocket connection open.")
 
+    def sendSocketMessage(self, message):
+        self.sendMessage(str.encode(message))
+
     def onMessage(self, payload, isBinary):
         print(payload, flush=True)
         message = json.loads(payload)
-        self.sendMessage(str.encode("Received payload!"), fragmentSize=len(
-            str.encode("Received payload!")), sync=False)
+        self.sendSocketMessage("Received payload!")
         if message[0] == "SPLIT_IMAGES":
-            thread = threading.Thread(target=split_images,args=(self, message[1], message[2])).start()
+            thread = threading.Thread(target=split_images, args=(
+                self, message[1], message[2])).start()
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)

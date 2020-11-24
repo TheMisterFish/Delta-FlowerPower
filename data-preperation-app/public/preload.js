@@ -1,5 +1,8 @@
 console.log("loaded preload!")
 
+console.log("DIRNAME", __dirname)
+console.log("STATIC", __static)
+
 import { contextBridge, ipcRenderer } from 'electron';
 
 console.log("imported electron")

@@ -1,15 +1,27 @@
 <template>
   <v-container>
-    <v-btn @click="selectInputFolder" color="primary">
-      {{ inputFolder || "Select input folder" }}
-    </v-btn>
-    <v-btn @click="selectOutputFolder" color="primary">
-      {{ outputFolder || "Select output folder" }}
-    </v-btn>
-    {{ socket.messages[socket.messages.length - 1] }}
-    <v-btn @click="splitImages" color="primary">
-      Split images
-    </v-btn>
+    <v-card>
+      <v-row>
+        <v-col class="d-flex justify-center">
+          <v-btn @click="selectInputFolder" color="primary">
+            {{ inputFolder || "Select input folder" }}
+          </v-btn>
+        </v-col>
+        <v-col class="d-flex justify-center">
+          <v-btn @click="selectOutputFolder" color="primary">
+            {{ outputFolder || "Select output folder" }}
+          </v-btn>
+        </v-col>
+        <v-col cols="12" class="d-flex justify-center">
+          <v-btn @click="splitImages" color="primary">
+            Split images
+          </v-btn>
+        </v-col>
+        <v-col class="d-flex justify-center">
+          {{ socket.messages[socket.messages.length - 1] }}
+        </v-col>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
