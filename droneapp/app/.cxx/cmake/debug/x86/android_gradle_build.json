@@ -1,0 +1,42 @@
+{
+  "stringTable": {
+    "0": "D:/git_repos/rosettadrone/app/.cxx/cmake/debug/x86",
+    "1": "--target=i686-none-linux-android22 --gcc-toolchain=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Ddjivideojni_EXPORTS -I../../../../src/main/cpp -I../../../../src/main/cpp/include -I../../../../src/main/cpp/gstreamer-1.0/armv7/include/gstreamer-1.0 -I../../../../src/main/cpp/gstreamer-1.0/armv7/include/glib-2.0 -I../../../../src/main/cpp/gstreamer-1.0/armv7/lib/glib-2.0/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC"
+  },
+  "buildFiles": [
+    "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\build\\cmake\\platforms.cmake",
+    "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
+    "D:\\git_repos\\rosettadrone\\app\\CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\x86\" clean"
+  ],
+  "buildTargetsCommand": "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\x86\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "djivideojni-Debug-x86": {
+      "buildCommand": "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\x86\" djivideojni",
+      "buildType": "debug",
+      "toolchain": "3515727410",
+      "abi": "x86",
+      "artifactName": "djivideojni",
+      "files": [
+        {
+          "src": "D:\\git_repos\\rosettadrone\\app\\src\\main\\cpp\\dji_video_jni.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "D:\\git_repos\\rosettadrone\\app\\.cxx\\cmake\\debug\\x86\\libdjivideojni.so"
+    }
+  },
+  "toolchains": {
+    "3515727410": {
+      "cCompilerExecutable": "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": []
+}
