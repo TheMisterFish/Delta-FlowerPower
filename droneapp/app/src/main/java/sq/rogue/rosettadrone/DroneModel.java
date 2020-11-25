@@ -45,11 +45,13 @@ import com.MAVLink.enums.MAV_PROTOCOL_CAPABILITY;
 import com.MAVLink.enums.MAV_RESULT;
 import com.MAVLink.enums.MAV_STATE;
 import com.MAVLink.enums.MAV_TYPE;
+import com.google.android.gms.common.util.ArrayUtils;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.PortUnreachableException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -89,6 +91,7 @@ import dji.common.model.LocationCoordinate2D;
 // TENI import dji.common.remotecontroller.ChargeRemaining;
 import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
+import dji.internal.util.ArrayUtil;
 import dji.sdk.battery.Battery;
 import dji.sdk.camera.Camera;
 import dji.sdk.flightcontroller.FlightController;
@@ -1021,17 +1024,29 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
         sendMessage(msg);
     }
 
-//    void send_command_ackdata(int message_id, int result, String data) {
-//        msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
-////        msg.command = message_id;
-////        msg.result = (short) result;
-//        msg.
-//
-//        byte[] payload = data.getBytes();
-//        msg.payload = payload;
-//
-//        sendMessage(msg);
-//    }
+    void send_command_ftp_ack(int message_id, String data) {
+        parent.logMessageDJI("CAME HERE!");
+        msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
+
+        byte[] byteString = data.getBytes();
+        short[] shortString = new short[byteString.length];
+        parent.logMessageDJI("CAME HERE!: " + byteString.length);
+
+        for (int i = 0; i < byteString.length; i++){
+            short s = (short)byteString[i];
+            shortString[i] = s;
+        }
+        msg.payload = shortString;
+        msg.msgid = message_id;
+
+        msg_file_transfer_protocol packet = msg;
+        parent.logMessageDJI("Msg id: " + packet.msgid + "");
+        parent.logMessageDJI("payload length: " + packet.payload.length);
+        parent.logMessageDJI("payload: " + packet.payload.toString());
+
+
+        sendMessage(msg);
+    }
 
     private void send_global_position_int() {
         msg_global_position_int msg = new msg_global_position_int();

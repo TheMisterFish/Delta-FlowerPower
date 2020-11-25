@@ -505,12 +505,14 @@ public class MAVLinkReceiver {
                 int sessionId = new Short(msg_ftp_item.payload[2]).intValue();
                 int opCode = new Short(msg_ftp_item.payload[3]).intValue();
 
-                String offsetNumberString = "";
+                byte[] byteArray = new byte[4];
+
                 for(int i = 0; i <= 3; i++){
                     int added = 8 + i;
-                    offsetNumberString += new Short(msg_ftp_item.payload[added]).intValue();
+                    short x = new Short(msg_ftp_item.payload[added]);
+                    byteArray[i] = (byte)(x & 0xff);
                 };
-                int offset = Integer.parseInt(offsetNumberString.replaceAll( "^0+", ""));
+                int offset = ByteBuffer.wrap(byteArray).getInt();
 
                 parent.logMessageDJI("opCode: " + opCode);
                 parent.logMessageDJI("Offset: " + offset);
@@ -540,7 +542,7 @@ public class MAVLinkReceiver {
                         parent.getFilesDir();
                         String dir_items = "";
                         String add_dir = "";
-                        for(int i = 0; i < parent.mediaFileList.size(); i++){
+                        for(int i = offset; i < parent.mediaFileList.size(); i++){
                             add_dir = parent.mediaFileList.get(i).getFileName() + "\\" + parent.mediaFileList.get(i).getFileSize() + "\\0";
                             if(dir_items.length() + add_dir.length() < 254) {
                                 dir_items = dir_items + add_dir;
@@ -548,7 +550,7 @@ public class MAVLinkReceiver {
                         }
                         parent.logMessageDJI("total: " + dir_items.length() + ": " + dir_items);
 
-                        mModel.send_command_ack(MAV_PROTOCOL_CAPABILITY_FTP, MAV_RESULT.MAV_RESULT_ACCEPTED);
+                        mModel.send_command_ftp_ack(MAV_PROTOCOL_CAPABILITY_FTP, dir_items);
                         break;
                     case 4:
                         break;
