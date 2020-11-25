@@ -29,6 +29,11 @@ import com.MAVLink.enums.MAV_PROTOCOL_CAPABILITY;
 import com.MAVLink.enums.MAV_RESULT;
 import com.MAVLink.common.msg_set_position_target_local_ned;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,6 +124,8 @@ public class MAVLinkReceiver {
     private ArrayList<msg_mission_item> mMissionItemList;
     private boolean isHome = true;
     private float homeValue = 0;
+    private File currentFile;
+    private byte[] currentFileInBytes;
 
     public MAVLinkReceiver(MainActivity parent, DroneModel model) {
 
@@ -489,18 +496,7 @@ public class MAVLinkReceiver {
                 parent.logMessageDJI("Received MAV: MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL");
                 msg_file_transfer_protocol msg_ftp_item = (msg_file_transfer_protocol) msg;
 
-//                ByteBuffer buffer = ByteBuffer.allocate(msg_ftp_item.payload.length * 2);
-//                buffer.asShortBuffer().put(msg_ftp_item.payload);
-//                byte[] bytes = buffer.array();
-
                 parent.logMessageDJI(msg_ftp_item.payload.length + "");
-
-
-//                byte[] bytes = new byte[8];
-//                ByteBuffer.wrap(bytes).putLong(value);
-//                Arrays.copy
-//                parent.logMessageDJI();
-
 
                 int sessionId = new Short(msg_ftp_item.payload[2]).intValue();
                 int opCode = new Short(msg_ftp_item.payload[3]).intValue();
@@ -515,52 +511,88 @@ public class MAVLinkReceiver {
                 int offset = ByteBuffer.wrap(byteArray).getInt();
 
                 parent.logMessageDJI("opCode: " + opCode);
+                parent.logMessageDJI("sessionId: " + sessionId);
                 parent.logMessageDJI("Offset: " + offset);
 
 //                TODO Fix this so it F* works T>T
-                String commandInfo = "";
-                for (int x = 0; x < 251; x ++){
-                    try {
-                        commandInfo += new Short(msg_ftp_item.payload[x]).intValue();
-                    } catch (Exception e) {
-                        parent.logMessageDJI(e.toString());
-                    }
-                }
-                parent.logMessageDJI(commandInfo);
-                parent.logMessageDJI(String.valueOf(opCode));
                 parent.logMessageDJI("code was " + opCode);
 //                TODO add download function, add delete function
                 switch (opCode) {
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3: //return list
+                    case 3: // Return list
                         parent.logMessageDJI("Getting files");
                         parent.getFilesDir();
-                        String dir_items = "";
-                        String add_dir = "";
-                        for(int i = offset; i < parent.mediaFileList.size(); i++){
-                            add_dir = parent.mediaFileList.get(i).getFileName() + "\\" + parent.mediaFileList.get(i).getFileSize() + "\\0";
-                            if(dir_items.length() + add_dir.length() < 254) {
-                                dir_items = dir_items + add_dir;
+                        if(parent.mediaFileList.size() < offset) {
+                            mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
+                        } else {
+                            String dir_items = "";
+                            String add_dir = "";
+                            for (int i = offset; i < parent.mediaFileList.size(); i++) {
+                                add_dir = "F" + parent.mediaFileList.get(i).getFileName() + "\\t" + parent.mediaFileList.get(i).getFileSize() + "\\0";
+                                if (dir_items.getBytes().length + add_dir.getBytes().length < (251 - 12)) {
+                                    dir_items += add_dir;
+                                }
                             }
-                        }
-                        parent.logMessageDJI("total: " + dir_items.length() + ": " + dir_items);
+                            parent.logMessageDJI("total: " + dir_items.getBytes().length + ": " + dir_items);
 
-                        mModel.send_command_ftp_ack(MAV_PROTOCOL_CAPABILITY_FTP, dir_items);
+                            mModel.send_command_ftp_string_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, dir_items);
+                        }
                         break;
-                    case 4:
+                    case 4: // Open file for reading
+                        int file_id = new Short(msg_ftp_item.payload[12]).intValue();
+                        parent.downloadFileByIndex(file_id);
+                        // wait for done
+                        while (parent.currentProgress != -1);
+
+                        if(parent.downloadError == -1){
+                            byte[] data = new byte[251];
+                            data[2] = (byte)sessionId;
+                            data[4] = 8;
+                            currentFile = new File(parent.last_downloaded_file);
+                            // convert to byte array
+                            try (InputStream is = new FileInputStream(currentFile)) {
+                                if (currentFile.length() > Integer.MAX_VALUE) {
+                                    mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 1, 0);
+                                    parent.logMessageDJI("File to big!");
+                                }
+
+                                int byte_offset = 0;
+                                int bytesRead;
+                                currentFileInBytes = new byte[(int) currentFile.length()];
+                                while (byte_offset < currentFileInBytes.length
+                                        && (bytesRead = is.read(currentFileInBytes, byte_offset, currentFileInBytes.length - byte_offset)) >= 0) {
+                                    byte_offset += bytesRead;
+                                }
+                            } catch (FileNotFoundException e) {
+                                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
+                                parent.logMessageDJI("FileNotFoundException: " + e.toString());
+                                return;
+                            } catch (IOException e) {
+                                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 1, 0);
+                                parent.logMessageDJI("IOException: " + e.toString());
+                                return;
+                            }
+                            long file_size = currentFile.length();
+                            // Create 8 bytes for the long file size
+                            byte[] bytes = ByteBuffer.allocate(8).putLong(file_size).array();
+                            for(int i = 0; i <= 7; i++){
+                                int added = 12 + i;
+                                data[i + added] = bytes[i];
+                            };
+                            mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
+                        } else {
+                            mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 1, 0);
+                        }
                         break;
-                    case 5:
+                    case 5: // Read file
+                        byte[] data = new byte[251];
+                        data[2] = (byte)sessionId;
+                        // TODO NOW make sure that offset cannot be to big. And if the bytesize minus the offset is lower than 251, make the byte array smaller
+                        for(int i = 0; i <= (251 - 12); i++){
+                            int added = 12 + i;
+                            data[i + added] = currentFileInBytes[offset + i];
+                        };
                         break;
-                    case 6:
-                        break;
-                    case 7:
-                        break;
-                    case 8:
+                    case 8: // Remove file
                         break;
                 }
                 break;

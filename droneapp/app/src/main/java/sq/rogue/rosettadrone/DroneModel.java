@@ -792,40 +792,44 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
     }
 
     private void sendMessage(MAVLinkMessage msg) {
-        if (socket == null)
+        if (socket == null) {
+            parent.logMessageDJI("Socket is null");
             return;
-
-        MAVLinkPacket packet = msg.pack();
-
-        packet.sysid = mSystemId;
-        packet.compid = MAV_COMP_ID_AUTOPILOT1;
-
-        byte[] bytes = packet.encodePacket();
-
+        }
         try {
-            DatagramPacket p = new DatagramPacket(bytes, bytes.length, socket.getInetAddress(), socket.getPort());
-            socket.send(p);
-            parent.logMessageToGCS(msg.toString());
+            MAVLinkPacket packet = msg.pack();
+            packet.sysid = mSystemId;
+            packet.compid = MAV_COMP_ID_AUTOPILOT1;
 
-            if (secondarySocket != null) {
-                DatagramPacket secondaryPacket = new DatagramPacket(bytes, bytes.length, secondarySocket.getInetAddress(), secondarySocket.getPort());
-                secondarySocket.send(secondaryPacket);
+            byte[] bytes = packet.encodePacket();
+
+            try {
+                DatagramPacket p = new DatagramPacket(bytes, bytes.length, socket.getInetAddress(), socket.getPort());
+                try {
+                    socket.send(p);
+                } catch (Exception e){
+                    parent.logMessageDJI("Error: " + e.toString());
+                }
+                parent.logMessageToGCS(msg.toString());
+
+                if (secondarySocket != null) {
+                    DatagramPacket secondaryPacket = new DatagramPacket(bytes, bytes.length, secondarySocket.getInetAddress(), secondarySocket.getPort());
+                    secondarySocket.send(secondaryPacket);
 //                parent.logMessageDJI("SECONDARY PACKET SENT");
+                }
+            if(msg.msgid == 128 || msg.msgid == 110) {
+                parent.logMessageDJI("send:" + msg.toString());
+                parent.logMessageDJI("sysid:" + packet.sysid);
+                parent.logMessageDJI("compid:" + packet.compid);
             }
-//            if(msg.msgid != MAVLINK_MSG_ID_POWER_STATUS &&
-//                    msg.msgid != MAVLINK_MSG_ID_SYS_STATUS &&
-//                    msg.msgid != MAVLINK_MSG_ID_VIBRATION &&
-//                    msg.msgid != MAVLINK_MSG_ID_ATTITUDE &&
-//                    msg.msgid != MAVLINK_MSG_ID_VFR_HUD &&
-//                    msg.msgid != MAVLINK_MSG_ID_GLOBAL_POSITION_INT &&
-//                    msg.msgid != MAVLINK_MSG_ID_GPS_RAW_INT &&
-//                    msg.msgid != MAVLINK_MSG_ID_RADIO_STATUS)
-//                parent.logMessageToGCS(msg.toString());
 
-        } catch (PortUnreachableException ignored) {
-
-        } catch (IOException e) {
-
+            } catch (PortUnreachableException ignored) {
+                parent.logMessageToGCS("Port unreachable exeption");
+            } catch (IOException e) {
+                parent.logMessageToGCS("Error: " + e.toString());
+            }
+        } catch(Exception e){
+            parent.logMessageDJI("Could not pack msg, error: " + e.toString());
         }
     }
 
@@ -1024,27 +1028,61 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
         sendMessage(msg);
     }
 
-    void send_command_ftp_ack(int message_id, String data) {
-        parent.logMessageDJI("CAME HERE!");
+    void send_command_ftp_string_ack(int message_id, String data) {
         msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
-
         byte[] byteString = data.getBytes();
-        short[] shortString = new short[byteString.length];
-        parent.logMessageDJI("CAME HERE!: " + byteString.length);
+        short[] shortArray = new short[251];
 
+        int sizeCounter = 0;
         for (int i = 0; i < byteString.length; i++){
+            int added = 12 + i;
             short s = (short)byteString[i];
-            shortString[i] = s;
+            shortArray[added] = s;
+            sizeCounter += 1;
         }
-        msg.payload = shortString;
+        shortArray[3] = (short)128;
+        shortArray[4] = (short)sizeCounter;
+
+        msg.payload = shortArray;
         msg.msgid = message_id;
 
-        msg_file_transfer_protocol packet = msg;
-        parent.logMessageDJI("Msg id: " + packet.msgid + "");
-        parent.logMessageDJI("payload length: " + packet.payload.length);
-        parent.logMessageDJI("payload: " + packet.payload.toString());
+        sendMessage(msg);
+    }
 
+    void send_command_ftp_bytes_ack(int message_id, byte[] data) {
+        msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
+        short[] shortArray = new short[data.length];
 
+        int sizeCounter = 0;
+        for (int i = 0; i < data.length; i++){
+            int added = 12 + i;
+            short s = (short)data[i];
+            shortArray[added] = s;
+            sizeCounter += 1;
+        }
+        shortArray[3] = (short)128;
+        shortArray[4] = (short)sizeCounter;
+
+        msg.payload = shortArray;
+        msg.msgid = message_id;
+
+        sendMessage(msg);
+    }
+
+    void send_command_ftp_nak(int message_id, int errorCode, int failCode) {
+        msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
+        short[] shortArray = new short[251];
+
+        shortArray[3] = (short)129; //nak code
+        if(failCode != 0){
+            shortArray[4] = (short)2; //error size
+            shortArray[13] = (short)failCode;
+        } else {
+            shortArray[4] = (short)1; //error size
+        }
+        shortArray[12] = (short)errorCode; // the error code
+
+        msg.msgid = message_id;
         sendMessage(msg);
     }
 

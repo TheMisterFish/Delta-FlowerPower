@@ -206,6 +206,11 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
     private MediaManager mMediaManager;
     private MediaManager.FileListState currentFileListState = MediaManager.FileListState.UNKNOWN;
     private FetchMediaTaskScheduler scheduler;
+    public String last_downloaded_file;
+    public int downloadError;
+
+    public int currentProgress = -1;
+    File destDir = new File(Environment.getExternalStorageDirectory().getPath() + "/DroneApp/");
 
     private Runnable djiUpdateRunnable = () -> {
         Intent intent = new Intent(FLAG_CONNECTION_CHANGE);
@@ -407,8 +412,6 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
                 }
             }
         }
-        logMessageDJI("Init media manager");
-        initMediaManager();
     }
 
 
@@ -631,6 +634,8 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
         mTimerHandler.postDelayed(enablesafety, 3000);
         //--------------------------------------------------------------
         //CUSTOM
+        logMessageDJI("Init media manager");
+        initMediaManager();
     }
 
     protected void SetMesasageBox(String msg) {
@@ -1565,6 +1570,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
             FLAG_DRONE_LANDING_PROTECTION_CHANGED = false;
         }
 
+        getFileList();
     }
 
     //---------------------------------------------------------------------------------------
@@ -1681,6 +1687,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
     }
 
     public void getFileList() {
+        logMessageDJI("Came here (getFileList)");
         mMediaManager = RDApplication.getCameraInstance().getMediaManager();
         if (mMediaManager != null) {
 
@@ -1703,9 +1710,9 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
                                 @Override
                                 public int compare(MediaFile lhs, MediaFile rhs) {
                                     if (lhs.getTimeCreated() < rhs.getTimeCreated()) {
-                                        return 1;
-                                    } else if (lhs.getTimeCreated() > rhs.getTimeCreated()) {
                                         return -1;
+                                    } else if (lhs.getTimeCreated() > rhs.getTimeCreated()) {
+                                        return 1;
                                     }
                                     return 0;
                                 }
@@ -1736,10 +1743,52 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
         }
     };
 
-    //    File managment done (CUSTOM)
+    public void downloadFileByIndex(final int index){
+        if ((mediaFileList.get(index).getMediaType() == MediaFile.MediaType.PANORAMA)
+                || (mediaFileList.get(index).getMediaType() == MediaFile.MediaType.SHALLOW_FOCUS)) {
+            logMessageDJI( "Media type is " + mediaFileList.get(index).getMediaType() + " This is not accaptable.");
+            return;
+        }
+
+        mediaFileList.get(index).fetchFileData(destDir, null, new DownloadListener<String>() {
+            @Override
+            public void onFailure(DJIError error) {
+                logMessageDJI( "Download File Failed" + error.getDescription());
+                currentProgress = -1;
+                downloadError = 1;
+            }
+
+            @Override
+            public void onProgress(long total, long current) {
+            }
+
+            @Override
+            public void onRateUpdate(long total, long current, long persize) {
+                int tmpProgress = (int) (1.0 * current / total * 100);
+                if (tmpProgress != currentProgress) {
+                    currentProgress = tmpProgress;
+                }
+            }
+
+            @Override
+            public void onStart() {
+                currentProgress = 0;
+            }
+
+            @Override
+            public void onSuccess(String filePath) {
+                logMessageDJI( "Download File Success: " + filePath + "/" + mediaFileList.get(index).getFileName());
+                last_downloaded_file = filePath+ "/" + mediaFileList.get(index).getFileName();
+                currentProgress = -1;
+                downloadError = -1;
+            }
+        });
+    }
+
     void onFileListStateChange(MediaManager.FileListState state){
         logMessageDJI( "Files changed?");
     }
+    //    File managment done (CUSTOM)
 
     private static class GCSCommunicatorAsyncTask extends AsyncTask<Integer, Integer, Integer> {
 
