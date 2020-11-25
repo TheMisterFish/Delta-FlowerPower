@@ -20,13 +20,18 @@
         <v-col class="d-flex justify-center">
           {{ socket.messages[socket.messages.length - 1] }}
         </v-col>
+        <v-col cols="12" class="d-flex justify-center">
+          <v-btn @click="flyDrone" color="primary">
+            Fly the drone
+          </v-btn>
+        </v-col>
       </v-row>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import { FILESYSTEM, SELECT_FOLDER, SPLIT_IMAGES } from "../constants.js";
+import { FILESYSTEM, FLY_AND_LAND, SELECT_FOLDER, SPLIT_IMAGES } from "../constants.js";
 import { mapState } from "vuex";
 
 export default {
@@ -56,6 +61,9 @@ export default {
         JSON.stringify([SPLIT_IMAGES, this.inputFolder, this.outputFolder])
       );
     },
+    flyDrone() {
+      this.$store.dispatch("sendWebSocketMessage", JSON.stringify([FLY_AND_LAND]))
+    }
   },
 };
 </script>
