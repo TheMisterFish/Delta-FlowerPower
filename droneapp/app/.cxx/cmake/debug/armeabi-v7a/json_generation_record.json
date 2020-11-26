@@ -5,7 +5,47 @@
   },
   {
     "level": "INFO",
-    "message": "JSON \u0027D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\android_gradle_build.json\u0027 was up-to-date"
+    "message": "Trying to locate CMake in local SDK repository."
+  },
+  {
+    "level": "INFO",
+    "message": "- CMake found in SDK at \u0027D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\u0027 had version \u00273.10.2\u0027"
+  },
+  {
+    "level": "INFO",
+    "message": "rebuilding JSON D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\android_gradle_build.json due to:"
+  },
+  {
+    "level": "INFO",
+    "message": "- a dependent build file changed"
+  },
+  {
+    "level": "INFO",
+    "message": "  - D:\\git_repos\\flowerpower\\droneapp\\app\\CMakeLists.txt"
+  },
+  {
+    "level": "INFO",
+    "message": "keeping json folder \u0027D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\armeabi-v7a\u0027 but regenerating project"
+  },
+  {
+    "level": "INFO",
+    "message": "executing cmake Executable : D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\cmake.exe\narguments : \n-HD:\\git_repos\\flowerpower\\droneapp\\app\n-BD:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\armeabi-v7a\n-DANDROID_ABI\u003darmeabi-v7a\n-DANDROID_PLATFORM\u003dandroid-22\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dD:\\git_repos\\flowerpower\\droneapp\\app\\build\\intermediates\\cmake\\debug\\obj\\armeabi-v7a\n-DCMAKE_BUILD_TYPE\u003dDebug\n-DANDROID_NDK\u003dD:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_ANDROID_ARCH_ABI\u003darmeabi-v7a\n-DCMAKE_SYSTEM_VERSION\u003d22\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_ANDROID_NDK\u003dD:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\n-DCMAKE_TOOLCHAIN_FILE\u003dD:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\build\\cmake\\android.toolchain.cmake\n-G Ninja\n-DCMAKE_MAKE_PROGRAM\u003dD:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe\njvmArgs : \n\n"
+  },
+  {
+    "level": "INFO",
+    "message": "done executing cmake"
+  },
+  {
+    "level": "INFO",
+    "message": "write build output D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\build_output.txt"
+  },
+  {
+    "level": "INFO",
+    "message": "deleted unexpected build output D:\\git_repos\\flowerpower\\droneapp\\app\\build\\intermediates\\cmake\\debug\\obj\\armeabi-v7a\\libdjivideojni.so in incremental regenerate"
+  },
+  {
+    "level": "INFO",
+    "message": "write command file D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\build_command.txt"
   },
   {
     "level": "INFO",

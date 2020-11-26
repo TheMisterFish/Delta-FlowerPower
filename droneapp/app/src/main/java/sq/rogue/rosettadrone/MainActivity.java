@@ -1687,6 +1687,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
     }
 
     public void getFileList() {
+        RDApplication.getProductInstance().getCamera().getMediaManager();
         logMessageDJI("Came here (getFileList)");
         mMediaManager = RDApplication.getCameraInstance().getMediaManager();
         if (mMediaManager != null) {

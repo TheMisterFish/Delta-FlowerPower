@@ -1,3 +1,5 @@
 # ninja log v5
 1	587	627933633	CMakeFiles/djivideojni.dir/src/main/cpp/dji_video_jni.c.o	22268a02b241e14c
 590	943	627933633	libdjivideojni.so	6a72bbda3546d852
+40	731	628089127	CMakeFiles/djivideojni.dir/src/main/cpp/dji_video_jni.c.o	22268a02b241e14c
+731	1378	628089128	libdjivideojni.so	6a72bbda3546d852
