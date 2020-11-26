@@ -1,27 +1,25 @@
-console.log("we reading the preload!!")
+console.log("loaded preload!")
 
-import { ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
-console.log("imported ipcrenderer");
+console.log("imported electron")
 
-window.ipcRenderer = ipcRenderer;
+console.log("exposing main world")
 
-console.log('setted the window')
+contextBridge.exposeInMainWorld(
+    'electron', {
+        send: (channel, data) => {
+            ipcRenderer.send(channel, data);
+        },
+        receive: (channel, func) => {
+            ipcRenderer.on(channel, (event, ...args) => func(...args));
+        },
+        invoke: async(channel, data) => {
+            const result = await ipcRenderer.invoke(channel, data);
+            console.log(result);
+            return result;
+        }
+    }
+)
 
-import rpc from 'json-rpc2';
-
-console.log("importerd rpc")
-
-console.log(rpc);
-
-const client = rpc.Client.$create(4242, 'localhost');
-
-console.log("created client")
-
-// Call add function on the server
-
-client.call('add', [1, 2], function(err, result) {
-    console.log('1 + 2 = ' + result);
-});
-
-console.log("END!")
+console.log("exposed!")

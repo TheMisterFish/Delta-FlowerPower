@@ -1,63 +1,66 @@
-from werkzeug.wrappers import Request, Response
-from werkzeug.serving import run_simple
-
-from jsonrpc import JSONRPCResponseManager, dispatcher
-
+from autobahn.twisted.websocket import WebSocketServerProtocol
+from autobahn.twisted.websocket import WebSocketServerFactory
+from twisted.internet import reactor
+from twisted.python import log
+# from scripts import splitter
+# from scripts import drone
+import threading
+import random
+import json
 import sys
 
-print("runnaman", flush=True)
+log.startLogging(sys.stdout)
 
 
-@dispatcher.add_method
-def foobar(**kwargs):
-    return kwargs["foo"] + kwargs["bar"]
+def split_images(client, input_directory, output_directory):
+    # Sending opening script message
+    client.sendSocketMessage("Opening script...")
+    # Execute the splitter script on a new thread, this way we can wait for the thread to be finished (thread.join())
+    # thread = threading.Thread(target=splitter.split_images, args=(
+    #     client, input_directory, output_directory, 512, 512))
+    # thread.start()
+    # thread.join()
+    # At the end of the script send the finished message
+    client.sendSocketMessage("Finished succesfully!")
 
 
-@Request.application
-def application(request):
-    # Dispatcher is dictionary {<method_name>: callable}
-    dispatcher["echo"] = lambda s: s
-    dispatcher["add"] = lambda a, b: a + b
+def fly_and_land(client):
+    client.sendSocketMessage("Executing fly and land script...")
+    # thread = threading.Thread(target=drone.fly_and_land, args=(client))
+    # thread.start()
+    # thread.join()
+    client.sendSocketMessage("Finished script succesfully!")
 
-    response = JSONRPCResponseManager.handle(
-        request.get_data(cache=False, as_text=True), dispatcher)
-    return Response(response.json, mimetype='application/json')
+
+class MyServerProtocol(WebSocketServerProtocol):
+    def onConnect(self, request):
+        print("Client connecting: {}".format(request.peer), flush=True)
+
+    def onOpen(self):
+        print("WebSocket connection open.")
+
+    def sendSocketMessage(self, message):
+        self.sendMessage(str.encode(message))
+
+    def onMessage(self, payload, isBinary):
+        print(payload, flush=True)
+        message = json.loads(payload)
+        self.sendSocketMessage("Received payload!")
+        if message[0] == "SPLIT_IMAGES":
+            thread = threading.Thread(target=split_images, args=(
+                self, message[1], message[2])).start()
+        elif message[0] == "FLY_AND_LAND":
+            thread = threading.Thread(
+                target=fly_and_land, args=(self,)).start()
+
+    def onClose(self, wasClean, code, reason):
+        print("WebSocket connection closed: {}".format(reason), flush=True)
 
 
 if __name__ == '__main__':
-    print("I AM RUNNING!", flush=True)
-    run_simple('localhost', 4242, application)
+    # WebSocketServerFactory.resetProtocolOptions()
+    factory = WebSocketServerFactory("ws://127.0.0.1:9000")
+    factory.protocol = MyServerProtocol
 
-
-# from __future__ import print_function
-# from yolov5 import simple_detect as detect
-# import sys
-
-# class Router(object):
-#     def calc(self, text):
-#         """based on the input text, return the int result"""
-#         try:
-#             return detect.test()
-#         except Exception as e:
-#             return 0.0
-#     def echo(self, text):
-#         """echo any text"""
-#         return text
-
-# def parse_port():
-#     port = 4242
-#     try:
-#         port = int(sys.argv[1])
-#     except Exception as e:
-#         pass
-#     return '{}'.format(port)
-
-# def main():
-#     addr = 'tcp://127.0.0.1:' + parse_port()
-#     s = zerorpc.Server(Router())
-#     s.bind(addr)
-#     print('start running on {}'.format(addr))
-#     s.run()
-
-# if __name__ == '__main__':
-#     main()
+    reactor.listenTCP(9000, factory)
+    reactor.run()

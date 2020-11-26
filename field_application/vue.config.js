@@ -4,11 +4,10 @@ module.exports = {
     ],
     pluginOptions: {
         electronBuilder: {
-            // nodeIntegration: true,
             preload: 'public/preload.js',
-            externals: ['json-rpc2'],
+            externals: ['dialog'],
             builderOptions: {
-                extraResources: ['public/preload.js']
+                extraResources: [{ "from": 'public/backend_dist', "to": 'backend_dist' }]
             }
         }
     }

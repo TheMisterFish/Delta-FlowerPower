@@ -16,7 +16,7 @@ const PYTHON_MODULE = 'api';
  * Python process
  *************************************************************/
 function packaged() {
-    return require('fs').existsSync(path.join(__static, PYTHON_DIST_FOLDER));
+    return process.env.VUE_APP_MODE === "PRODUCTION"
 }
 
 function getPythonScriptPath() {
@@ -25,20 +25,14 @@ function getPythonScriptPath() {
     }
 
     if (process.platform === 'win32') {
-        return path.join(__static, PYTHON_DIST_FOLDER, PYTHON_MODULE, `${PYTHON_MODULE}.exe`);
+        return path.join(__static, '..', PYTHON_DIST_FOLDER, PYTHON_MODULE, `${PYTHON_MODULE}.exe`);
     }
 
-    return path.join(__static, PYTHON_DIST_FOLDER, PYTHON_MODULE, PYTHON_MODULE);
+    return path.join(__static, '..', PYTHON_DIST_FOLDER, PYTHON_MODULE, PYTHON_MODULE);
 }
 
 function createPythonProcess() {
     const script = getPythonScriptPath();
-
-    console.log('---------------------------creating python process---------------------------')
-
-    console.log(script);
-
-    console.log('packaged', packaged())
 
     if (packaged()) {
         pythonProcess = require('child_process').execFile(script);
@@ -46,20 +40,13 @@ function createPythonProcess() {
         pythonProcess = require('child_process').spawn('python', [script]);
     }
 
-    console.log('---------------------------python process created---------------------------')
-
     pythonProcess.stdout.on('data', function(data) {
-        console.log('received data!', data);
+        console.log('PYTHON: stdout:', data.toString());
     })
 
     pythonProcess.stderr.on('data', function(data) {
         //Here is where the error output goes
-
-        console.log('stderr: ' + data);
-
-        data = data.toString();
-
-        console.log(data);
+        console.log('PYTON: stderr:', data.toString());
     });
 }
 
@@ -82,13 +69,14 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 550,
+        width: 1200,
         height: 800,
         webPreferences: {
             // enableRemoteModule: true,
             // Use pluginOptions.nodeIntegration, leave this alone
             // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
             nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+            contextIsolation: true,
             preload: path.join(__dirname, 'preload.js')
         }
     })

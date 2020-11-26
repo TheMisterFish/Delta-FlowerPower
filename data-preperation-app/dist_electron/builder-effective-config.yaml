@@ -1,0 +1,12 @@
+directories:
+  output: dist_electron
+  buildResources: build
+  app: dist_electron/bundled
+files:
+  - filter:
+      - '**'
+extends: null
+extraResources:
+  - from: public/backend_dist
+    to: backend_dist
+electronVersion: 9.3.5
