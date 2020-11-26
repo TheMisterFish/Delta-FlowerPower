@@ -4,6 +4,7 @@ from twisted.internet import reactor
 from twisted.python import log
 # from scripts import splitter
 # from scripts import drone
+from scripts.yolov5 import simple_detect
 import threading
 import random
 import json
@@ -32,6 +33,14 @@ def fly_and_land(client):
     client.sendSocketMessage("Finished script succesfully!")
 
 
+def simple_detect_action(client, input_directory):
+    client.sendSocketMessage("Executing simple detect script")
+    thread = threading.Thread(target=simple_detect.detect, args=(client, './public/backend/scripts/yolov5/weights/best_weights.pt', 512, 0.1, input_directory))
+    thread.start()
+    thread.join()
+    client.sendSocketMessage("Finished simple detect script")
+
+
 class MyServerProtocol(WebSocketServerProtocol):
     def onConnect(self, request):
         print("Client connecting: {}".format(request.peer), flush=True)
@@ -52,6 +61,9 @@ class MyServerProtocol(WebSocketServerProtocol):
         elif message[0] == "FLY_AND_LAND":
             thread = threading.Thread(
                 target=fly_and_land, args=(self,)).start()
+        elif message[0] == "DETECT_IMAGES":
+            thread = threading.Thread(
+                target=simple_detect_action, args=(self, message[1])).start()
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)

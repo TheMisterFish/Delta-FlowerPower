@@ -1,4 +1,5 @@
 //WEBSOCKET_CHANNELS
+export const DETECT_IMAGES = "DETECT_IMAGES";
 export const SPLIT_IMAGES = "SPLIT_IMAGES";
 export const FLY_AND_LAND = "FLY_AND_LAND"
 

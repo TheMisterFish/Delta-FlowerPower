@@ -6,19 +6,26 @@
     <v-btn @click="selectOutputFolder" color="primary">
       {{ outputFolder || "Select output folder" }}
     </v-btn>
-    <v-btn color="primary">Test the detection script</v-btn>
+    <v-btn @click="detectImages" color="primary"
+      >Test the detection script</v-btn
+    >
+    <h1>{{ socket.messages[socket.messages.length - 1] }}</h1>
   </v-layout>
 </template>
 
 <script>
-import { FILESYSTEM, SELECT_FOLDER } from '../../../data-preperation-app/dist_electron/bundled/backend_dist/api/matplotlib/mpl-data/src/constants';
+import { FILESYSTEM, SELECT_FOLDER, DETECT_IMAGES } from "../constants.js";
+import { mapState } from "vuex";
 export default {
   name: "Test",
   data: () => ({
     inputFolder:
-      "C:\\Users\\sueno\\Documents\\Flower power flow test\\Original annotated data",
+      "C:\\Users\\sueno\\Documents\\Flower power flow test\\Splitted data\\images",
     outputFolder: "C:\\Users\\sueno\\Desktop\\splitted data!",
   }),
+  computed: {
+    ...mapState(["socket"]),
+  },
   methods: {
     async selectInputFolder() {
       const response = await window.electron.invoke(FILESYSTEM, SELECT_FOLDER);
@@ -29,6 +36,13 @@ export default {
       const response = await window.electron.invoke(FILESYSTEM, SELECT_FOLDER);
 
       this.outputFolder = response;
+    },
+
+    detectImages() {
+      this.$store.dispatch(
+        "sendWebSocketMessage",
+        JSON.stringify([DETECT_IMAGES, this.inputFolder, this.outputFolder])
+      );
     },
   },
 };
