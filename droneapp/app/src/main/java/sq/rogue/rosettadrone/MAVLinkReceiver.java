@@ -92,7 +92,7 @@ import static com.MAVLink.enums.MAV_MISSION_TYPE.MAV_MISSION_TYPE_MISSION;
 // CUSTOM
 import static com.MAVLink.enums.MAV_PROTOCOL_CAPABILITY.MAV_PROTOCOL_CAPABILITY_FTP;
 import static com.MAVLink.common.msg_file_transfer_protocol.MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL;
-import static com.MAVLink.enums.MAV_PROTOCOL_CAPABILITY.MAV_PROTOCOL_CAPABILITY_FTP;
+import static com.MAVLink.enums.MAV_GOTO.MAV_GOTO_HOLD_AT_SPECIFIED_POSITION;
 
 
 import static sq.rogue.rosettadrone.util.TYPE_WAYPOINT_DISTANCE;
@@ -427,55 +427,68 @@ public class MAVLinkReceiver {
                 mModel.request_mission_item(0);
                 break;
 
-            case MAVLINK_MSG_ID_MISSION_ITEM:
-                parent.logMessageDJI("Received MAV: MAVLINK_MSG_ID_MISSION_ITEM");
-                msg_mission_item msg_item = (msg_mission_item) msg;
+            case MAV_GOTO_HOLD_AT_SPECIFIED_POSITION:
+                parent.logMessageDJI("Received MAV: MAV_GOTO_HOLD_AT_SPECIFIED_POSITION");
+                msg_mission_item goto_item = (msg_mission_item) msg;
 
-                if (mModel.getSystemId() != msg_item.target_system) {
+                if (mModel.getSystemId() != goto_item.target_system) {
                     break;
                 }
-                parent.logMessageDJI("Add mission: " + msg_item.seq );
-
-                if(((msg_mission_item) msg).command == MAV_CMD_NAV_WAYPOINT) {
-                    Log.d(TAG, "Lat = " + msg_item.x);
-                    Log.d(TAG, "Lon = " + msg_item.y);
-                    Log.d(TAG, "ALT = " + msg_item.z);
+                    Log.d(TAG, "Lat = " + goto_item.x);
+                    Log.d(TAG, "Lon = " + goto_item.y);
+                    Log.d(TAG, "ALT = " + goto_item.z);
                     mModel.do_set_motion_absolute(
-                            (double) msg_item.x / 10000000,
-                            (double) msg_item.y / 10000000,
-                            msg_item.z,
-                            msg_item.param4,
+                            (double) goto_item.x,
+                            (double) goto_item.y,
+                            goto_item.z,
+                            goto_item.param4,
                             0,
                             0,
                             0,
                             0,
                             0b0000111111111000);
-                }
-                else {
-
-                    // Somehow the GOTO from QGroundControl does not issue a mission count...
-                    if (mMissionItemList == null) {
-                        parent.logMessageDJI("Special single point mission!");
-                        generateNewMission();
-                        mMissionItemList = new ArrayList<msg_mission_item>();
-                        mNumGCSWaypoints = 1;
-                        wpState = WP_STATE_REQ_WP;
-                        mModel.request_mission_item(0);
-                    }
-
-                    mMissionItemList.add(msg_item);
-
-                    // We are done fetching a complete mission from the GCS...
-                    if (msg_item.seq == mNumGCSWaypoints - 1) {
-                        wpState = WP_STATE_INACTIVE;
-                        finalizeNewMission();
-                        //      mModel.send_mission_ack();
-                    } else {
-                        mModel.request_mission_item((msg_item.seq + 1));
-                    }
-                    mModel.echoLoadedMission();
-                }
                 break;
+            case MAVLINK_MSG_ID_MISSION_ITEM:
+                switch (((msg_mission_item) msg).command) {
+                    case MAV_CMD_NAV_WAYPOINT:
+                        parent.logMessageDJI("Received MAV: MAV_GOTO_HOLD_AT_SPECIFIED_POSITION");
+                        msg_mission_item msg_item = (msg_mission_item) msg;
+
+                        if (mModel.getSystemId() != msg_item.target_system) {
+                            break;
+                        }
+
+                        // Somehow the GOTO from QGroundControl does not issue a mission count...
+                        if (mMissionItemList == null) {
+                            parent.logMessageDJI("Special single point mission!");
+                            generateNewMission();
+                            mMissionItemList = new ArrayList<msg_mission_item>();
+                            mNumGCSWaypoints = 1;
+                            wpState = WP_STATE_REQ_WP;
+                            mModel.request_mission_item(0);
+                        }
+
+                        mMissionItemList.add(msg_item);
+
+                        // We are done fetching a complete mission from the GCS...
+                        if (msg_item.seq == mNumGCSWaypoints - 1) {
+                            wpState = WP_STATE_INACTIVE;
+                            finalizeNewMission();
+                            //      mModel.send_mission_ack();
+                        } else {
+                            mModel.request_mission_item((msg_item.seq + 1));
+                        }
+                        mModel.echoLoadedMission();
+                        break;
+                    case MAV_CMD_MISSION_START:
+                    case MAV_CMD_NAV_LAND:
+                    case MAV_CMD_NAV_TAKEOFF:
+                    case MAV_CMD_NAV_RETURN_TO_LAUNCH:
+                        break;
+                    default:
+                        parent.logMessageDJI("MAVLINK_MSG_ID_MISSION_ITEM unkown mission id: " + ((msg_mission_item) msg).command);
+                }
+
 
             /**************************************************************
              * These messages from GCS direct a mission-related action    *
@@ -490,6 +503,14 @@ public class MAVLinkReceiver {
                 parent.logMessageDJI("MSN: received clear_all from GCS");
                 WaypointMission y = mModel.getWaypointMissionOperator().getLoadedMission();
                 if( y != null){
+                    try {
+                        parent.logMessageDJI(y.toString());
+                        for (int i = 0; i < y.getWaypointCount(); i++) {
+                            parent.logMessageDJI("M:" + y.getWaypointList().get(i).toString());
+                        }
+                    } catch (Exception e){
+                        parent.logMessageDJI("499Error: " + e);
+                    }
                     y.getWaypointList().clear();
                 }
                 break;
