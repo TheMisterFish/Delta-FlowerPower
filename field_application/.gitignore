@@ -4,14 +4,13 @@ node_modules
 
 
 */dist_electron
-*/backenddist
+*/backend_dist
 */dist
 # local env files
 .env.local
 .env.*.local
 .env.development
 .env.production
-
 
 # Log files
 npm-debug.log*

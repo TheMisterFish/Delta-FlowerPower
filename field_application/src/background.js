@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
+import fs from 'fs'
+import { FILESYSTEM, IPC_MESSAGES } from './constants'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 let pythonProcess = null;
@@ -77,6 +79,7 @@ async function createWindow() {
             // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
             nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
             contextIsolation: true,
+            webSecurity: false,
             preload: path.join(__dirname, 'preload.js')
         }
     })
@@ -111,6 +114,10 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async() => {
+    protocol.registerFileProtocol('file', (request, callback) => {
+        const pathname = decodeURI(request.url.replace('file:///', ''));
+        callback(pathname)
+    })
     if (isDevelopment && !process.env.IS_TEST) {
         // Install Vue Devtools
         try {
@@ -136,3 +143,22 @@ if (isDevelopment) {
         })
     }
 }
+
+//--------------------------------------- IPC MAIN PROCESS ---------------------------------------//
+ipcMain.handle(FILESYSTEM, async(event, args) => {
+    if (args.message === IPC_MESSAGES.SELECT_FOLDER) {
+        try {
+            const response = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+            return response.filePaths[0];
+        } catch (error) {
+            console.error(error);
+        }
+    } else if (args.message === IPC_MESSAGES.GET_IMAGE_FILES_FROM_FOLDER) {
+        try {
+            const response = await fs.promises.readdir(args.data);
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+})

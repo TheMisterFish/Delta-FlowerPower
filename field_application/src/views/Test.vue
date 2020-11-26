@@ -13,11 +13,22 @@
       >Test the detection script</v-btn
     >
     <h1>{{ socket.messages[socket.messages.length - 1] }}</h1>
+
+    <div v-for="(image, index) in images" :key="index">
+      {{ image }}
+    </div>
+
+    <v-img
+      v-for="image in images"
+      :key="image"
+      :src="inputFolder + '/'+ image"
+    ></v-img>
   </v-layout>
 </template>
 
 <script>
-import { FILESYSTEM, SELECT_FOLDER, DETECT_IMAGES } from "../constants.js";
+import { FILESYSTEM, IPC_MESSAGES, DETECT_IMAGES } from "../constants.js";
+import { IpcMessage } from "../IpcMessage.js";
 import { mapState } from "vuex";
 export default {
   name: "Test",
@@ -26,22 +37,38 @@ export default {
     inputFolder:
       "C:\\Users\\sueno\\Documents\\Flower power flow test\\Splitted data\\images",
     outputFolder: "C:\\Users\\sueno\\Desktop\\splitted data!",
+    images: [],
   }),
   computed: {
     ...mapState(["socket"]),
   },
   methods: {
-    async selectWeightsFile() {
-
-    },
+    async selectWeightsFile() {},
 
     async selectInputFolder() {
-      const response = await window.electron.invoke(FILESYSTEM, SELECT_FOLDER);
+      const ipcMessage = new IpcMessage(IPC_MESSAGES.SELECT_FOLDER);
+      const response = await window.electron.invoke(FILESYSTEM, ipcMessage);
 
       this.inputFolder = response;
+
+      console.log(response)
+
+      this.getImagesFromFolder(response);
     },
+
+    async getImagesFromFolder(folder) {
+      const ipcMessage = new IpcMessage(
+        IPC_MESSAGES.GET_IMAGE_FILES_FROM_FOLDER,
+        folder
+      );
+      const response = await window.electron.invoke(FILESYSTEM, ipcMessage);
+
+      this.images = response;
+    },
+
     async selectOutputFolder() {
-      const response = await window.electron.invoke(FILESYSTEM, SELECT_FOLDER);
+      const ipcMessage = new IpcMessage(IPC_MESSAGES.SELECT_FOLDER);
+      const response = await window.electron.invoke(FILESYSTEM, ipcMessage);
 
       this.outputFolder = response;
     },
@@ -49,7 +76,12 @@ export default {
     detectImages() {
       this.$store.dispatch(
         "sendWebSocketMessage",
-        JSON.stringify([DETECT_IMAGES, this.weightsFile, this.inputFolder, this.outputFolder])
+        JSON.stringify([
+          DETECT_IMAGES,
+          this.weightsFile,
+          this.inputFolder,
+          this.outputFolder,
+        ])
       );
     },
   },

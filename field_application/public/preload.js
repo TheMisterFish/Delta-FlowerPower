@@ -16,7 +16,6 @@ contextBridge.exposeInMainWorld(
         },
         invoke: async(channel, data) => {
             const result = await ipcRenderer.invoke(channel, data);
-            console.log(result);
             return result;
         }
     }
