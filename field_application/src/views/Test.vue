@@ -1,5 +1,8 @@
 <template>
   <v-layout class="d-flex column">
+    <v-btn @click="selectWeightsFile" color="primary">
+      {{ weightsFile || "Select output folder" }}
+    </v-btn>
     <v-btn @click="selectInputFolder" color="primary">
       {{ inputFolder || "Select input folder" }}
     </v-btn>
@@ -19,6 +22,7 @@ import { mapState } from "vuex";
 export default {
   name: "Test",
   data: () => ({
+    weightsFile: "C:\\Users\\sueno\\Desktop\\weights\\best_weights.pt",
     inputFolder:
       "C:\\Users\\sueno\\Documents\\Flower power flow test\\Splitted data\\images",
     outputFolder: "C:\\Users\\sueno\\Desktop\\splitted data!",
@@ -27,6 +31,10 @@ export default {
     ...mapState(["socket"]),
   },
   methods: {
+    async selectWeightsFile() {
+
+    },
+
     async selectInputFolder() {
       const response = await window.electron.invoke(FILESYSTEM, SELECT_FOLDER);
 
@@ -41,7 +49,7 @@ export default {
     detectImages() {
       this.$store.dispatch(
         "sendWebSocketMessage",
-        JSON.stringify([DETECT_IMAGES, this.inputFolder, this.outputFolder])
+        JSON.stringify([DETECT_IMAGES, this.weightsFile, this.inputFolder, this.outputFolder])
       );
     },
   },

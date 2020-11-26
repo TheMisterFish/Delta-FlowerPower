@@ -2,8 +2,6 @@ from autobahn.twisted.websocket import WebSocketServerProtocol
 from autobahn.twisted.websocket import WebSocketServerFactory
 from twisted.internet import reactor
 from twisted.python import log
-# from scripts import splitter
-# from scripts import drone
 from scripts.yolov5 import simple_detect
 import threading
 import random
@@ -13,29 +11,10 @@ import sys
 log.startLogging(sys.stdout)
 
 
-def split_images(client, input_directory, output_directory):
-    # Sending opening script message
-    client.sendSocketMessage("Opening script...")
-    # Execute the splitter script on a new thread, this way we can wait for the thread to be finished (thread.join())
-    # thread = threading.Thread(target=splitter.split_images, args=(
-    #     client, input_directory, output_directory, 512, 512))
-    # thread.start()
-    # thread.join()
-    # At the end of the script send the finished message
-    client.sendSocketMessage("Finished succesfully!")
-
-
-def fly_and_land(client):
-    client.sendSocketMessage("Executing fly and land script...")
-    # thread = threading.Thread(target=drone.fly_and_land, args=(client))
-    # thread.start()
-    # thread.join()
-    client.sendSocketMessage("Finished script succesfully!")
-
-
-def simple_detect_action(client, input_directory):
+def simple_detect_action(client, weights_directory, input_directory):
     client.sendSocketMessage("Executing simple detect script")
-    thread = threading.Thread(target=simple_detect.detect, args=(client, './public/backend/scripts/yolov5/weights/best_weights.pt', 512, 0.1, input_directory))
+    thread = threading.Thread(target=simple_detect.detect, args=(
+        client, weights_directory, 512, 0.1, input_directory))
     thread.start()
     thread.join()
     client.sendSocketMessage("Finished simple detect script")
@@ -52,18 +31,11 @@ class MyServerProtocol(WebSocketServerProtocol):
         self.sendMessage(str.encode(message))
 
     def onMessage(self, payload, isBinary):
-        print(payload, flush=True)
-        message = json.loads(payload)
         self.sendSocketMessage("Received payload!")
-        if message[0] == "SPLIT_IMAGES":
-            thread = threading.Thread(target=split_images, args=(
-                self, message[1], message[2])).start()
-        elif message[0] == "FLY_AND_LAND":
+        message = json.loads(payload)
+        if message[0] == "DETECT_IMAGES":
             thread = threading.Thread(
-                target=fly_and_land, args=(self,)).start()
-        elif message[0] == "DETECT_IMAGES":
-            thread = threading.Thread(
-                target=simple_detect_action, args=(self, message[1])).start()
+                target=simple_detect_action, args=(self, message[1], message[2])).start()
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)
