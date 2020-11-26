@@ -55,7 +55,6 @@ def detect(client, weights, img_size, conf, source):
     img = torch.zeros((1, 3, imgsz, imgsz), device=device)  # init img
     _ = model(img.half() if half else img) if device.type != 'cpu' else None  # run once
     for path, img, im0s, _ in dataset:
-        client.sendSocketMessage("Handling image path: " + path)
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -73,6 +72,9 @@ def detect(client, weights, img_size, conf, source):
         # Apply Classifier
         if classify:
             pred = apply_classifier(pred, modelc, img, im0s)
+
+        file_path = path
+        bounding_boxes = []
 
         # Process detections
         for i, det in enumerate(pred):  # detections per image
@@ -93,10 +95,14 @@ def detect(client, weights, img_size, conf, source):
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                    print(calcBox(xywh, imgsz, imgsz))
+                    bounding_box = calcBox(xywh, imgsz, imgsz)
+                    bounding_boxes.append(bounding_box)
 
             # Print time (inference + NMS)
             print('%sDone. (%.3fs)' % (s, t2 - t1))
+        
+        if len(bounding_boxes) > 0:
+            client.sendSocketMessage(str(file_path) + str(bounding_boxes))
 
     print('Done. (%.3fs)' % (time.time() - t0))
 
