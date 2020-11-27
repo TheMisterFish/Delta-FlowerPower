@@ -817,11 +817,11 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
                     secondarySocket.send(secondaryPacket);
 //                parent.logMessageDJI("SECONDARY PACKET SENT");
                 }
-            if(msg.msgid == 128 || msg.msgid == 110) {
-                parent.logMessageDJI("send:" + msg.toString());
-                parent.logMessageDJI("sysid:" + packet.sysid);
-                parent.logMessageDJI("compid:" + packet.compid);
-            }
+//            if(msg.msgid == 128 || msg.msgid == 110) {
+//                parent.logMessageDJI("send:" + msg.toString());
+//                parent.logMessageDJI("sysid:" + packet.sysid);
+//                parent.logMessageDJI("compid:" + packet.compid);
+//            }
 
             } catch (PortUnreachableException ignored) {
                 parent.logMessageToGCS("Port unreachable exeption");
@@ -1028,10 +1028,20 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
         sendMessage(msg);
     }
 
-    void send_command_ftp_string_ack(int message_id, String data) {
+    void send_command_ftp_string_ack(int message_id, String data, byte[] header) {
         msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
         byte[] byteString = data.getBytes();
         short[] shortArray = new short[251];
+
+
+        if(header != null){
+            parent.logMessageDJI("11 ...");
+            for(int i = 0; i < header.length; i++) {
+                short s = (short)(header[i] & 0xFF);
+                shortArray[i] = s;
+            }
+        }
+        parent.logMessageDJI("2 ...");
 
         int sizeCounter = 0;
         for (int i = 0; i < byteString.length; i++){
@@ -1040,9 +1050,10 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
             shortArray[added] = s;
             sizeCounter += 1;
         }
+        parent.logMessageDJI("3 ...");
         shortArray[3] = (short)128;
         shortArray[4] = (short)sizeCounter;
-
+        parent.logMessageDJI("4 ...");
         msg.payload = shortArray;
         msg.msgid = message_id;
 
@@ -1053,15 +1064,19 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
         msg_file_transfer_protocol msg = new msg_file_transfer_protocol();
         short[] shortArray = new short[data.length];
 
+//        public static short BAToS(byte b[], int offset) {
+//            return (short) (((b[offset + 1] & 0xFF) << 8) | (b[offset] & 0xFF));
+//        }
+
         int sizeCounter = 0;
         for (int i = 0; i < data.length; i++){
-            int added = 12 + i;
-            short s = (short)data[i];
-            shortArray[added] = s;
-            sizeCounter += 1;
+//            short s = (short)data[i];
+            short s = (short)(data[i] & 0xFF);
+            shortArray[i] = s;
         }
+
         shortArray[3] = (short)128;
-        shortArray[4] = (short)sizeCounter;
+        shortArray[4] = (short)shortArray.length;
 
         msg.payload = shortArray;
         msg.msgid = message_id;

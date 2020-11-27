@@ -207,8 +207,8 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
     private MediaManager.FileListState currentFileListState = MediaManager.FileListState.UNKNOWN;
     private FetchMediaTaskScheduler scheduler;
     public String last_downloaded_file;
-    public int downloadError;
-
+    public boolean downloadError = false;
+    public int lastDownloadedIndex = -1;
     public int currentProgress = -1;
     File destDir = new File(Environment.getExternalStorageDirectory().getPath() + "/DroneApp/");
 
@@ -471,6 +471,10 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
             mCodecManager.cleanSurface();
             mCodecManager.destroyCodec();
         }
+        if (mediaFileList != null) {
+            mediaFileList.clear();
+        }
+
         doUnbindService();
 
         super.onDestroy();
@@ -1756,7 +1760,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
             public void onFailure(DJIError error) {
                 logMessageDJI( "Download File Failed" + error.getDescription());
                 currentProgress = -1;
-                downloadError = 1;
+                downloadError = true;
             }
 
             @Override
@@ -1781,7 +1785,8 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
                 logMessageDJI( "Download File Success: " + filePath + "/" + mediaFileList.get(index).getFileName());
                 last_downloaded_file = filePath+ "/" + mediaFileList.get(index).getFileName();
                 currentProgress = -1;
-                downloadError = -1;
+                downloadError = false;
+                lastDownloadedIndex = index;
             }
         });
     }

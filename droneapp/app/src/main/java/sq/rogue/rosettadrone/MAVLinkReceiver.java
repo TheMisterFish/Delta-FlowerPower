@@ -516,23 +516,21 @@ public class MAVLinkReceiver {
                 break;
 // CUSTOM custom cases
             case MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL:
-                parent.logMessageDJI("Received MAV: MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL");
+//                parent.logMessageDJI("Received MAV: MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL");
                 msg_file_transfer_protocol msg_ftp_item = (msg_file_transfer_protocol) msg;
 
-                parent.logMessageDJI(msg_ftp_item.payload.length + "");
+//                parent.logMessageDJI(msg_ftp_item.payload.length + "");
 
                 int session_id = new Short(msg_ftp_item.payload[2]).intValue();
                 int sessionId = new Short(msg_ftp_item.payload[2]).intValue();
                 int opCode = new Short(msg_ftp_item.payload[3]).intValue();
                 int offset = ftpManager.getOffset(msg_ftp_item.payload);
 
-
-                parent.logMessageDJI("opCode: " + opCode);
-                parent.logMessageDJI("sessionId: " + sessionId);
-                parent.logMessageDJI("Offset: " + offset);
-
-//                TODO Fix this so it F* works T>T
-                parent.logMessageDJI("code was " + opCode);
+//                DEBUG
+//                parent.logMessageDJI("opCode: " + opCode);
+//                parent.logMessageDJI("sessionId: " + sessionId);
+//                parent.logMessageDJI("Offset: " + offset);
+//                parent.logMessageDJI("code was " + opCode);
 //                TODO add download function, add delete function
                 switch (opCode) {
                     case 3: // Return list
