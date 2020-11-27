@@ -1,5 +1,6 @@
 from autobahn.twisted.websocket import WebSocketServerProtocol
 from autobahn.twisted.websocket import WebSocketServerFactory
+from socket_message import socket_message
 from twisted.internet import reactor
 from twisted.python import log
 from scripts.yolov5 import simple_detect
@@ -27,11 +28,11 @@ class MyServerProtocol(WebSocketServerProtocol):
     def onOpen(self):
         print("WebSocket connection open.")
 
-    def sendSocketMessage(self, message):
-        self.sendMessage(str.encode(message))
+    def sendSocketMessage(self, message, data=None):
+        self.sendMessage(str.encode(json.dumps(socket_message(message, data).__dict__)))
 
     def onMessage(self, payload, isBinary):
-        self.sendSocketMessage("Received payload!")
+        self.sendSocketMessage("RECEIVED PAYLOAD!")
         message = json.loads(payload)
         if message[0] == "DETECT_IMAGES":
             thread = threading.Thread(
@@ -42,7 +43,6 @@ class MyServerProtocol(WebSocketServerProtocol):
 
 
 if __name__ == '__main__':
-    # WebSocketServerFactory.resetProtocolOptions()
     factory = WebSocketServerFactory("ws://127.0.0.1:9000")
     factory.protocol = MyServerProtocol
 

@@ -5,7 +5,8 @@ export const socket_store = {
         websocket: null,
         connected: false,
         status: '',
-        messages: []
+        messages: [],
+        messageCount: 0
     },
     mutations: {
         [SOCKET_CONNECT](state) {
@@ -26,6 +27,7 @@ export const socket_store = {
         },
         [SOCKET_ON_SEND_MESSAGE](state, message) {
             state.messages.push(message);
+            state.messageCount += 1;
         },
         [SOCKET_SEND_MESSAGE](state, message) {
             state.websocket.send(message);

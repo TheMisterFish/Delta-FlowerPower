@@ -1,5 +1,5 @@
 <template>
-  <v-layout class="d-flex column">
+  <v-layout class="d-flex column wrap">
     <v-btn @click="selectWeightsFile" color="primary">
       {{ weightsFile || "Select output folder" }}
     </v-btn>
@@ -12,17 +12,16 @@
     <v-btn @click="detectImages" color="primary"
       >Test the detection script</v-btn
     >
-    <h1>{{ socket.messages[socket.messages.length - 1] }}</h1>
+    <h1 v-if="messages">{{ messages[messages.length - 1] }}</h1>
 
-    <div v-for="(image, index) in images" :key="index">
-      {{ image }}
-    </div>
-
-    <v-img
-      v-for="image in images"
-      :key="image"
-      :src="inputFolder + '/'+ image"
-    ></v-img>
+    <v-row>
+      <v-col v-for="(image, index) in images" :key="index" cols="3">
+        <AnnotatedImage
+          :imagePath="image.filePath"
+          :boundingBoxes="image.boundingBoxes"
+        />
+      </v-col>
+    </v-row>
   </v-layout>
 </template>
 
@@ -30,17 +29,40 @@
 import { FILESYSTEM, IPC_MESSAGES, DETECT_IMAGES } from "../constants.js";
 import { IpcMessage } from "../IpcMessage.js";
 import { mapState } from "vuex";
+import AnnotatedImage from "../components/AnnotatedImage.vue";
 export default {
   name: "Test",
+  components: {
+    AnnotatedImage,
+  },
   data: () => ({
     weightsFile: "C:\\Users\\sueno\\Desktop\\weights\\best_weights.pt",
-    inputFolder:
-      "C:\\Users\\sueno\\Documents\\Flower power flow test\\Splitted data\\images",
+    inputFolder: "C:\\Users\\sueno\\Desktop\\spliet",
     outputFolder: "C:\\Users\\sueno\\Desktop\\splitted data!",
     images: [],
   }),
   computed: {
-    ...mapState(["socket"]),
+    ...mapState({
+      messages: (state) => state.socket.messages,
+    }),
+  },
+  watch: {
+    messages(newValue, oldValue) {
+      const message = JSON.parse(newValue[newValue.length - 1]);
+      if (message.message === "BOUNDING_BOXES") {
+        const image = message.data.image;
+        const boundingBoxes = message.data.boundingBoxes;
+        console.log(image);
+        this.images.forEach((i) => {
+          console.log(i.filePath);
+          if (i.filePath === image) {
+            console.log("we got em bois");
+            i.boundingBoxes = boundingBoxes;
+          }
+        });
+        console.log("NEXT");
+      }
+    },
   },
   methods: {
     async selectWeightsFile() {},
@@ -50,8 +72,6 @@ export default {
       const response = await window.electron.invoke(FILESYSTEM, ipcMessage);
 
       this.inputFolder = response;
-
-      console.log(response)
 
       this.getImagesFromFolder(response);
     },
@@ -63,7 +83,13 @@ export default {
       );
       const response = await window.electron.invoke(FILESYSTEM, ipcMessage);
 
-      this.images = response;
+      response.forEach((r) => {
+        this.images.push({
+          image: r,
+          filePath: `${this.inputFolder}\\${r}`,
+          boundingBoxes: [],
+        });
+      });
     },
 
     async selectOutputFolder() {
@@ -83,6 +109,9 @@ export default {
           this.outputFolder,
         ])
       );
+    },
+    beforeDestroy() {
+      this.unwatch();
     },
   },
 };

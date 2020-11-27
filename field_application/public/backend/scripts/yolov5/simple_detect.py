@@ -4,6 +4,7 @@ from pathlib import Path
 import cv2
 from numpy import random
 import sys
+from socket_message import socket_message
 
 sys.path.insert(0, './public/backend/scripts/yolov5')
 
@@ -55,6 +56,7 @@ def detect(client, weights, img_size, conf, source):
     img = torch.zeros((1, 3, imgsz, imgsz), device=device)  # init img
     _ = model(img.half() if half else img) if device.type != 'cpu' else None  # run once
     for path, img, im0s, _ in dataset:
+        client.sendSocketMessage("Handling image", path)
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -102,7 +104,7 @@ def detect(client, weights, img_size, conf, source):
             print('%sDone. (%.3fs)' % (s, t2 - t1))
         
         if len(bounding_boxes) > 0:
-            client.sendSocketMessage(str(file_path) + str(bounding_boxes))
+            client.sendSocketMessage("BOUNDING_BOXES", {"image": file_path, "boundingBoxes": bounding_boxes})
 
     print('Done. (%.3fs)' % (time.time() - t0))
 
@@ -126,7 +128,7 @@ def calcBox(xywh, width, height):
         b = dh - 1
 
     # Return Top, Left - Bottom, Right
-    return (t,l),(b,r)
+    return {"x1": l, "y1": t, "x2": r, "y2": b}
 
 
 # if __name__ == '__main__':
