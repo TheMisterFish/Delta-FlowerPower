@@ -15,7 +15,7 @@
     <h1 v-if="messages">{{ messages[messages.length - 1] }}</h1>
 
     <v-row>
-      <v-col v-for="(image, index) in images" :key="index" cols="3">
+      <v-col v-for="(image, index) in images" :key="index" cols="4">
         <AnnotatedImage
           :imagePath="image.filePath"
           :boundingBoxes="image.boundingBoxes"
@@ -52,15 +52,11 @@ export default {
       if (message.message === "BOUNDING_BOXES") {
         const image = message.data.image;
         const boundingBoxes = message.data.boundingBoxes;
-        console.log(image);
         this.images.forEach((i) => {
-          console.log(i.filePath);
           if (i.filePath === image) {
-            console.log("we got em bois");
             i.boundingBoxes = boundingBoxes;
           }
         });
-        console.log("NEXT");
       }
     },
   },
