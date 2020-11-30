@@ -4,7 +4,7 @@ import pandas as pd
 import sys
 import os
 
-if len(sys.argv) < 5:
+if len(sys.argv) < 6:
     print('Not enough arguments!')
     print('MAX_WIDTH', 'MAX_HEIGHT', 'INPUT_DIRECTORY', 'OUTPUT_DIRECTORY')
     exit()
@@ -15,8 +15,11 @@ MAX_HEIGHT = int(sys.argv[2])
 INPUT_DIRECTORY = sys.argv[3]
 OUTPUT_DIRECTORY = sys.argv[4]
 
+REASSEMBLE = sys.argv[5].upper() == "TRUE"
+
 IMAGE_INPUT_DIRECTORY = f'{INPUT_DIRECTORY}/images'
 IMAGE_OUTPUT_DIRECTORY = f'{OUTPUT_DIRECTORY}/images'
+
 
 if not os.path.exists(IMAGE_OUTPUT_DIRECTORY):
     os.makedirs(IMAGE_OUTPUT_DIRECTORY)
@@ -40,7 +43,9 @@ for image in tqdm(images):
     w_divider = round(image_width/MAX_WIDTH)
     h_divider = round(image_height/MAX_HEIGHT)
     sub_image_counter = 0
+    height_counter = 0
     for h_d in range(h_divider):
+        width_counter = 0
         for w_d in range(w_divider):
             regio = (float(w_d * MAX_WIDTH), float(h_d * MAX_HEIGHT), float(w_d *
                                                                             MAX_WIDTH + MAX_WIDTH), float(h_d * MAX_HEIGHT + MAX_HEIGHT))
@@ -57,6 +62,10 @@ for image in tqdm(images):
                     new_image_name = f'{image[:-4]}_{sub_image_counter}.JPG'
                     this_image_points.append(
                         [float(row['x'])-regio[0], float(row['y'])-regio[1], float(row['w']), float(row['h']), new_image_name])
+                elif REASSEMBLE:
+                    show = True
+                    new_image_name = f'{image[:-4]}_{width_counter}_{height_counter}.JPG'
+
             cropped_image = loaded_image.crop(regio)
             if(show):
                 cropped_image.save(
@@ -73,6 +82,8 @@ for image in tqdm(images):
                         'height': MAX_HEIGHT
                     })
                 sub_image_counter += 1
+            width_counter +=1
+        height_counter += 1
 
 pd.DataFrame(csv_rows).to_csv(
     f'{OUTPUT_DIRECTORY}/annotations.csv', header=False, index=None)
