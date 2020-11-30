@@ -541,7 +541,7 @@ public class MAVLinkReceiver {
                         ftpManager.openFile(file_id, session_id);
                         break;
                     case 5: // Read file
-                        ftpManager.readFile(session_id, offset);
+                        ftpManager.readFile(session_id, offset, msg_ftp_item.payload);
                         break;
                     case 8: // Remove file
                         break;

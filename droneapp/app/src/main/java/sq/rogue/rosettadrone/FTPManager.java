@@ -107,113 +107,17 @@ public class FTPManager {
         }
     }
 
-    public static class SendThread implements Runnable {
-        private boolean stopRequested = false;
+    public void readFile(int session_id, int offset, short[] payload){
+        byte[] data = new byte[251];
 
-        private MainActivity parent;
-        private DroneModel mModel;
-        private File currentFile;
-        private byte[] currentFileInBytes;
-        public SendThread(MainActivity parent, DroneModel mModel, byte[] currentFileInBytes, File currentFile) {
-            this.parent = parent;
-            this.mModel = mModel;
-            this.currentFile = currentFile;
-            this.currentFileInBytes = currentFileInBytes;
-        }
+//      Set offset from original payload
+        for(int i = 8; i <= 12; i++){
+            short x = new Short(payload[i]);
+            data[i] = (byte)(x & 0xff);
+        };
+//      Set session
+        data[2] = (byte)session_id;
 
-        public synchronized void requestStop() {
-            this.stopRequested = true;
-        }
-
-        public synchronized  boolean isStopRequested() {
-            return this.stopRequested;
-        }
-
-        private void sleep(long millis){
-            try {
-                Thread.sleep(millis);
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void run() {
-            parent.logMessageDJI("Sending file in second thread.");
-
-            int session_id = 1;
-            int offset = 0;
-
-            int payload_data_size = (251-12);
-            int total_messages = currentFileInBytes.length/payload_data_size;
-
-            parent.logMessageDJI("total: " + total_messages);
-
-            //prepare data for anti crashing?
-            byte[][] data = new byte[total_messages][251];
-
-            for (int i = 0; i < total_messages; i++){
-
-                int startByte = payload_data_size * i;
-
-                data[i][2] = (byte)session_id;
-
-                for (int j = 0; j < payload_data_size; j++) {
-                    int added = j + 12;
-                    int byte_to_get = startByte + j;
-                    if(byte_to_get >= currentFileInBytes.length){
-                        data[i][added] = (byte)0;
-                    } else {
-                        data[i][added] = currentFileInBytes[byte_to_get];
-                    }
-                }
-            }
-
-            try {
-                for (int i = 0; i < data.length; i++) {
-                    if (isStopRequested()) {
-                        return;
-                    }
-                    mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data[i]);
-                    if (i % 500 == 0 && i != 0) {
-                        sleep(100);
-                    }
-//                    int startByte = payload_data_size * c;
-//                    int bytes_to_add_size = payload_data_size;
-//
-//                    if (startByte + 251 > currentFileInBytes.length) {
-//                        bytes_to_add_size = currentFileInBytes.length - (startByte + 251);
-//                    }
-//
-//                    if (bytes_to_add_size > 0) {
-//                        try {
-//                            for (int i = 0; i < bytes_to_add_size; i++) {
-//                                int added = i + 12;
-//                                int byte_to_get = startByte + i;
-//                                data[added] = currentFileInBytes[byte_to_get];
-//                            }
-//
-//                            mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
-//                        } catch (Exception e) {
-//                            parent.logMessageDJI(e.toString());
-//                            mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
-//                        }
-//                    } else {
-//                        mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
-//                    }
-                }
-                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
-                parent.logMessageDJI("Done sending image");
-            } catch (Exception e){
-                parent.logMessageDJI("Could not finish sending image");
-                parent.logMessageDJI("Error: " + e.toString());
-            }
-        }
-
-    }
-
-    public void readFile(int session_id, int offset){
-//        parent.logMessageDJI("Read file");
         if(currentFile == null || currentFile.length() == 0){
             parent.logMessageDJI("File is null, sending error code");
             mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
@@ -223,14 +127,17 @@ public class FTPManager {
         int payload_data_size = (251-12);
 
         if(offset > (currentFileInBytes.length/payload_data_size) ){
+            parent.logMessageDJI("offset > (currentFileInBytes.length/payload_data_size)");
             mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
             return;
         }
 
-        SendThread newThread = new SendThread(parent, mModel, currentFileInBytes, currentFile);
-        Thread thread = new Thread(newThread, "SendThread");
-        thread.start();
-        parent.logMessageDJI("Started sending thread, should continue now...");
+                mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
+            } catch (Exception e) {
+                parent.logMessageDJI(e.toString());
+                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
+            }
+        }
 
     }
 }

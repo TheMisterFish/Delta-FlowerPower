@@ -1076,7 +1076,6 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
         }
 
         shortArray[3] = (short)128;
-        shortArray[4] = (short)shortArray.length;
 
         msg.payload = shortArray;
         msg.msgid = message_id;
