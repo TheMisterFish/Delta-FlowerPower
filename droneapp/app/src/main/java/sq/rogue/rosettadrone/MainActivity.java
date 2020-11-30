@@ -1621,6 +1621,44 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
     }
 
     //    File managment (CUSTOM)
+//    private void initMediaManager() {
+//        if (RDApplication.getProductInstance() == null) {
+//            mediaFileList.clear();
+//            DJILog.e(TAG, "Product disconnected");
+//            return;
+//        } else {
+//            if (null != RDApplication.getCameraInstance() && RDApplication.getCameraInstance().isMediaDownloadModeSupported()) {
+//                mMediaManager = RDApplication.getCameraInstance().getMediaManager();
+//                if (null != mMediaManager) {
+//                    mMediaManager.addUpdateFileListStateListener(this.updateFileListStateListener);
+//                    switchCameraMode(SettingsDefinitions.CameraMode.MEDIA_DOWNLOAD);
+//                    RDApplication.getCameraInstance().setMode(SettingsDefinitions.CameraMode.MEDIA_DOWNLOAD, new CommonCallbacks.CompletionCallback() {
+//                        @Override
+//                        public void onResult(DJIError error) {
+//                            if (error == null) {
+//                                DJILog.e(TAG, "Set cameraMode success");
+//                            } else {
+//                                logMessageDJI("Set cameraMode failed");
+//                            }
+//                            getFileList();
+//                        }
+//                    });
+//                    if (mMediaManager.isVideoPlaybackSupported()) {
+//                        DJILog.e(TAG, "Camera support video playback!");
+//                    } else {
+//                        logMessageDJI("Camera does not support video playback!");
+//                    }
+//                    scheduler = mMediaManager.getScheduler();
+//                }
+//
+//            } else if (null != RDApplication.getCameraInstance()
+//                    && !RDApplication.getCameraInstance().isMediaDownloadModeSupported()) {
+//                logMessageDJI( "Media Download Mode not Supported, but camera is?");
+//            }
+//        }
+//        return;
+//    }
+
     private void initMediaManager() {
         if (RDApplication.getProductInstance() == null) {
             mediaFileList.clear();
@@ -1629,15 +1667,22 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
         } else {
             if (null != RDApplication.getCameraInstance() && RDApplication.getCameraInstance().isMediaDownloadModeSupported()) {
                 mMediaManager = RDApplication.getCameraInstance().getMediaManager();
+                if(!RDApplication.getCameraInstance().isSSDSupported()){
+                    logMessageDJI("Internal sd is not suported");
+                }
                 if (null != mMediaManager) {
                     mMediaManager.addUpdateFileListStateListener(this.updateFileListStateListener);
+                    switchCameraMode(SettingsDefinitions.CameraMode.MEDIA_DOWNLOAD);
                     RDApplication.getCameraInstance().setMode(SettingsDefinitions.CameraMode.MEDIA_DOWNLOAD, new CommonCallbacks.CompletionCallback() {
                         @Override
                         public void onResult(DJIError error) {
                             if (error == null) {
                                 DJILog.e(TAG, "Set cameraMode success");
+                                logMessageDJI("Set cameraMode success");
                             } else {
                                 logMessageDJI("Set cameraMode failed");
+                                DJILog.e(TAG, "Set cameraMode failed");
+                                logMessageDJI(error.toString());
                             }
                             getFileList();
                         }
@@ -1647,12 +1692,13 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
                     } else {
                         logMessageDJI("Camera does not support video playback!");
                     }
+
                     scheduler = mMediaManager.getScheduler();
                 }
 
             } else if (null != RDApplication.getCameraInstance()
                     && !RDApplication.getCameraInstance().isMediaDownloadModeSupported()) {
-                logMessageDJI( "Media Download Mode not Supported, but camera is?");
+                logMessageDJI("Media Download Mode not Supported");
             }
         }
         return;
@@ -1692,14 +1738,14 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
 
     public void getFileList() {
         RDApplication.getProductInstance().getCamera().getMediaManager();
-        logMessageDJI("Came here (getFileList)");
         mMediaManager = RDApplication.getCameraInstance().getMediaManager();
         if (mMediaManager != null) {
-
+            logMessageDJI(currentFileListState.name());
             if ((currentFileListState == MediaManager.FileListState.SYNCING) || (currentFileListState == MediaManager.FileListState.DELETING)){
                 DJILog.e(TAG, "Media Manager is busy.");
-            }else{
+                logMessageDJI("Media Manager is busy.");
 
+            } else {
                 mMediaManager.refreshFileListOfStorageLocation(SettingsDefinitions.StorageLocation.SDCARD, new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
@@ -1738,6 +1784,8 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
                 });
 
             }
+        } else {
+            logMessageDJI("mMediaManager == null");
         }
     }
     //Listeners
@@ -1745,6 +1793,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
         @Override
         public void onFileListStateChange(MediaManager.FileListState state) {
             currentFileListState = state;
+            logMessageDJI("Changed state to " + currentFileListState.name());
         }
     };
 

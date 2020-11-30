@@ -125,13 +125,28 @@ public class FTPManager {
         }
 
         int payload_data_size = (251-12);
+        int startByte = payload_data_size * offset;
+        int bytes_to_add_size = payload_data_size;
+
+        if(startByte + payload_data_size > currentFileInBytes.length){
+            bytes_to_add_size = (startByte + payload_data_size) - currentFileInBytes.length;
+        }
+//      Set bytes to read (size)
+        data[4] = (byte)bytes_to_add_size;
 
         if(offset > (currentFileInBytes.length/payload_data_size) ){
             parent.logMessageDJI("offset > (currentFileInBytes.length/payload_data_size)");
             mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
             return;
         }
-
+        if(bytes_to_add_size > 0) {
+            try {
+                for (int i = 0; i < bytes_to_add_size; i++) {
+                    int added = i + 12;
+                    int byte_to_get = startByte + i;
+                    data[added] = currentFileInBytes[byte_to_get];
+                }
+//                parent.logMessageDJI("Sending " + bytes_to_add_size + " bytes using FTP protocol");
                 mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
             } catch (Exception e) {
                 parent.logMessageDJI(e.toString());
