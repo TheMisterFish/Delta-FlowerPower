@@ -19,7 +19,7 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 
 
-def detect(client, weights, img_size, conf, source):
+def detect(client, weights, img_size, confidence, source):
     client.sendSocketMessage("Inside the detec function")
     source, weights, imgsz = source, weights, img_size
     # Initialize
@@ -68,7 +68,7 @@ def detect(client, weights, img_size, conf, source):
         pred = model(img, augment=None)[0]
 
         # Apply NMS
-        pred = non_max_suppression(pred, conf, 0.45, classes=None, agnostic=None)
+        pred = non_max_suppression(pred, confidence, 0.45, classes=None, agnostic=None)
         t2 = time_synchronized()
 
         # Apply Classifier
