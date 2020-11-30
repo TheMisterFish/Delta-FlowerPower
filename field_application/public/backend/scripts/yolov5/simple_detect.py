@@ -4,7 +4,10 @@ from pathlib import Path
 import cv2
 from numpy import random
 import sys
+import os
 from socket_message import socket_message
+from scripts.splitter import split_images
+import shutil
 
 sys.path.insert(0, './public/backend/scripts/yolov5')
 
@@ -18,6 +21,8 @@ from utils.general import check_img_size, non_max_suppression, apply_classifier,
 from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 
+BASE_PATH = os.getcwd()
+TEMP_PATH = os.path.join(BASE_PATH, "temp")
 
 def detect(client, weights, img_size, confidence, source):
     client.sendSocketMessage("Inside the detec function")
@@ -42,7 +47,17 @@ def detect(client, weights, img_size, confidence, source):
     # Set Dataloader
     vid_path, vid_writer = None, None
 
-    dataset = LoadImages(source, img_size=imgsz)
+    if not os.path.exists(TEMP_PATH):
+        os.makedirs(TEMP_PATH)
+    else:
+        shutil.rmtree(TEMP_PATH)
+        os.makedirs(TEMP_PATH)
+
+    split_images(source, TEMP_PATH, img_size)
+
+    new_source = TEMP_PATH
+
+    dataset = LoadImages(new_source, img_size=imgsz)
 
     client.sendSocketMessage("Loaded the dataset!")
 
@@ -76,11 +91,13 @@ def detect(client, weights, img_size, confidence, source):
             pred = apply_classifier(pred, modelc, img, im0s)
 
         file_path = path
+        original_path = file_path.split("\\")[-1][:-8]
+        print("ORIGINAL FILE PATH", flush=True)
+        print(original_path, flush=True)
         bounding_boxes = []
 
         # Process detections
         for i, det in enumerate(pred):  # detections per image
-            print(Path(path))
             p, s, im0 = Path(path), '', im0s
 
             s += '%gx%g ' % img.shape[2:]  # print string
@@ -95,23 +112,28 @@ def detect(client, weights, img_size, confidence, source):
                     s += '%g %ss, ' % (n, names[int(c)])  # add to string
 
                 # Write results
+                file_position_x = int(file_path.split("_")[-2])
+                file_position_y = int(file_path.split("_")[-1][:-4])
+                offset_x = file_position_x * img_size
+                offset_y = file_position_y * img_size
                 for *xyxy, conf, cls in reversed(det):
                     xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                    bounding_box = calcBox(xywh, imgsz, imgsz)
+                    bounding_box = calcBox(xywh, imgsz, imgsz, offset_x, offset_y)
+
                     bounding_boxes.append(bounding_box)
 
             # Print time (inference + NMS)
             print('%sDone. (%.3fs)' % (s, t2 - t1))
         
         if len(bounding_boxes) > 0:
-            client.sendSocketMessage("BOUNDING_BOXES", {"image": file_path, "boundingBoxes": bounding_boxes})
+            client.sendSocketMessage("BOUNDING_BOXES", {"image": original_path, "boundingBoxes": bounding_boxes})
 
+    shutil.rmtree(TEMP_PATH)
     print('Done. (%.3fs)' % (time.time() - t0))
 
-def calcBox(xywh, width, height):
+def calcBox(xywh, width, height, offset_x, offset_y):
     dh,dw = width,height
     x, y, w, h = map(float, xywh)
-    print(x,y,w,h)
 
     l = int((x - w / 2) * dw)
     r = int((x + w / 2) * dw)
@@ -128,7 +150,7 @@ def calcBox(xywh, width, height):
         b = dh - 1
 
     # Return Top, Left - Bottom, Right
-    return {"x1": l, "y1": t, "x2": r, "y2": b}
+    return {"x1": str(l+offset_x), "y1": str(t+offset_y), "x2": str(r+offset_x), "y2": str(b+offset_y)}
 
 
 # if __name__ == '__main__':

@@ -12,10 +12,10 @@
     <v-btn @click="detectImages" color="primary"
       >Test the detection script</v-btn
     >
-    <h1 v-if="messages">{{ messages[messages.length - 1] }}</h1>
+    <!-- <h1 v-if="messages">{{ messages[messages.length - 1] }}</h1> -->
 
     <v-row>
-      <v-col v-for="(image, index) in images" :key="index" cols="4">
+      <v-col v-for="(image, index) in images" :key="index" cols="12">
         <AnnotatedImage
           :imagePath="image.filePath"
           :boundingBoxes="image.boundingBoxes"
@@ -37,7 +37,7 @@ export default {
   },
   data: () => ({
     weightsFile: "C:\\Users\\sueno\\Desktop\\weights\\best_weights.pt",
-    inputFolder: "C:\\Users\\sueno\\Desktop\\spliet",
+    inputFolder: "C:\\Users\\sueno\\Desktop\\splitter",
     outputFolder: "C:\\Users\\sueno\\Desktop\\splitted data!",
     images: [],
   }),
@@ -53,8 +53,8 @@ export default {
         const image = message.data.image;
         const boundingBoxes = message.data.boundingBoxes;
         this.images.forEach((i) => {
-          if (i.filePath === image) {
-            i.boundingBoxes = boundingBoxes;
+          if (i.filePath.includes(image)) {
+            i.boundingBoxes = i.boundingBoxes.concat(boundingBoxes);
           }
         });
       }

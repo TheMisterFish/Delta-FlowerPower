@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas class="canvas" ref="canvas"></canvas>
+    <canvas class="canvas" ref="canvas" width="4056" height="2080"></canvas>
   </div>
 </template>
 <script>
@@ -61,18 +61,7 @@ export default {
         canvas.height
       );
 
-      let log = false;
-
-      this.boundingBoxes.forEach((b) => {
-        if (b.x1 === 332) {
-          log = true;
-        }
-      });
-
-      if (log) {
-        console.log("BOUNDING BOXES:", this.boundingBoxes);
-      }
-      context.lineWidth = "2";
+      context.lineWidth = "6";
       context.strokeStyle = "pink";
 
       this.boundingBoxes.forEach((b) => {
@@ -93,6 +82,7 @@ export default {
     this.canvasImage.onload = function() {
       self.imageWidth = self.canvasImage.width;
       self.imageHeight = self.canvasImage.height;
+      console.log(canvas.width, canvas.height)
       context.drawImage(
         self.canvasImage,
         0,
