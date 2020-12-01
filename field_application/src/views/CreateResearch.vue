@@ -1,6 +1,6 @@
 <template>
   <v-layout fill-height column ma-0>
-    <v-stepper v-model="e1">
+    <v-stepper v-model="e1" style="height: 100%; min-height: 100vh">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
           Name of step 1
@@ -8,7 +8,7 @@
 
         <v-divider></v-divider>
 
-        <v-stepper-step :complete="e1 > 2" step="2">
+        <v-stepper-step :complete="e1 > 2" step="2" :rules="[() =>drone_settings.use_ftp]">
           Name of step 2
         </v-stepper-step>
 
@@ -19,7 +19,7 @@
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <create-settings></create-settings>
+          <create-flight-settings :photo_settings="photo_settings" :drone_settings="drone_settings"></create-flight-settings>
           
           <v-spacer></v-spacer>
 
@@ -27,8 +27,8 @@
           <v-btn text @click="$router.go(-1)"> Terug </v-btn>
         </v-stepper-content>
 
-        <v-stepper-content step="2">
-          <create-connect></create-connect>
+        <v-stepper-content step="2" >
+          <create-process-settings :process_settings="process_settings" :process_disabled="!drone_settings.use_ftp"></create-process-settings>
 
           <v-spacer></v-spacer>
           
@@ -50,18 +50,33 @@
 </template>
 
 <script>
-import CreateSettings from "@/components/research_components/CreateSettingsComponent.vue";
-import CreateConnect from "@/components/research_components/CreateConnectComponent.vue";
+import createFlightSettings from "@/components/research_components/CreateFlightSettingsComponent.vue";
+import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
 import ControlSettings from "@/components/research_components/ControlSettingsComponent.vue";
 export default {
   data() {
     return {
       e1: 1,
+      photo_settings: {
+        sensor_width: null,
+        focal_length: null,
+        image_width: null,
+      },
+      drone_settings: {
+        fly_height: null,
+        use_ftp: true,
+      },
+      process_settings: {
+        model: null,
+        weight: null,
+        image_width: null,
+        confidence: 25
+      }
     };
   },
   components: {
-    CreateSettings,
-    CreateConnect,
+    createFlightSettings,
+    CreateProcessSettings,
     ControlSettings
   },
 };

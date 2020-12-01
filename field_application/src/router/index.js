@@ -7,7 +7,7 @@ const routes = [{
         path: "/",
         name: "Landing",
         component: () =>
-            import ("../views/Test.vue"),
+            import ("../views/CreateResearch.vue"),
     },
     {
         path: "/dashboard",
