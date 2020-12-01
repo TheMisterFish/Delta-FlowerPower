@@ -808,7 +808,7 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
                 try {
                     socket.send(p);
                 } catch (Exception e){
-                    parent.logMessageDJI("Error: " + e.toString());
+//                    parent.logMessageDJI("Error: " + e.toString());
                 }
                 parent.logMessageToGCS(msg.toString());
 

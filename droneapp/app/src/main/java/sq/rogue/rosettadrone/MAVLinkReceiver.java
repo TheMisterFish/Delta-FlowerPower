@@ -151,18 +151,17 @@ public class MAVLinkReceiver {
                 break;
 
             case MAVLINK_MSG_ID_COMMAND_LONG:
-                parent.logMessageDJI("Received MAV: MAVLINK_MSG_ID_COMMAND_LONG");
                 msg_command_long msg_cmd = (msg_command_long) msg;
+                parent.logMessageDJI("Received MAV: MAVLINK_MSG_ID_COMMAND_LONG - command:" + msg_cmd.command);
 
                 if (mModel.getSystemId() != msg_cmd.target_system) {
+                    parent.logMessageDJI("system id is not target_system. SysID: " + mModel.getSystemId() + " - TargetSys: " + msg_cmd.target_system);
                     return;
                 }
-
 //                if (mModel.isSafetyEnabled()) {
 //                    parent.logMessageDJI(parent.getResources().getString(R.string.safety_launch));
 //                    return;
 //                }
-
                 switch (msg_cmd.command) {
                     case MAV_CMD_COMPONENT_ARM_DISARM:
                         parent.logMessageDJI("Received MAV: MAV_CMD_COMPONENT_ARM_DISARM");
@@ -273,6 +272,9 @@ public class MAVLinkReceiver {
                         parent.logMessageDJI("Received MAV: MAV_PROTOCOL_CAPABILITY_FTP");
                         mModel.send_command_ack(MAV_PROTOCOL_CAPABILITY_FTP, MAV_RESULT.MAV_RESULT_ACCEPTED);
                         break;
+                    default:
+                        parent.logMessageDJI("Received unknown command id: " + msg_cmd.command);
+                        parent.logMessageDJI("R:" + msg_cmd.toString());
                 }
                 break;
 
@@ -487,6 +489,7 @@ public class MAVLinkReceiver {
                         break;
                     default:
                         parent.logMessageDJI("MAVLINK_MSG_ID_MISSION_ITEM unkown mission id: " + ((msg_mission_item) msg).command);
+                    parent.logMessageDJI("" + ((msg_mission_item) msg).toString());
                 }
 
 
@@ -620,13 +623,6 @@ public class MAVLinkReceiver {
 
                 case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
                     parent.logMessageDJI("Takeoff...");
-//                    parent.logMessageDJI("P1 = " + m.param1);
-//                    parent.logMessageDJI("P2 = " + m.param2);
-//                    parent.logMessageDJI("P3 = " + m.param3);
-//                    parent.logMessageDJI("P4 = " + m.param4);
-//                    parent.logMessageDJI("x = " + m.x);
-//                    parent.logMessageDJI("y = " + m.y);
-//                    parent.logMessageDJI("z = " + m.z);
                     break;
 
                 case MAV_CMD.MAV_CMD_NAV_WAYPOINT:
@@ -677,30 +673,10 @@ public class MAVLinkReceiver {
                         dji_wps.add(currentWP);
 
                         parent.logMessageDJI("Waypoint: " + m.x + ", " + m.y + " at " + m.z + " m " + m.param2 + " Yaw " + m.param1 + " Delay ");
-//                        parent.logMessageDJI("P1 = " + m.param1);
-//                        parent.logMessageDJI("P2 = " + m.param2);
-//                        parent.logMessageDJI("P3 = " + m.param3);
-//                        parent.logMessageDJI("P4 = " + m.param4);
-//                        parent.logMessageDJI("x = " + m.x);
-//                        parent.logMessageDJI("y = " + m.y);
-//                        parent.logMessageDJI("z = " + m.z);
                     }
                     break;
                 case MAV_CMD.MAV_CMD_DO_CHANGE_SPEED:
                     parent.logMessageDJI("Received MAV: MAV_CMD_DO_CHANGE_SPEED");
-
-//                    final DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                        }
-//                    };
-//
-//                    final DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
-//                        @Override
-//                        public void onCancel(DialogInterface dialog) {
-//                        }
-//                    };
-
                     if (m.param2 < -15) {
                         parent.runOnUiThread(new Runnable() {
                             @Override
