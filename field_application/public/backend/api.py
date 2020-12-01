@@ -16,6 +16,8 @@ log.startLogging(sys.stdout)
 BASE_PATH = os.getcwd()
 TEMP_PATH = os.path.join(BASE_PATH, "temp")
 
+#TODO In the temp folder generate a subfolder for each image instead of putting everything in the root
+#That way we can trace back the original file name (which is the name of the subfolder)
 def simple_detect_action(client, weights_directory, input_directory):
     client.sendSocketMessage("Splitting images")
     #IMAGE SIZE IS NOW HARDCODED 512 MAYBE NEED TO CHANGE?
