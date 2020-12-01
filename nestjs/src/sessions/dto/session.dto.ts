@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
-import { Location } from 'src/locations/locations.model';
-import { User } from 'src/users/users.model';
+import { Location } from '../../locations/locations.model';
+import { User } from '../../users/users.model';
 
 export class SessionsDto {
   @IsString()

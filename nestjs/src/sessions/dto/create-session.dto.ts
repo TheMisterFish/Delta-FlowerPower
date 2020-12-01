@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreateSessionDto { 
   @IsString()

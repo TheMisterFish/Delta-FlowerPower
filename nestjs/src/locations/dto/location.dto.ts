@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsDate, IsLatLong, MinLength } from 'class-validator';
-import { User } from 'src/users/users.model';
+import { User } from '../../users/users.model';
 
 export class LocationsDto {
   @IsString()

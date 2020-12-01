@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
-import { Location } from 'src/locations/locations.model';
+import { Location } from '../../locations/locations.model';
 
 export class UpdateSessionDto {
   @IsString()
