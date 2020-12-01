@@ -1,11 +1,8 @@
 from PIL import Image
-import pandas as pd
-import sys
 import os
 
 
 def split_images(source, output_dir, size):
-    print("SPLITTIN!", flush=True)
     images = os.listdir(source)
     for image in images:
         loaded_image = Image.open(f'{source}/{image}')
@@ -20,7 +17,8 @@ def split_images(source, output_dir, size):
             for w_d in range(w_divider):
                 regio = (float(w_d * size), float(h_d * size), float(w_d *
                                                                                 size + size), float(h_d * size + size))
-                new_image_name = f'{image[:-4]}_{width_counter}_{height_counter}.JPG'
+                #THE NEW IMAGE NAME IS FILE#X_Y#.JPG, MIGHT WANT TO CHANGE LATER. HASHTAG # IS A RESERVED CHARACTER.
+                new_image_name = f'{image[:-4]}#{width_counter}_{height_counter}#.JPG'
                 cropped_image = loaded_image.crop(regio)
                 cropped_image.save(os.path.join(output_dir, new_image_name))
                 width_counter +=1

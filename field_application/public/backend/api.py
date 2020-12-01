@@ -3,22 +3,40 @@ from autobahn.twisted.websocket import WebSocketServerFactory
 from socket_message import socket_message
 from twisted.internet import reactor
 from twisted.python import log
-from scripts.yolov5 import simple_detect
+from scripts.yolov5.simple_detect import detect
+from scripts.splitter import split_images
 import threading
-import random
 import json
 import sys
+import os
+import shutil
 
 log.startLogging(sys.stdout)
 
+BASE_PATH = os.getcwd()
+TEMP_PATH = os.path.join(BASE_PATH, "temp")
 
 def simple_detect_action(client, weights_directory, input_directory):
+    client.sendSocketMessage("Splitting images")
+    #IMAGE SIZE IS NOW HARDCODED 512 MAYBE NEED TO CHANGE?
+    IMAGE_SIZE = 512
+
+    if not os.path.exists(TEMP_PATH):
+        os.makedirs(TEMP_PATH)
+    else:
+        shutil.rmtree(TEMP_PATH)
+        os.makedirs(TEMP_PATH)
+
+    split_images(input_directory, TEMP_PATH, IMAGE_SIZE)
+
     client.sendSocketMessage("Executing simple detect script")
-    thread = threading.Thread(target=simple_detect.detect, args=(
-        client, weights_directory, 512, 0.1, input_directory))
+    thread = threading.Thread(target=detect, args=(
+        client, weights_directory, IMAGE_SIZE, 0.1, TEMP_PATH))
     thread.start()
     thread.join()
     client.sendSocketMessage("Finished simple detect script")
+
+    shutil.rmtree(TEMP_PATH)
 
 
 class MyServerProtocol(WebSocketServerProtocol):
