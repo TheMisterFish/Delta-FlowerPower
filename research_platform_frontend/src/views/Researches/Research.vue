@@ -10,6 +10,19 @@
           <v-card-subtitle class="pl-0">{{
             research && research.description
           }}</v-card-subtitle>
+          <v-row v-if="research">
+            <v-col
+              v-for="(result, index) in research.results"
+              :key="index"
+              cols="12"
+            >
+              <AnnotatedImage
+                :imagePath="'http://localhost:7080/'+result.file.filePath.split(/\/(.+)/)[1]"
+                :boundingBoxes="result.boundingBoxes"
+              />
+            </v-col>
+          </v-row>
+
           <v-card-actions class="d-flex justify-space-between">
             <v-btn @click="deleteResearch" text color="error">
               Delete
@@ -24,8 +37,13 @@
 <script>
 import { mapState } from "vuex";
 import { STATUS } from "../../store/storeResponse";
+import AnnotatedImage from "../../components/AnnotatedImage";
+
 export default {
   name: "Research",
+  components: {
+    AnnotatedImage,
+  },
   computed: {
     ...mapState(["researches"]),
     _id() {
@@ -65,6 +83,6 @@ export default {
 
 <style scoped>
 .card {
-  max-width: 800px;
+  max-width: 1400px;
 }
 </style>
