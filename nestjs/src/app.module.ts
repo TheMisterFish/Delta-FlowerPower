@@ -37,7 +37,7 @@ import { mkdirSync, existsSync } from 'fs';
       storage: diskStorage({
         destination: function(req, file, cb) {
           const path = join('public', 'files', 'researches', req.params.id);
-          if (!existsSync(path)) mkdirSync(path);
+          if (!existsSync(path)) mkdirSync(path, true);
           cb(null, path);
         },
         filename: function(req, file, cb) {
