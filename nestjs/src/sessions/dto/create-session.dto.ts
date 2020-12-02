@@ -17,7 +17,7 @@ export class CreateSessionDto {
 
   made_by: string;
 
-  flower_count: JSON;
+  results: JSON;
 
   @IsString()
   @IsNotEmpty()

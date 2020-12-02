@@ -1,6 +1,7 @@
 import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
 import { Location } from '../../locations/locations.model';
 import { User } from '../../users/users.model';
+import { SessionResult } from '../sessionResult';
 
 export class SessionsDto {
   @IsString()
@@ -20,9 +21,8 @@ export class SessionsDto {
   @IsString()
   @IsNotEmpty()
   made_by: User;
-
-  @IsJSON()
-  flower_count: JSON;
+  
+  results: SessionResult[];
 
   @IsString()
   @IsNotEmpty()

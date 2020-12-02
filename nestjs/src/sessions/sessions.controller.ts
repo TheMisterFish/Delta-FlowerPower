@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, HttpException, HttpStatus, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, HttpException, HttpStatus, Request, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { HasRoles } from '../common/decorators/roles.decorator';
 import { SessionsService } from './sessions.service';
 import { CreateSessionDto, UpdateSessionDto, SessionsDto } from "./dto";
 import { Session } from "./sessions.model";
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('sessions')
 export class SessionsController {
@@ -41,7 +42,16 @@ export class SessionsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @HasRoles('moderator')
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
+  @UseInterceptors(FilesInterceptor("files"))
+  async update(@UploadedFiles() files, @Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
+    if(updateSessionDto.results) {
+      updateSessionDto.results.forEach(r => {
+        const file = files.find(f => f.originalname === r.file.fileName);
+        r.file.filePath = file.path;
+        r.file.fileSize = file.size;
+      })
+    }
+
     return await this.sessionsService.update(id, updateSessionDto).catch(err => {
       if (err.name === 'CastError')
         err.message = "Could not update " + id;

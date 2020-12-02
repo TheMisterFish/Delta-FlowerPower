@@ -1,7 +1,8 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
-import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
 import { Location } from "../locations/locations.model";
 import { User } from "src/users/users.model";
+import { SessionResult } from "./sessionResult";
 
 @pre<Session>('save', function (next) {
   if (!this.isNew) {
@@ -35,9 +36,8 @@ export class Session {
   @prop({ ref: 'User' })
   made_by: Ref<User>;
 
-  @IsJSON()
   @prop()
-  flower_count: JSON;
+  results: Ref<SessionResult[]>;
 
   @IsString()
   @IsNotEmpty()
