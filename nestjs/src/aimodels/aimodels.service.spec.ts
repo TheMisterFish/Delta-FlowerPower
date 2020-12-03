@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getModelToken } from 'nestjs-typegoose';
 import { AimodelsService } from './aimodels.service';
 
 describe('AimodelsService', () => {
@@ -6,7 +7,13 @@ describe('AimodelsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AimodelsService],
+      providers: [
+        AimodelsService,
+        {
+          provide: getModelToken('Aimodel'),
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<AimodelsService>(AimodelsService);

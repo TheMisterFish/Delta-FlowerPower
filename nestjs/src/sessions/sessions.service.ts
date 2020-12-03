@@ -14,7 +14,7 @@ export class SessionsService {
   }
 
   async findAll(): Promise<Session[] | null> {
-    return await this.sessionModel.find().exec();
+    return await this.sessionModel.find().populate("made_by").populate("location_id").exec();
   }
 
   async create(dto: CreateSessionDto): Promise<SessionsDto> {
