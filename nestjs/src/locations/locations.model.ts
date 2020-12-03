@@ -1,5 +1,6 @@
-import { prop, pre } from "@typegoose/typegoose";
+import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, IsLatLong, MinLength } from 'class-validator';
+import { User } from "src/users/users.model";
 
 @pre<Location>('save', function (next) {
   if (!this.isNew) {
@@ -25,8 +26,8 @@ export class Location {
 
   @IsString()
   @IsNotEmpty()
-  @prop({ ref: 'Users' })
-  made_by: string;
+  @prop({ ref: 'User' })
+  made_by: Ref<User>;
 
   @IsNotEmpty()
   @IsLatLong()
