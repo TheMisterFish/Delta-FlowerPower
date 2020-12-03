@@ -1,8 +1,8 @@
 export class IpcMessage {
-    message;
-    data;
-    constructor(message, data) {
-        this.message = message;
-        this.data = data;
-    }
+                message;
+                data;
+                constructor(message, data) {
+                                this.message = message;
+                                this.data = data;
+                }
 }
