@@ -21,6 +21,13 @@ const ai_settings_store = {
             state.image_size = payload.image_size;
             state.confidence = payload.confidence;
         },
+        resetSettings(state){
+            state.path = null;
+            state.model = null;
+            state.weight = null;
+            state.image_size = null;
+            state.confidence = 25;        
+        }
         
     },
     actions: {
@@ -34,6 +41,11 @@ const ai_settings_store = {
         }, payload) {
             commit("setAiSettings", payload);
         },
+        resetSettings({
+            commit
+        }) {
+            commit("resetSettings");
+        }
     },
     getters: {
         getPath: state => { return state.path },
