@@ -12,14 +12,14 @@ import researches_store from './modules/researches_store.js'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-                modules: {
-                                researches: researches_store,
-                                models: models_store,
-                                socket: socket_store,
-                                authentication: authentication_store,
-                                alerts: alerts_store,
-                                ai_settings: ai_settings_store,
-                                research_settings: research_settings_store,
-                                drone_settings: drone_settings_store,
-                }
+    modules: {
+        researches: researches_store,
+        models: models_store,
+        socket: socket_store,
+        authentication: authentication_store,
+        alerts: alerts_store,
+        ai_settings: ai_settings_store,
+        research_settings: research_settings_store,
+        drone_settings: drone_settings_store,
+    }
 });

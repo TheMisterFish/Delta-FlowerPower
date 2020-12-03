@@ -21,7 +21,7 @@ import Vue from "vue";
 
 export default Vue.extend({
     name: "LoginForm",
-    data: function() {
+    data: function () {
         return {
             email: "",
             password: "",
@@ -38,7 +38,8 @@ export default Vue.extend({
             this.$store
                 .dispatch("login", { email, password })
                 .then(() => {
-                    this.$router.push("/")})
+                    this.$router.push("/");
+                })
                 .catch((error) => console.log(error));
         },
     },

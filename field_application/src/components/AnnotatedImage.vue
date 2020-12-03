@@ -4,7 +4,6 @@
     </div>
 </template>
 <script>
-
 export default {
     name: "AnnotatedImage",
     props: ["imagePath", "boundingBoxes"],
@@ -19,9 +18,9 @@ export default {
         scaleY: 0,
     }),
     watch: {
-        boundingBoxes: function(newValue, oldValue) {
+        boundingBoxes: function (newValue, oldValue) {
             this.drawBoundingBoxes();
-        }
+        },
     },
     methods: {
         resizeCanvas() {
@@ -70,19 +69,24 @@ export default {
 
                 const w = (b.x2 - b.x1) * self.ratioX;
                 const h = (b.y2 - b.y1) * self.ratioY;
-                context.strokeRect(x*this.scaleX, y*this.scaleY, w*this.scaleX, h*this.scaleY);
+                context.strokeRect(
+                    x * this.scaleX,
+                    y * this.scaleY,
+                    w * this.scaleX,
+                    h * this.scaleY
+                );
             });
         },
     },
-    mounted: function() {
+    mounted: function () {
         const canvas = this.$refs.canvas;
         const context = canvas.getContext("2d");
         this.canvasImage = new Image();
         const self = this;
-        this.canvasImage.onload = function() {
+        this.canvasImage.onload = function () {
             self.imageWidth = self.canvasImage.width;
             self.imageHeight = self.canvasImage.height;
-            console.log(canvas.width, canvas.height)
+            console.log(canvas.width, canvas.height);
             context.drawImage(
                 self.canvasImage,
                 0,

@@ -3,7 +3,7 @@ import ModelsApi from "./ModelsApi";
 import ResearchesApi from "./ResearchesApi";
 
 export {
-        UploadApi,
-        ModelsApi,
-        ResearchesApi
+    UploadApi,
+    ModelsApi,
+    ResearchesApi
 };

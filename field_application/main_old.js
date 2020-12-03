@@ -44,7 +44,7 @@ const createPyProc = () => {
     } else {
         pyProc = require('child_process').spawn('python', [script, port])
     }
- 
+
     if (pyProc != null) {
         //console.log(pyProc)
         console.log('child process success on port ' + port)
@@ -68,7 +68,10 @@ app.on('will-quit', exitPyProc)
 let mainWindow = null
 
 const createWindow = () => {
-    mainWindow = new BrowserWindow({width: 800, height: 600})
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600
+    })
     mainWindow.loadURL(require('url').format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',

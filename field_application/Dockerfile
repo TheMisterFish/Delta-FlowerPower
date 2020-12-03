@@ -36,9 +36,9 @@ ENV PYPI_INDEX_URL=https://pypi.python.org/simple
 RUN set -x \
     && winetricks win7 \
     && for msifile in `echo core dev exe lib path pip tcltk tools`; do \
-        wget -nv "https://www.python.org/ftp/python/$PYTHON_VERSION/win32/${msifile}.msi"; \
-        wine msiexec /i "${msifile}.msi" /qb TARGETDIR=C:/Python37; \
-        rm ${msifile}.msi; \
+    wget -nv "https://www.python.org/ftp/python/$PYTHON_VERSION/win32/${msifile}.msi"; \
+    wine msiexec /i "${msifile}.msi" /qb TARGETDIR=C:/Python37; \
+    rm ${msifile}.msi; \
     done \
     && cd /wine/drive_c/Python37 \
     && echo 'wine '\''C:\Python37\python.exe'\'' "$@"' > /usr/bin/python \
