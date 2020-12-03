@@ -9,14 +9,12 @@
             hide-details
         ></v-text-field>
 
-        <small
-            ><a href="#" @click="downloadResearches"
-                >Download onderzoeken</a
-            ></small
-        >
-        <small
-            ><a href="#" @click="downloadLocations">Download locaties</a></small
-        >
+        <small>
+            <a href="#" @click="downloadResearches">Download onderzoeken</a>
+        </small>
+        <small>
+            <a href="#" @click="downloadLocations">Download locaties</a>
+        </small>
         <v-progress-linear
             v-if="downloading"
             indeterminate
@@ -39,12 +37,6 @@
                                     <v-list-item-title
                                         v-text="research.name"
                                     ></v-list-item-title>
-
-                                    <!-- <v-list-item-subtitle
-                                                                                class="text--primary"
-                                                                                v-text="research.name"
-                                                                        ></v-list-item-subtitle> -->
-
                                     <v-list-item-subtitle
                                         v-text="research.description"
                                     ></v-list-item-subtitle>

@@ -62,11 +62,16 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="4">
-                    <control-settings></control-settings>
+                    <check-settings
+                        :research_settings="research_settings"
+                        :photo_settings="photo_settings"
+                        :drone_settings="drone_settings"
+                        :process_settings="process_settings"
+                    ></check-settings>
 
                     <v-spacer></v-spacer>
 
-                    <v-btn color="primary" @click="e1 = 1"> Verder </v-btn>
+                    <v-btn color="primary" @click="e1 = 1"> Start </v-btn>
                     <v-btn text @click="e1 = 3"> Terug </v-btn>
                 </v-stepper-content>
             </v-stepper-items>
@@ -78,9 +83,10 @@
 import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
 import createFlightSettings from "@/components/research_components/CreateFlightSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
-import ControlSettings from "@/components/research_components/ControlSettingsComponent.vue";
+import CheckSettings from "@/components/research_components/CheckSettingsComponent.vue";
+
 export default {
-    name: "SdResearch",
+    name: "DroneResearch",
     data() {
         return {
             e1: 1,
@@ -109,12 +115,12 @@ export default {
     components: {
         createFlightSettings,
         CreateProcessSettings,
-        ControlSettings,
+        CheckSettings,
         SelectResearchSettings,
     },
     methods: {
         cancelFunction() {
-            this.$router.go(-1);
+            this.$router.push({ path: "Landing" });
         },
     },
 };

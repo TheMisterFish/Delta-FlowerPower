@@ -42,7 +42,7 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
-                    <control-settings></control-settings>
+                    <detect></detect>
 
                     <v-spacer></v-spacer>
 
@@ -57,7 +57,7 @@
 <script>
 import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
-import ControlSettings from "@/components/research_components/ControlSettingsComponent.vue";
+import Detect from "@/components/research_components/DetectComponent.vue";
 export default {
     name: "DroneResearch",
     data() {
@@ -83,7 +83,7 @@ export default {
     },
     components: {
         CreateProcessSettings,
-        ControlSettings,
+        Detect,
         SelectResearchSettings,
     },
     created: function () {

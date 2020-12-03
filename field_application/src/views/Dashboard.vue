@@ -97,22 +97,6 @@
                             </v-btn>
                         </v-card-actions>
                     </v-card>
-
-                    <v-card class="mx-auto card-spacer">
-                        <v-card-text>
-                            <div>Word of the Day</div>
-                            <div class="text--primary">
-                                relating to or dependent on charity;
-                                charitable.<br />
-                                "an eleemosynary educational institution."
-                            </div>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn text color="primary accent-4">
-                                Bekijk data en opties
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
                 </v-col>
             </v-row>
         </v-container>
