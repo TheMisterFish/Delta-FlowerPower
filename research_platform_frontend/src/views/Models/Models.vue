@@ -26,7 +26,6 @@ import AddButton from "../../components/AddButton";
 import { STATUS } from "../../store/storeResponse";
 import { mapState } from "vuex";
 
-
 export default {
   name: "Models",
   components: {

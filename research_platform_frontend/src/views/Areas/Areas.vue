@@ -1,46 +1,36 @@
 <template>
-  <v-container fill-height class="pa-8 align-start">
-    <v-row>
-      <v-col cols="12">
-        <v-data-table
-          :headers="areasHeaders"
-          :items="areas.areas"
-          hide-default-footer
-          class="area-table"
-          @click:row="openArea"
-        >
-          <template v-slot:[`item.created_at`]="{ item }">
-            <span>{{ new Date(item.created_at).toDateString() }}</span>
-          </template>
+  <v-container class="pa-8 align-start">
+    <v-data-table
+      :headers="areasHeaders"
+      :items="areas.areas"
+      hide-default-footer
+      class="area-table"
+      @click:row="openArea"
+    >
+      <template v-slot:[`item.created_at`]="{ item }">
+        <span>{{ new Date(item.created_at).toDateString() }}</span>
+      </template>
 
-          <template v-slot:[`item.updated_at`]="{ item }">
-            <span>{{
-              item.updated_at ? new Date(item.updated_at).toDateString() : ""
-            }}</span>
-          </template>
-        </v-data-table>
-        <v-btn
-          :to="{ name: 'areas/add' }"
-          bottom
-          fixed
-          right
-          color="primary"
-          elevation="2"
-          fab
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
+      <template v-slot:[`item.updated_at`]="{ item }">
+        <span>{{
+          item.updated_at ? new Date(item.updated_at).toDateString() : ""
+        }}</span>
+      </template>
+    </v-data-table>
+    <AddButton to="areas/add" />
   </v-container>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import AddButton from "../../components/AddButton";
 import { STATUS } from "../../store/storeResponse";
+import { mapState } from "vuex";
 
 export default {
   name: "Areas",
+  components: {
+    AddButton,
+  },
   data: () => ({
     areasHeaders: [
       { text: "Area", value: "name" },
@@ -55,11 +45,9 @@ export default {
   },
   methods: {
     openArea(value) {
-      const areaId = value._id;
-      const areaName = value.name;
       this.$router.push({
         name: "areas/:id",
-        params: { id: areaId, title: areaName },
+        params: { id: value._id, title: value.name },
       });
     },
   },
