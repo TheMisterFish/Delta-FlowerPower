@@ -4,18 +4,12 @@
     <v-text-field
       v-model="search"
       append-icon="mdi-magnify"
-      label="Search"
+      label="Zoeken"
       single-line
       hide-details
     ></v-text-field>
 
-    <small
-      ><a
-        href="#"
-        @click="downloadLocations"
-        >Download locaties</a
-      ></small
-    >
+    <small><a href="#" @click="downloadLocations">Download locaties</a></small>
     <v-progress-linear
       v-if="downloading"
       indeterminate
@@ -33,17 +27,25 @@
             <v-list-item :key="item.id">
               <template>
                 <v-list-item-content>
-                  <v-list-item-title v-text="item.title"></v-list-item-title>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
 
                   <v-list-item-subtitle
                     class="text--primary"
-                    v-text="item.headline"
+                    v-text="item.pos_1"
                   ></v-list-item-subtitle>
 
                   <v-list-item-subtitle
-                    v-text="item.subtitle"
+                    v-text="item.description"
                   ></v-list-item-subtitle>
                 </v-list-item-content>
+                <v-list-item-action>
+                  <v-list-item-action-text>
+                    {{ item.made_by.name }}
+                  </v-list-item-action-text>
+                  <v-list-item-action-text>
+                    {{ item.created_at | dateTime }}
+                  </v-list-item-action-text>
+                </v-list-item-action>
               </template>
             </v-list-item>
 
@@ -56,12 +58,18 @@
 </template>
 
 <script>
+// import moment from 'moment';
 export default {
   name: "SelectLocationSettings",
   props: {
     location_settings: {
       type: Object,
       required: true,
+    },
+  },
+  filters: {
+    dateTime: function (thing) {
+      return window.moment().format( 'LLL' );
     },
   },
   data() {
@@ -71,50 +79,15 @@ export default {
       selected: 2,
       items: [
         {
-          action: "15 min",
-          headline: "Brunch this weekend?",
-          subtitle: `I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-          title: "Ali Connosfsrs",
-        },
-        {
-          action: "2 hr",
-          headline: "Summer BBQ",
-          subtitle: `Wish I could come, but I'm out of town this weekend.`,
-          title: "me, Scrowertbt, Jennifer",
-        },
-        {
-          action: "6 hr",
-          headline: "Oui oui",
-          subtitle: "Do you have Paris recommendations? Have you ever been?",
-          title: "Sandra rewAdvams",
-        },
-        {
-          action: "12 hr",
-          headline: "Birthday gift",
-          subtitle:
-            "Have any ideas about what we should get Heidi for her birthday?",
-          title: "Trevor bvcHanasen",
-        },
-        {
-          action: "18hr",
-          headline: "Recipe to try",
-          subtitle:
-            "We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-          title: "Brittazxc Holta",
-        },
-        {
-          action: "12 hr",
-          headline: "Birthday gift",
-          subtitle:
-            "Have any ideas about what we should get Heidi for her birthday?",
-          title: "Trevorawda Haxnsen",
-        },
-        {
-          action: "18hr",
-          headline: "Recipe to try",
-          subtitle:
-            "We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-          title: "Britta xHolt",
+          _id: "awlkdjawld-2893u1289321-kladjwkldjawd",
+          name: "Nep Locatie",
+          description: "New descriptie",
+          pos_1: "5.342546,56.234543",
+          pos_2: "5.543215,56.987456",
+          created_at: new Date(),
+          made_by: {
+            name: "jaap",
+          },
         },
       ],
     };
@@ -122,7 +95,7 @@ export default {
   computed: {
     filtered_items: function () {
       return this.items.filter((i) => {
-        return i.title.toLowerCase().includes(this.search.toLowerCase());
+        return i.name.toLowerCase().includes(this.search.toLowerCase());
       });
     },
   },

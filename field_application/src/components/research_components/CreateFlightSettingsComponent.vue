@@ -44,22 +44,25 @@
 
     <p class="subtitle-2 text-center">Andere instellingen</p>
 
-    <v-checkbox v-model="drone_settings.use_ftp" label="Gebruik maken van FTP"></v-checkbox>
+    <v-checkbox
+      v-model="drone_settings.use_ftp"
+      label="Gebruik maken van FTP"
+    ></v-checkbox>
   </div>
 </template>
 
 <script>
 export default {
   name: "CreateFlightSettings",
-  props:{ 
+  props: {
     photo_settings: {
       required: true,
-      type: Object
+      type: Object,
     },
     drone_settings: {
       required: true,
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {

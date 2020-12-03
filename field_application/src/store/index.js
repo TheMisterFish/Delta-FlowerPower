@@ -7,7 +7,6 @@ import ai_settings_store from './modules/ai_settings_store.js'
 import research_settings_store from './modules/research_settings_store.js'
 import drone_settings_store from './modules/drone_settings_store.js'
 
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({

@@ -57,7 +57,7 @@
           <v-text-field
             v-model="search_prev_research"
             append-icon="mdi-magnify"
-            label="Search"
+            label="Zoeken"
             single-line
             hide-details
           ></v-text-field>
