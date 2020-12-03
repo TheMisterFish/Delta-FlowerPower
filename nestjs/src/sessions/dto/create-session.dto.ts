@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsDate, IsJSON, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreateSessionDto { 
   @IsString()
@@ -17,7 +17,7 @@ export class CreateSessionDto {
 
   made_by: string;
 
-  flower_count: JSON;
+  results: JSON;
 
   @IsString()
   @IsNotEmpty()

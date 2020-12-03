@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsEmpty, IsDate, MinLength } from 'class-validator';
+import { File } from '../../sessions/file';
 
 export class AimodelDto { 
   @IsString()
@@ -11,9 +12,7 @@ export class AimodelDto {
   @MinLength(10)
   description: string;
 
-  @IsString()
-  @IsEmpty()
-  path: string;
+  weights: File[]
 
   @IsString()
   @IsEmpty()
@@ -22,4 +21,6 @@ export class AimodelDto {
   @IsDate()
   @IsEmpty()
   created_at: Date;
+
+  updated_at: Date;
 }
