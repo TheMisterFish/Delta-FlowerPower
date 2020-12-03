@@ -1,73 +1,38 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { decodeJWT, isAuthenticated } from "./auth.js";
+import { routes } from './routes.js'
+import store from '../store/index.js'
 
 Vue.use(VueRouter);
-
-const routes = [{
-        path: "/",
-        name: "Landing",
-        component: () =>
-            import ("../views/Landing.vue"),
-    },
-    {
-        path: "/dashboard",
-        name: "Dashboard",
-        component: () =>
-            import ("../views/Dashboard.vue"),
-        meta: {
-            researcher: true,
-        },
-    },
-    {
-        path: "/onderzoeken",
-        name: "Onderzoeken",
-        component: () =>
-            import ("../views/Onderzoeken.vue"),
-        meta: {
-            researcher: true,
-        },
-    },
-    {
-        path: "/gebieden",
-        name: "Gebieden",
-        component: () =>
-            import ("../views/Gebieden.vue"),
-        meta: {
-            researcher: true,
-        },
-    },
-    {
-        path: "/gebruikers",
-        name: "Gebruikers",
-        component: () =>
-            import ("../views/Gebruikers.vue"),
-        meta: {
-            researcher: true,
-        },
-    },
-    {
-        path: "*",
-        redirect: "/",
-        name: "Landing",
-        component: () =>
-            import ("../views/Landing.vue"),
-    },
-];
 
 const router = new VueRouter({
     routes,
 });
 
 router.beforeEach((to, from, next) => {
-    console.log(to, from);
+    store.state.title.title = to.params.title || to.meta.title;
+    document.title = to.params.title || to.meta.title || "Flower Power";
+
+    store.state.authentication.isAuthenticated = isAuthenticated();
+
+    if (isAuthenticated()) {
+        store.state.authentication.user = decodeJWT();
+    }
+
+    if (to.name === "landing" && isAuthenticated()) {
+        next({
+            name: "dashboard"
+        });
+    }
+
     if (to.matched.some((record) => record.meta.researcher)) {
-        if (localStorage.getItem("token") == null) {
-            next({
-                path: "/landing",
-                params: { nextUrl: to.fullPath },
-            });
-        } else {
+        if (isAuthenticated()) {
             next();
+        } else {
+            next({
+                name: "landing"
+            });
         }
     } else {
         next();
