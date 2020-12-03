@@ -1,23 +1,18 @@
 <template>
-  <v-container class="pa-8 align-start">
-    <v-data-table
-      :headers="modelsHeaders"
-      :items="models.models"
-      hide-default-footer
-      class="models-table"
-      @click:row="openModel"
-    >
-      <template v-slot:[`item.created_at`]="{ item }">
-        <span>{{ new Date(item.created_at).toDateString() }}</span>
-      </template>
-
-      <template v-slot:[`item.updated_at`]="{ item }">
-        <span>{{
-          item.updated_at && new Date(item.updated_at).toDateString()
-        }}</span>
-      </template>
-    </v-data-table>
-    <AddButton to="models/add"/>
+  <v-container class="pa-8">
+    <v-row>
+      <v-col v-for="(model, index) in models.models" :key="index">
+        <v-card @click="openModel(model)" class="ma-auto pa-8 pb-4">
+          <v-card-title class="pl-0 pt-0"
+            >{{ model.name }}
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-card-subtitle class="pl-0">{{
+            model.description
+          }}</v-card-subtitle>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -28,9 +23,6 @@ import { mapState } from "vuex";
 
 export default {
   name: "Models",
-  components: {
-    AddButton
-  },
   data: () => ({
     modelsHeaders: [
       { text: "Model", value: "name" },
@@ -60,9 +52,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.models-table >>> tbody tr:hover {
-  cursor: pointer;
-}
-</style>

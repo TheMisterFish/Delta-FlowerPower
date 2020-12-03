@@ -133,12 +133,12 @@ export const routes = [{
                 }
             },
             {
-                path: "add",
-                name: "models/add",
+                path: ":id",
+                name: "models/:id",
                 component: () =>
-                    import ("@/views/Models/AddModel.vue"),
+                    import ("@/views/Models/Model.vue"),
                 meta: {
-                    title: "Add model",
+                    title: "Model",
                     action: true,
                     from: "models"
                 }

@@ -56,6 +56,7 @@ export const modelsStore = {
         },
         [UPDATE_MODEL_SUCCESS](state, model) {
             state.status = "success";
+            console.log(model)
             state.models = state.models.filter(m => m._id !== model._id);
             state.models.push(model);
         },
