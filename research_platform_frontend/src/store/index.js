@@ -6,6 +6,8 @@ import { titleStore } from './modules/titleStore.js'
 import { areasStore } from './modules/areasStore.js'
 import { researchesStore } from "./modules/researchesStore.js";
 import { usersStore } from "./modules/usersStore.js";
+import { modelsStore } from "./modules/modelsStore.js";
+
 
 Vue.use(Vuex);
 
@@ -16,6 +18,7 @@ export default new Vuex.Store({
         snackbar: snackbarStore,
         title: titleStore,
         areas: areasStore,
-        researches: researchesStore
+        researches: researchesStore,
+        models: modelsStore
     }
 });

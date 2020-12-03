@@ -19,6 +19,12 @@
         </v-list-item-icon>
         <v-list-item-title>Areas</v-list-item-title>
       </v-list-item>
+      <v-list-item to="/models">
+        <v-list-item-icon>
+          <v-icon>mdi-brain</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Models</v-list-item-title>
+      </v-list-item>
       <v-list-item to="/users">
         <v-list-item-icon>
           <v-icon>mdi-account-multiple</v-icon>

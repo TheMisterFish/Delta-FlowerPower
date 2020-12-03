@@ -84,3 +84,41 @@ export function updateArea(_id, area) {
         method: "PUT"
     })
 }
+
+//aimodels_Store
+export function getModels() {
+    return Axios({
+        url: "http://localhost:7080/aimodels",
+        method: "GET",
+    })
+}
+
+export function getModel(_id) {
+    return Axios({
+        url: `http://localhost:7080/aimodels/${_id}`,
+        method: "GET"
+    })
+}
+
+export function addModel(area) {
+    return Axios({
+        url: "http://localhost:7080/aimodels",
+        method: "POST",
+        data: area
+    })
+}
+
+export function deleteModel(_id) {
+    return Axios({
+        url: `http://localhost:7080/aimodels/${_id}`,
+        method: "DELETE",
+    })
+}
+
+export function updateModel(_id, area) {
+    return Axios({
+        url: `http://localhost:7080/aimodels/${_id}`,
+        data: area,
+        method: "PUT"
+    })
+}

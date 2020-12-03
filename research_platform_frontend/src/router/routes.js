@@ -117,6 +117,35 @@ export const routes = [{
         ]
     },
     {
+        path: "/models",
+        component: emptyRouteView,
+        meta: {
+            researcher: true,
+        },
+        children: [{
+                path: "",
+                name: "models",
+                component: () =>
+                    import ("@/views/Models/Models.vue"),
+                meta: {
+                    title: "Models",
+                    drawer: true
+                }
+            },
+            {
+                path: "add",
+                name: "models/add",
+                component: () =>
+                    import ("@/views/Models/AddModel.vue"),
+                meta: {
+                    title: "Add model",
+                    action: true,
+                    from: "models"
+                }
+            }
+        ]
+    },
+    {
         path: "/users",
         component: emptyRouteView,
         meta: {
