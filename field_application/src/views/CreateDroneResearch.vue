@@ -3,46 +3,61 @@
     <v-stepper v-model="e1" style="height: 100%; min-height: 100vh">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
-          Name of step 1
+          Locatie
         </v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step :complete="e1 > 2" step="2" :rules="[() =>drone_settings.use_ftp]">
-          Name of step 2
+        <v-stepper-step :complete="e1 > 2" step="2">
+          Vlieg instellingen
         </v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step step="3"> Name of step 3 </v-stepper-step>
+        <v-stepper-step :complete="e1 > 3" step="3" :rules="[() =>drone_settings.use_ftp]">
+          Vlieg instellingen
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step step="4">
+          Process instellingen
+        </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <create-flight-settings :photo_settings="photo_settings" :drone_settings="drone_settings"></create-flight-settings>
-          
+          <select-location-settings :location_settings="location_settings"></select-location-settings>
           <v-spacer></v-spacer>
 
           <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
           <v-btn text @click="$router.go(-1)"> Terug </v-btn>
         </v-stepper-content>
-
-        <v-stepper-content step="2" >
-          <create-process-settings :process_settings="process_settings" :process_disabled="!drone_settings.use_ftp"></create-process-settings>
-
-          <v-spacer></v-spacer>
+        <v-stepper-content step="2">
+          <create-flight-settings :photo_settings="photo_settings" :drone_settings="drone_settings"></create-flight-settings>
           
+          <v-spacer></v-spacer>
+
           <v-btn color="primary" @click="e1 = 3"> Verder </v-btn>
           <v-btn text @click="e1 = 1"> Terug </v-btn>
         </v-stepper-content>
 
-        <v-stepper-content step="3">
+        <v-stepper-content step="3" >
+          <create-process-settings :process_settings="process_settings" :process_disabled="!drone_settings.use_ftp"></create-process-settings>
+
+          <v-spacer></v-spacer>
+          
+          <v-btn color="primary" @click="e1 = 4"> Verder </v-btn>
+          <v-btn text @click="e1 = 2"> Terug </v-btn>
+        </v-stepper-content>
+
+        <v-stepper-content step="4">
           <control-settings></control-settings>
 
           <v-spacer></v-spacer>
 
           <v-btn color="primary" @click="e1 = 1"> Verder </v-btn>
-          <v-btn text @click="e1 = 2"> Terug </v-btn>
+          <v-btn text @click="e1 = 3"> Terug </v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -50,6 +65,7 @@
 </template>
 
 <script>
+import SelectLocationSettings from "@/components/research_components/SelectLocationSettingsComponent.vue";
 import createFlightSettings from "@/components/research_components/CreateFlightSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
 import ControlSettings from "@/components/research_components/ControlSettingsComponent.vue";
@@ -58,6 +74,11 @@ export default {
   data() {
     return {
       e1: 1,
+      location_settings: {
+        name: null,
+        pos_1: null,
+        pos_2: null
+      },
       photo_settings: {
         sensor_width: null,
         focal_length: null,
@@ -78,7 +99,8 @@ export default {
   components: {
     createFlightSettings,
     CreateProcessSettings,
-    ControlSettings
+    ControlSettings,
+    SelectLocationSettings
   },
 };
 </script>

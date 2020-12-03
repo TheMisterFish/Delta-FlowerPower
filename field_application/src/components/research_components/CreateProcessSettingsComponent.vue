@@ -16,6 +16,16 @@
       return-object
       single-line
     ></v-select>
+    <small
+      ><a href="#" class="disabled" @click="downloadWeight" :disabled="process_disabled"
+        >Download laatste gewicht voor {{ selected_ai_type.type }}</a
+      ></small
+    >
+    <v-progress-linear
+      v-if="downloading"
+      indeterminate
+      color="primary"
+    ></v-progress-linear>
     <v-select
       :disabled="process_disabled"
       v-model="selected_ai_weight"
@@ -42,11 +52,8 @@
       v-model="process_settings.image_width"
     ></v-text-field>
     <br />
-    <!-- <v-slider
-        :color="sliderColor"
-        v-model="process_settings.confidence"
-    ></v-slider> -->
     <v-slider
+      :disabled="process_disabled"
       :hint="process_settings.confidence + '%'"
       max="100"
       min="5"
@@ -59,6 +66,9 @@
         {{ satisfactionEmojis[Math.min(Math.floor(value / 10), 9)] }}
       </template>
     </v-slider>
+    <p>
+      De confidence van de AI houd in hoe goed hij het object moet herkennen om het object mee te rekenen in het systeem, een confidence tussen de 20 en 40 is aan te raden.
+    </p>
     <br />
   </div>
 </template>
@@ -109,6 +119,7 @@ export default {
         "😐",
         "☹️",
       ],
+      downloading: false,
     };
   },
   computed: {
@@ -126,8 +137,17 @@ export default {
       this.process_settings.weight = ai_weight.weight;
     },
   },
+  methods: {
+    downloadWeight() {
+      this.downloading = true;
+    },
+  },
 };
 </script>
 
 <style lang="css" scoped>
+.disabled{
+  color: grey;
+  cursor: not-allowed;
+}
 </style>
