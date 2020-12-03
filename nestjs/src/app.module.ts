@@ -14,10 +14,6 @@ import { AimodelsController } from './aimodels/aimodels.controller';
 import { AimodelsModule } from './aimodels/aimodels.module';
 import { LocationsController } from './locations/locations.controller';
 import { LocationsModule } from './locations/locations.module';
-import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { join } from 'path';
-import { mkdirSync, existsSync } from 'fs';
 
 @Module({
   imports: [
@@ -33,18 +29,6 @@ import { mkdirSync, existsSync } from 'fs';
         useFindAndModify: false,
       },
     ),
-    MulterModule.register({
-      storage: diskStorage({
-        destination: function(req, file, cb) {
-          const path = join('public', 'files', 'researches', req.params.id);
-          if (!existsSync(path)) mkdirSync(path, true);
-          cb(null, path);
-        },
-        filename: function(req, file, cb) {
-          cb(null, join(file.originalname));
-        },
-      }),
-    }),
     CommandModule,
     AuthModule,
     UsersModule,

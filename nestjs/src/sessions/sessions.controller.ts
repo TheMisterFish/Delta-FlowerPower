@@ -5,6 +5,9 @@ import { SessionsService } from './sessions.service';
 import { CreateSessionDto, UpdateSessionDto, SessionsDto } from "./dto";
 import { Session } from "./sessions.model";
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { join } from 'path';
+import * as fs from 'fs';
 
 @Controller('sessions')
 export class SessionsController {
@@ -42,7 +45,21 @@ export class SessionsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @HasRoles('moderator')
   @Put(':id')
-  @UseInterceptors(FilesInterceptor("files"))
+  @UseInterceptors(
+    FilesInterceptor('files', 100, {
+      limits: { fileSize: 1024 * 1024 * 2000 },
+      storage: diskStorage({
+        destination: function(req, file, cb) {
+          const path = join('public', 'files', 'researches', req.params.id);
+          if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
+          cb(null, path);
+        },
+        filename: function(req, file, cb) {
+          cb(null, file.originalname);
+        },
+      }),
+    }),
+  )
   async update(@UploadedFiles() files, @Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
     if(updateSessionDto.results) {
       updateSessionDto.results.forEach(r => {
