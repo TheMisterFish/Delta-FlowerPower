@@ -17,7 +17,10 @@
       single-line
     ></v-select>
     <small
-      ><a href="#" class="disabled" @click="downloadWeight" :disabled="process_disabled"
+      ><a
+        href="#"
+        :class="process_disabled == true ? 'disabled' : ''"
+        @click="downloadWeight"
         >Download laatste gewicht voor {{ selected_ai_type.type }}</a
       ></small
     >
@@ -67,7 +70,9 @@
       </template>
     </v-slider>
     <p>
-      De confidence van de AI houd in hoe goed hij het object moet herkennen om het object mee te rekenen in het systeem, een confidence tussen de 20 en 40 is aan te raden.
+      De confidence van de AI houd in hoe goed hij het object moet herkennen om
+      het object mee te rekenen in het systeem, een confidence tussen de 20 en
+      40 is aan te raden.
     </p>
     <br />
   </div>
@@ -146,7 +151,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.disabled{
+.disabled {
   color: grey;
   cursor: not-allowed;
 }

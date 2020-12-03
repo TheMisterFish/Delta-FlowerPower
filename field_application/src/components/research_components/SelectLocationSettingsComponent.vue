@@ -1,50 +1,36 @@
 <template>
   <div>
     <p class="subtitle-2 text-center">Locatie instellingen</p>
-    Selecteer een locatie
-    <hr />
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Search"
+      single-line
+      hide-details
+    ></v-text-field>
 
-    <!-- <v-virtual-scroll :items="items" height="500" item-height="100" >
-      <template v-slot:default="{ item }">
-        <v-list-item :key="item">
-          <template v-slot:default="{ active }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
+    <small
+      ><a
+        href="#"
+        @click="downloadLocations"
+        >Download locaties</a
+      ></small
+    >
+    <v-progress-linear
+      v-if="downloading"
+      indeterminate
+      color="primary"
+    ></v-progress-linear>
 
-              <v-list-item-subtitle
-                class="text--primary"
-                v-text="item.headline"
-              ></v-list-item-subtitle>
-
-              <v-list-item-subtitle
-                v-text="item.subtitle"
-              ></v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-list-item-action-text
-                v-text="item.action"
-              ></v-list-item-action-text>
-
-              <v-icon v-if="!active" color="grey lighten-1">
-                mdi-star-outline
-              </v-icon>
-
-              <v-icon v-else color="yellow darken-3"> mdi-star </v-icon>
-            </v-list-item-action>
-          </template>
-        </v-list-item>
-        <v-divider v-if="index < items.length - 1" :key="index"></v-divider>
-      </template>
-    </v-virtual-scroll> -->
-    <v-virtual-scroll height="300px">
+    <div class="scroll-box">
       <v-list two-line>
         <v-list-item-group
           v-model="selected"
           active-class="primary--text"
-          multiple
+          single
         >
-          <template v-for="(item, index) in items">
-            <v-list-item :key="item.title">
+          <template v-for="(item, index) in filtered_items">
+            <v-list-item :key="item.id">
               <template>
                 <v-list-item-content>
                   <v-list-item-title v-text="item.title"></v-list-item-title>
@@ -58,12 +44,6 @@
                     v-text="item.subtitle"
                   ></v-list-item-subtitle>
                 </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-list-item-action-text
-                    v-text="item.action"
-                  ></v-list-item-action-text>
-                </v-list-item-action>
               </template>
             </v-list-item>
 
@@ -71,7 +51,7 @@
           </template>
         </v-list-item-group>
       </v-list>
-    </v-virtual-scroll>
+    </div>
   </div>
 </template>
 
@@ -87,59 +67,67 @@ export default {
   data() {
     return {
       downloading: false,
-      selected: [2],
+      search: "",
+      selected: 2,
       items: [
         {
           action: "15 min",
           headline: "Brunch this weekend?",
           subtitle: `I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-          title: "Ali Connors",
+          title: "Ali Connosfsrs",
         },
         {
           action: "2 hr",
           headline: "Summer BBQ",
           subtitle: `Wish I could come, but I'm out of town this weekend.`,
-          title: "me, Scrott, Jennifer",
+          title: "me, Scrowertbt, Jennifer",
         },
         {
           action: "6 hr",
           headline: "Oui oui",
           subtitle: "Do you have Paris recommendations? Have you ever been?",
-          title: "Sandra Adams",
+          title: "Sandra rewAdvams",
         },
         {
           action: "12 hr",
           headline: "Birthday gift",
           subtitle:
             "Have any ideas about what we should get Heidi for her birthday?",
-          title: "Trevor Hansen",
+          title: "Trevor bvcHanasen",
         },
         {
           action: "18hr",
           headline: "Recipe to try",
           subtitle:
             "We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-          title: "Britta Holt",
+          title: "Brittazxc Holta",
         },
         {
           action: "12 hr",
           headline: "Birthday gift",
           subtitle:
             "Have any ideas about what we should get Heidi for her birthday?",
-          title: "Trevor Hansen",
+          title: "Trevorawda Haxnsen",
         },
         {
           action: "18hr",
           headline: "Recipe to try",
           subtitle:
             "We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-          title: "Britta Holt",
+          title: "Britta xHolt",
         },
       ],
     };
   },
+  computed: {
+    filtered_items: function () {
+      return this.items.filter((i) => {
+        return i.title.toLowerCase().includes(this.search.toLowerCase());
+      });
+    },
+  },
   methods: {
-    getLocations() {
+    downloadLocations() {
       this.downloading = true;
     },
   },
@@ -147,4 +135,8 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.scroll-box {
+  height: 480px;
+  overflow-y: scroll;
+}
 </style>
