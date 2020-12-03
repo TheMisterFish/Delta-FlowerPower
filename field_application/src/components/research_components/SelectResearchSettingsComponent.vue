@@ -10,6 +10,7 @@
     ></v-text-field>
 
     <small><a href="#" @click="downloadResearches">Download onderzoeken</a></small>
+    <small><a href="#" @click="downloadLocations">Download locaties</a></small>
     <v-progress-linear
       v-if="downloading"
       indeterminate
@@ -23,19 +24,19 @@
           active-class="primary--text"
           single
         >
-          <template v-for="(item, index) in filtered_items">
-            <v-list-item :key="item.id">
+          <template v-for="(research, index) in researches.researches">
+            <v-list-item :key="research._id">
               <template>
                 <v-list-item-content>
-                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                  <v-list-item-title v-text="research.name"></v-list-item-title>
 
-                  <v-list-item-subtitle
+                  <!-- <v-list-item-subtitle
                     class="text--primary"
-                    v-text="item.pos_1"
-                  ></v-list-item-subtitle>
+                    v-text="research.name"
+                  ></v-list-item-subtitle> -->
 
                   <v-list-item-subtitle
-                    v-text="item.description"
+                    v-text="research.description"
                   ></v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
@@ -49,7 +50,7 @@
               </template>
             </v-list-item>
 
-            <v-divider v-if="index < items.length - 1" :key="index"></v-divider>
+            <v-divider v-if="index < researches.length - 1" :key="index"></v-divider>
           </template>
         </v-list-item-group>
       </v-list>
@@ -58,7 +59,7 @@
 </template>
 
 <script>
-// import moment from 'moment';
+import { mapState } from "vuex";
 export default {
   name: "SelectResearchSettings",
   props: {
@@ -77,27 +78,15 @@ export default {
       downloading: false,
       search: "",
       selected: 2,
-      items: [
-        {
-          _id: "awlkdjawld-2893u1289321-kladjwkldjawd",
-          name: "Nep Locatie",
-          description: "New descriptie",
-          pos_1: "5.342546,56.234543",
-          pos_2: "5.543215,56.987456",
-          created_at: new Date(),
-          made_by: {
-            name: "jaap",
-          },
-        },
-      ],
     };
   },
   computed: {
-    filtered_items: function () {
+    filtered_items: function() {
       return this.items.filter((i) => {
         return i.name.toLowerCase().includes(this.search.toLowerCase());
       });
     },
+    ...mapState(["researches"]),
   },
   methods: {
     downloadResearches() {

@@ -11,6 +11,13 @@
         <v-stepper-step :complete="e1 > 2" step="2">
           Name of step 2
         </v-stepper-step>
+
+                <v-divider></v-divider>
+
+
+        <v-stepper-step :complete="e1 > 3" step="3">
+          Name of step 3
+        </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
@@ -31,7 +38,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
+          <v-btn color="primary" @click="e1 = 3"> Verder </v-btn>
           <v-btn text @click="$router.go(-1)"> Terug </v-btn>
         </v-stepper-content>
 
@@ -40,7 +47,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
+          <v-btn color="primary" @click="e1 = 3"> Verder </v-btn>
           <v-btn text @click="e1 = 1"> Terug </v-btn>
         </v-stepper-content>
       </v-stepper-items>
@@ -60,7 +67,7 @@ export default {
       research_settings: {
         name: null,
         pos_1: null,
-        pos_2: null
+        pos_2: null,
       },
       photo_settings: {
         sensor_width: null,
@@ -78,9 +85,10 @@ export default {
   components: {
     CreateProcessSettings,
     ControlSettings,
-    SelectResearchSettings
+    SelectResearchSettings,
   },
   created: function() {
+    this.$store.dispatch("getResearches");
     this.$store.dispatch("getModels");
   },
 };
