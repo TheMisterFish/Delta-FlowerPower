@@ -11,34 +11,45 @@
         <v-stepper-step :complete="e1 > 2" step="2">
           Name of step 2
         </v-stepper-step>
-
       </v-stepper-header>
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <create-process-settings :process_settings="process_settings"></create-process-settings>
-          
+          <select-research-settings
+            :research_settings="research_settings"
+          ></select-research-settings>
+
+          <v-spacer></v-spacer>
+
+          <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
+          <v-btn text @click="$router.go(-1)"> Terug </v-btn>
+        </v-stepper-content>
+        <v-stepper-content step="2">
+          <create-process-settings
+            :process_settings="process_settings"
+          ></create-process-settings>
+
           <v-spacer></v-spacer>
 
           <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
           <v-btn text @click="$router.go(-1)"> Terug </v-btn>
         </v-stepper-content>
 
-        <v-stepper-content step="2" >
+        <v-stepper-content step="3">
           <control-settings></control-settings>
 
           <v-spacer></v-spacer>
-          
+
           <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
           <v-btn text @click="e1 = 1"> Terug </v-btn>
         </v-stepper-content>
-
       </v-stepper-items>
     </v-stepper>
   </v-layout>
 </template>
 
 <script>
+import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
 import ControlSettings from "@/components/research_components/ControlSettingsComponent.vue";
 export default {
@@ -46,6 +57,11 @@ export default {
   data() {
     return {
       e1: 1,
+      research_settings: {
+        name: null,
+        pos_1: null,
+        pos_2: null
+      },
       photo_settings: {
         sensor_width: null,
         focal_length: null,
@@ -55,13 +71,17 @@ export default {
         model: null,
         weight: null,
         image_width: null,
-        confidence: 25
-      }
+        confidence: 25,
+      },
     };
   },
   components: {
     CreateProcessSettings,
-    ControlSettings
+    ControlSettings,
+    SelectResearchSettings
+  },
+  created: function() {
+    this.$store.dispatch("getModels");
   },
 };
 </script>

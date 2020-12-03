@@ -27,7 +27,7 @@
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <select-location-settings :location_settings="location_settings"></select-location-settings>
+          <select-research-settings :research_settings="research_settings"></select-research-settings>
           <v-spacer></v-spacer>
 
           <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import SelectLocationSettings from "@/components/research_components/SelectLocationSettingsComponent.vue";
+import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
 import createFlightSettings from "@/components/research_components/CreateFlightSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
 import ControlSettings from "@/components/research_components/ControlSettingsComponent.vue";
@@ -74,7 +74,7 @@ export default {
   data() {
     return {
       e1: 1,
-      location_settings: {
+      research_settings: {
         name: null,
         pos_1: null,
         pos_2: null
@@ -100,7 +100,7 @@ export default {
     createFlightSettings,
     CreateProcessSettings,
     ControlSettings,
-    SelectLocationSettings
+    SelectResearchSettings
   },
 };
 </script>
