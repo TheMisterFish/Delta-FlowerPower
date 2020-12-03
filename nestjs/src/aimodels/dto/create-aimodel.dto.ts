@@ -19,4 +19,6 @@ export class CreateAimodelDto {
 
   @IsEmpty() 
   created_at: Date;
+
+  updated_at: Date;
 }

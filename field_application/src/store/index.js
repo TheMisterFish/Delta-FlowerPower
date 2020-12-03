@@ -6,11 +6,13 @@ import socket_store from './modules/socket_store.js'
 import ai_settings_store from './modules/ai_settings_store.js'
 import research_settings_store from './modules/research_settings_store.js'
 import drone_settings_store from './modules/drone_settings_store.js'
+import models_store from './modules/models_store.js'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     modules: {
+        models: models_store,
         socket: socket_store,
         authentication: authentication_store,
         alerts: alerts_store,

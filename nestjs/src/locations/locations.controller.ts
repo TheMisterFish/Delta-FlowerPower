@@ -14,7 +14,7 @@ export class LocationsController {
   @HasRoles('moderator')
   @Post()
   async create(@Request() req, @Body() createLocationDto: CreateLocationDto) {
-    createLocationDto.made_by = req.id;
+    createLocationDto.made_by = req.user._id;
     return await this.locationsService.create(createLocationDto);
   }
 

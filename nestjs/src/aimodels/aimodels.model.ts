@@ -1,5 +1,6 @@
-import { prop, pre } from "@typegoose/typegoose";
+import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
+import { File } from "../sessions/file";
 
 @pre<Aimodel>('save', function (next) {
   if (this.isNew) {
@@ -21,10 +22,8 @@ export class Aimodel {
   @prop()
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
   @prop()
-  path: string;
+  weights: Ref<File[]>
 
   @IsString()
   @IsNotEmpty()
