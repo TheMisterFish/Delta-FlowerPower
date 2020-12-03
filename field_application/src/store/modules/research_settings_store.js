@@ -5,29 +5,29 @@ Vue.use(Vuex);
 
 const research_settings_store = {
     state: {
-        alert_active: false,
-        alert_text: null
+        sensor_width: null,
+        focal_length: null,
+        image_width: null,
     },
     mutations: {
-        alert(state, payload) {
-            if (payload.text) {
-                state.alert_text = payload.text
-            } else {
-                state.alert_text = "Onbekende bericht"
-            }
-            state.alert_active = true;
+        setResearchSettings(state, payload){
+            state.sensor_width = payload.sensor_width;
+            state.focal_length = payload.focal_length;
+            state.image_width = payload.image_width;
         },
+        
     },
     actions: {
-        alert({
+        setResearchSettings({
             commit
         }, payload) {
-            commit("alert", payload);
+            commit("setResearchSettings", payload);
         },
     },
     getters: {
-        hasAlert: state => state.alert_active,
-        alertText: state => state.alert_text
+        getSensorWidth: state => { return state.sensor_width },
+        getFocalLength: state => { return state.focal_length },
+        getImageWidth: state => { return state.image_width },
     },
 };
 

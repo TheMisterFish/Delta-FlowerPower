@@ -1,6 +1,6 @@
 import { SOCKET_CONNECT, SOCKET_CONNECT_ERROR, SOCKET_CONNECT_SUCCESS, SOCKET_DISCONNECT, SOCKET_ON_SEND_MESSAGE, SOCKET_SEND_MESSAGE } from "../mutationTypes";
 
-export const socket_store = {
+const socket_store = {
     state: {
         websocket: null,
         connected: false,
@@ -56,3 +56,5 @@ export const socket_store = {
         }
     }
 }
+
+export default socket_store;

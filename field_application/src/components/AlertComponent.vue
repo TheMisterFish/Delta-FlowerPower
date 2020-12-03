@@ -18,8 +18,8 @@ export default {
     },
   },
   watch: {
-    "$store.state.hasAlert": function () {
-      if (this.$store.state.hasAlert) this.snackbar = true;
+    "$store.getters.hasAlert": function () {
+      if (this.$store.getters.hasAlert) this.snackbar = true;
     },
   },
 };

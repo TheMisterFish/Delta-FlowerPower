@@ -7,7 +7,7 @@ const routes = [{
         path: "/",
         name: "Landing",
         component: () =>
-            import ("../views/CreateResearch.vue"),
+            import ("../views/Dashboard.vue"),
     },
     {
         path: "/dashboard",
@@ -19,10 +19,19 @@ const routes = [{
         },
     },
     {
-        path: "/create_research",
-        name: "CreateResearch",
+        path: "/create_drone_research",
+        name: "CreateDroneResearch",
         component: () =>
-            import ("../views/CreateResearch.vue"),
+            import ("../views/CreateDroneResearch.vue"),
+        meta: {
+            researcher: true,
+        },
+    },
+    {
+        path: "/create_sd_research",
+        name: "CreateSdResearch",
+        component: () =>
+            import ("../views/CreateSdResearch.vue"),
         meta: {
             researcher: true,
         },
@@ -44,10 +53,11 @@ router.beforeEach((to, from, next) => {
     console.log(to, from);
     if (to.matched.some((record) => record.meta.researcher)) {
         if (localStorage.getItem("token") == null) {
-            next({
-                path: "/landing",
-                params: { nextUrl: to.fullPath },
-            });
+            next()
+            // next({
+            //     path: "/landing",
+            //     params: { nextUrl: to.fullPath },
+            // });
         } else {
             next();
         }

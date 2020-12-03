@@ -6,12 +6,16 @@
           <h3 class="text-center">Nieuw onderzoek.</h3>
         </v-col>
         <v-col cols="6" sm="6">
-          <v-btn class="big-button no-text-transform" block outline>
+          <v-btn
+            class="big-button no-text-transform text-center"
+            to="create_drone_research"
+            block
+          >
             <span
               style="
                 white-space: normal;
                 word-wrap: break-word;
-                width: 80%;
+                width: 90%;
                 padding: 10%;
               "
             >
@@ -22,12 +26,16 @@
           </v-btn>
         </v-col>
         <v-col cols="6" sm="6">
-          <v-btn class="big-button no-text-transform" block outline>
+          <v-btn
+            class="big-button no-text-transform text-center"
+            @click="selectInputFolder"
+            block
+          >
             <span
               style="
                 white-space: normal;
                 word-wrap: break-word;
-                width: 80%;
+                width: 90%;
                 padding: 10%;
               "
             >
@@ -47,7 +55,7 @@
         </v-col>
         <v-col cols="12" sm="12">
           <v-text-field
-            v-model="search"
+            v-model="search_prev_research"
             append-icon="mdi-magnify"
             label="Search"
             single-line
@@ -107,9 +115,26 @@
 <script>
 import Vue from "vue";
 import { mdiMicroSd, mdiQuadcopter } from "@mdi/js";
+import { FILESYSTEM, IPC_MESSAGES, DETECT_IMAGES } from "../constants.js";
+import { IpcMessage } from "../IpcMessage.js";
+import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "dashboard",
+  data() {
+    return {
+      search_prev_research: null,
+    };
+  },
+  methods: {
+    async selectInputFolder() {
+      const ipcMessage = new IpcMessage(IPC_MESSAGES.SELECT_FOLDER);
+      const response = await window.electron.invoke(FILESYSTEM, ipcMessage);
+      this.$store.dispatch("setPath", response);
+      this.$router.push("/create_sd_research")
+    },
+
+  },
 });
 </script>
 
@@ -123,5 +148,9 @@ export default Vue.extend({
 
 .card-spacer {
   margin-bottom: 20px;
+}
+
+.v-btn__content {
+  width: 100%;
 }
 </style>
