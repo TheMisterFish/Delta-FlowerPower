@@ -12,9 +12,8 @@ const models_store = {
     },
     actions: {
         async getModels({ commit }) {
-            const r = await ModelsApi.getModels();
-            console.log(r);
-            commit(GET_MODELS);
+            const result = await ModelsApi.getModels();
+            commit(GET_MODELS, result);
         }
     },
     getters: {

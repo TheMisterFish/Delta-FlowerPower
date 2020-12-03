@@ -5,6 +5,7 @@ export const FLY_AND_LAND = "FLY_AND_LAND"
 
 //IPC_CHANNELS
 export const FILESYSTEM = "FILESYSTEM";
+export const DOWNLOAD = "DOWNLOAD";
 
 //IPC_ACTIONS
 export const IPC_MESSAGES = {

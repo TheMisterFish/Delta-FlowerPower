@@ -2,11 +2,12 @@
 'use strict'
 
 import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
+import { download } from 'electron-dl'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import path from 'path'
 import fs from 'fs'
-import { FILESYSTEM, IPC_MESSAGES } from './constants'
+import { DOWNLOAD, FILESYSTEM, IPC_MESSAGES } from './constants'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 let pythonProcess = null;
@@ -161,4 +162,9 @@ ipcMain.handle(FILESYSTEM, async(event, args) => {
             console.error(error);
         }
     }
+})
+
+ipcMain.on(DOWNLOAD, (event, args) => {
+    download(BrowserWindow.getFocusedWindow(), args.url, args.properties)
+        .then(dl => window.webContents.send("download complete", dl.getSavePath()));
 })

@@ -7,10 +7,10 @@
     </p>
     <v-select
       :disabled="process_disabled"
-      v-model="selected_ai_type"
-      :items="ai_types"
-      item-text="type"
-      item-value="type"
+      v-model="selectedModel"
+      :items="models.models"
+      item-text="name"
+      item-value="_id"
       label="Select"
       persistent-hint
       return-object
@@ -21,7 +21,8 @@
         href="#"
         :class="process_disabled == true ? 'disabled' : ''"
         @click="downloadWeight"
-        >Download laatste gewicht voor {{ selected_ai_type.type }}</a
+        >Download laatste gewicht voor
+        {{ selectedModel && selectedModel.type }}</a
       ></small
     >
     <v-progress-linear
@@ -79,6 +80,10 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import * as axios from "axios";
+import { DOWNLOAD } from "../../constants";
+
 export default {
   name: "CreateProcessSettings",
   props: {
@@ -94,13 +99,13 @@ export default {
   },
   data() {
     return {
-      selected_ai_type: { type: "YoloV5" },
-      ai_types: [
-        { type: "YoloV5" },
-        { type: "YoloV3" },
-        { type: "F-RCNN" },
-        { type: "Detectron2" },
-      ],
+      selectedModel: null,
+      // ai_types: [
+      //   { type: "YoloV5" },
+      //   { type: "YoloV3" },
+      //   { type: "F-RCNN" },
+      //   { type: "Detectron2" },
+      // ],
       selected_ai_weight: { weight: "SomeWeight 1", weight_type: "YoloV5" },
       ai_weights: [
         { weight: "SomeWeight 1", weight_type: "YoloV5" },
@@ -128,23 +133,31 @@ export default {
     };
   },
   computed: {
-    ai_available_weights: function () {
+    ai_available_weights: function() {
       return this.ai_weights.filter((w) => {
-        return w.weight_type === this.selected_ai_type.type;
+        return w.weight_type === "YoloV5"; //THIS WON'T WORK YET this.selectedModel.type;
       });
     },
+    ...mapState(["models"]),
   },
   watch: {
-    selected_ai_type: function (ai_type) {
+    selectedModel: function(ai_type) {
       this.process_settings.model = ai_type.type;
     },
-    selected_ai_weight: function (ai_weight) {
+    selected_ai_weight: function(ai_weight) {
       this.process_settings.weight = ai_weight.weight;
     },
   },
   methods: {
     downloadWeight() {
       this.downloading = true;
+      //TODO CHANGE HARDCODED DIRECTORY TO THE DIRECTORY WHERE WE WANT TO SAVE THE WEIGHTS
+      window.electron.send(DOWNLOAD, {
+        url:
+          "http://localhost:7080/" +
+          this.selectedModel.weights[0].filePath.split(/\/(.+)/)[1],
+        properties: { directory: "C:\\Users\\sueno\\Documents\\baboo" },
+      });
     },
   },
 };
