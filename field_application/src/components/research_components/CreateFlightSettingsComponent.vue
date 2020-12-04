@@ -38,7 +38,14 @@
             hint="DJI Spark: 3968 pixels"
             v-model="photo_settings.image_width"
         ></v-text-field>
-
+        <br />
+        <v-text-field
+            append-icon="mdi-image-outline"
+            label="Afbeelding hoogte (pixels)"
+            type="number"
+            hint="DJI Spark: 2976 pixels"
+            v-model="photo_settings.image_height"
+        ></v-text-field>
         <br />
         <br />
 

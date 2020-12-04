@@ -1,35 +1,81 @@
 <template>
     <div>
-        <v-card class="mx-auto card-spacer mb-5">
-            <v-card-text>
-                <div>Onderzoek: </div>
-                <div class="text--primary">
-
-                </div>
-            </v-card-text>
-        </v-card>
+        <div class="text--primary mb-5">
+            <p class="subtitle-2 text-center">Foto instellingen</p>
+            <v-simple-table dense>
+                <template v-slot:default>
+                    <tbody>
+                        <tr>
+                            <td>Vlieg hoogte (meters):</td>
+                            <td>{{ drone_settings.fly_height }} m</td>
+                        </tr>
+                        <tr>
+                            <td>Sensor breedte (mm):</td>
+                            <td>{{ photo_settings.sensor_width }} mm</td>
+                        </tr>
+                        <tr>
+                            <td>Brandpuntsafstand (mm):</td>
+                            <td>{{ photo_settings.focal_length }} mm</td>
+                        </tr>
+                        <tr>
+                            <td>Afbeelding breedte (pixels):</td>
+                            <td>{{ photo_settings.image_width }} px</td>
+                        </tr>
+                        <tr>
+                            <td>CM per pixel:</td>
+                            <td>{{ cm_per_px.toFixed(5) }} cm/px</td>
+                        </tr>
+                        <tr @click="calculateLongestRoute()">
+                            <td>Meter per afbeelding:</td>
+                            <td>{{ cm_per_image_width.toFixed(5) }} m</td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
+        </div>
     </div>
 </template>
 
 <script>
+import { CalculateActions } from "../../actions"
 export default {
     name: "CheckSettings",
     props: {
         research_settings: {
             type: Object,
-            required: true
+            required: true,
         },
         photo_settings: {
             type: Object,
-            required: true
+            required: true,
         },
         drone_settings: {
             type: Object,
-            required: true
+            required: true,
         },
         process_settings: {
             type: Object,
-            required: true
+            required: true,
+        },
+    },
+    data() {
+        return {};
+    },
+    computed: {
+        cm_per_px: function () {
+            return (
+                (this.photo_settings.sensor_width *
+                    this.drone_settings.fly_height *
+                    100) /
+                (this.photo_settings.focal_length *
+                    this.photo_settings.image_width)
+            );
+        },
+        cm_per_image_width: function () {
+            return (this.cm_per_px * this.photo_settings.image_width) / 100;
+        },
+        cm_per_image_height: function () {
+            return (this.cm_per_px * this.photo_settings.image_height) / 100;
         },
     },
     mounted() {
@@ -40,6 +86,61 @@ export default {
         */
     },
     methods: {
+        calculateLongestRoute() {
+            const start_pos = [
+                this.research_settings.pos_x_1,
+                this.research_settings.pos_y_1,
+            ];
+            const pos_1 = [
+                this.research_settings.pos_x_1,
+                this.research_settings.pos_y_2,
+            ];
+            const pos_2 = [
+                this.research_settings.pos_x_2,
+                this.research_settings.pos_y_1,
+            ];
+
+            const length_1 = CalculateActions.distanceInMBetweenEarthCoordinates(
+                start_pos[0],
+                start_pos[1],
+                pos_1[0],
+                pos_1[1]
+            );
+            const length_2 = CalculateActions.distanceInMBetweenEarthCoordinates(
+                start_pos[0],
+                start_pos[1],
+                pos_2[0],
+                pos_2[1]
+            );
+            var heading;
+            var images_taken_width;
+            var images_taken_height;
+            const a = { lon: start_pos[0], lat: start_pos[1], elv: this.drone_settings.fly_height};
+            var b = {lon: null, lat: null, elv: null};
+            if (length_1 > length_2) {
+                images_taken_width = length_1 / this.cm_per_image_width;
+                images_taken_height = length_2 / this.cm_per_image_height;
+                b = { lat: pos_1[0], lon: pos_1[1], elv: this.drone_settings.fly_height};
+            } else {
+                images_taken_width = length_2 / this.cm_per_image_width;
+                images_taken_height = length_1 / this.cm_per_image_height;
+                b = { lon: pos_2[0], lat: pos_2[1], elv: this.drone_settings.fly_height};
+            }
+            heading = CalculateActions.CalculateAzimuth(a, b);
+            var total_images = Math.ceil(
+                Math.ceil(images_taken_width) * Math.ceil(images_taken_height)
+            );
+            
+            console.log(total_images);
+            console.log(Math.ceil(images_taken_width));
+            console.log(Math.ceil(images_taken_height));
+            console.log(heading);
+            console.log(length_1);
+            console.log(length_2);
+
+            // CalculateActions.CalculateAzimuth();
+        },
+
         saveSettings() {
             //setAiSettings
             //setDroneSettings
@@ -50,8 +151,10 @@ export default {
                 2. Save all settings to store, go to new page where we start the drone kit and stuff.
                 3. Check if all inputs are set up correct
             */
-        }
-    }
+        },
+
+       
+    },
 };
 </script>
 
