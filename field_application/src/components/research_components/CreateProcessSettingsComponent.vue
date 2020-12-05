@@ -19,7 +19,7 @@
         <small
             ><a
                 href="#"
-                :class="process_disabled == true ? 'disabled' : ''"
+                :class="process_disabled == true ? 'disabled' : !selectedModel ? 'disabled' : ''"
                 @click="downloadWeight"
                 >Download laatste gewicht voor
                 {{ selectedModel && selectedModel.type }}</a
@@ -34,8 +34,8 @@
             :disabled="process_disabled"
             v-model="selected_ai_weight"
             :items="ai_available_weights"
-            item-text="weight"
-            item-value="weight"
+            item-text="name"
+            item-value="name"
             label="Select"
             persistent-hint
             return-object
@@ -82,7 +82,7 @@
 <script>
 import { mapState } from "vuex";
 import * as axios from "axios";
-import { DOWNLOAD } from "../../constants";
+import { IPC_CHANNELS } from "../../constants";
 
 export default {
     name: "CreateProcessSettings",
@@ -100,20 +100,8 @@ export default {
     data() {
         return {
             selectedModel: null,
-            selected_ai_weight: {
-                weight: "SomeWeight 1",
-                weight_type: "YoloV5",
-            },
-            ai_weights: [
-                { weight: "SomeWeight 1", weight_type: "YoloV5" },
-                { weight: "SomeWeight 2", weight_type: "YoloV5" },
-                { weight: "SomeWeight 3", weight_type: "YoloV3" },
-                { weight: "SomeWeight 4", weight_type: "YoloV3" },
-                { weight: "SomeWeight 5", weight_type: "F-RCNN" },
-                { weight: "SomeWeight 5", weight_type: "F-RCNN" },
-                { weight: "SomeWeight 5", weight_type: "Detectron2" },
-                { weight: "SomeWeight 5", weight_type: "Detectron2" },
-            ],
+            selected_ai_weight: null,
+            ai_weights: [],
             satisfactionEmojis: [
                 "☹️",
                 "🙂",
@@ -131,31 +119,42 @@ export default {
     },
     computed: {
         ai_available_weights: function () {
+            if(!this.selectedModel) return [];
+            
             return this.ai_weights.filter((w) => {
-                return w.weight_type === "YoloV5"; //THIS WON'T WORK YET this.selectedModel.type;
+                return w.modelName === "YoloV5";
             });
         },
         ...mapState(["models"]),
     },
     watch: {
-        selectedModel: function (ai_type) {
-            this.process_settings.model = ai_type.type;
+        selectedModel: async function (ai_type) {
+            await this.getLocalWeights(ai_type.name)
+            this.process_settings.model = ai_type.name;
         },
         selected_ai_weight: function (ai_weight) {
-            this.process_settings.weight = ai_weight.weight;
+            this.process_settings.weights = {name: ai_weight.name, path: ai_weight.path};
         },
     },
     methods: {
-        downloadWeight() {
+        async downloadWeight() {   
+            if(!this.selectedModel) return
             this.downloading = true;
             //TODO CHANGE HARDCODED DIRECTORY TO THE DIRECTORY WHERE WE WANT TO SAVE THE WEIGHTS
-            window.electron.send(DOWNLOAD, {
-                url:
-                    "http://localhost:7080/" +
-                    this.selectedModel.weights[0].filePath.split(/\/(.+)/)[1],
-                properties: { directory: "C:\\Users\\sueno\\Documents\\baboo" },
+            const filePath = await window.electron.invoke(IPC_CHANNELS.DOWNLOAD_WEIGHTS, {
+                url: `http://localhost:7080/${this.selectedModel.weights[0].filePath.split(/\/(.+)/)[1]}`,
+                modelName: this.selectedModel.name
             });
+            this.getLocalWeights(this.selectedModel.name)
+            this.downloading = false;
         },
+
+        async getLocalWeights(modelName) {
+            const weights = await window.electron.invoke(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, {
+                modelName: modelName
+            })
+            this.ai_weights = (weights !== undefined) ? weights : [];
+        }
     },
 };
 </script>

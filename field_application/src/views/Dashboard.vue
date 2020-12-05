@@ -106,7 +106,7 @@
 <script>
 import Vue from "vue";
 import { mdiMicroSd, mdiQuadcopter } from "@mdi/js";
-import { FILESYSTEM, IPC_MESSAGES, DETECT_IMAGES } from "../constants.js";
+import { IPC_MESSAGES, IPC_CHANNELS } from "../constants.js";
 import { IpcMessage } from "../IpcMessage.js";
 import { mapState } from "vuex";
 
@@ -121,11 +121,14 @@ export default Vue.extend({
         async selectInputFolder() {
             const ipcMessage = new IpcMessage(IPC_MESSAGES.SELECT_FOLDER);
             const response = await window.electron.invoke(
-                FILESYSTEM,
+                IPC_CHANNELS.FILESYSTEM,
                 ipcMessage
             );
-            this.$store.dispatch("setPath", response);
-            this.$router.push("/create_sd_research");
+
+            if(response !== undefined) {
+                this.$store.dispatch("setPath", response);
+                this.$router.push("/create_sd_research");
+            }
         },
     },
 });

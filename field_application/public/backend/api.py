@@ -18,10 +18,8 @@ TEMP_PATH = os.path.join(BASE_PATH, "temp")
 
 #TODO In the temp folder generate a subfolder for each image instead of putting everything in the root
 #That way we can trace back the original file name (which is the name of the subfolder)
-def simple_detect_action(client, weights_directory, input_directory):
+def simple_detect_action(client, weights_directory, input_directory, confidence, image_size):
     client.sendSocketMessage("Splitting images")
-    #IMAGE SIZE IS NOW HARDCODED 512 MAYBE NEED TO CHANGE?
-    IMAGE_SIZE = 512
 
     if not os.path.exists(TEMP_PATH):
         os.makedirs(TEMP_PATH)
@@ -29,11 +27,11 @@ def simple_detect_action(client, weights_directory, input_directory):
         shutil.rmtree(TEMP_PATH)
         os.makedirs(TEMP_PATH)
 
-    split_images(input_directory, TEMP_PATH, IMAGE_SIZE)
+    split_images(input_directory, TEMP_PATH, image_size)
 
     client.sendSocketMessage("Executing simple detect script")
     thread = threading.Thread(target=detect, args=(
-        client, weights_directory, IMAGE_SIZE, 0.1, TEMP_PATH))
+        client, weights_directory, image_size, confidence, TEMP_PATH))
     thread.start()
     thread.join()
     client.sendSocketMessage("Finished simple detect script")
@@ -56,7 +54,7 @@ class MyServerProtocol(WebSocketServerProtocol):
         message = json.loads(payload)
         if message[0] == "DETECT_IMAGES":
             thread = threading.Thread(
-                target=simple_detect_action, args=(self, message[1], message[2])).start()
+                target=simple_detect_action, args=(self, message[1], message[2], float(message[3]), int(float(message[4])))).start()
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)
