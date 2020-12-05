@@ -92,16 +92,19 @@ export default {
             e1: 1,
             research_settings: {
                 name: null,
-                pos_1: null,
-                pos_2: null,
+                pos_x_1: 51.45090284955446,
+                pos_y_1: 5.455004957022852,
+                pos_x_2: 51.450658808081045,
+                pos_y_2: 5.455190029447212,
             },
             photo_settings: {
-                sensor_width: null,
-                focal_length: null,
-                image_width: null,
+                sensor_width: 6.17,
+                focal_length: 4.55,
+                image_width: 3968,
+                image_height: 2976,
             },
             drone_settings: {
-                fly_height: null,
+                fly_height: 3,
                 use_ftp: true,
             },
             process_settings: {

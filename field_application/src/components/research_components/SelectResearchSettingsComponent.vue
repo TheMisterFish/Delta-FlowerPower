@@ -8,7 +8,37 @@
             single-line
             hide-details
         ></v-text-field>
-
+        <br>
+        <v-text-field
+            v-model="research_settings.pos_x_1"
+            append-icon="mdi-eart"
+            label="Lat 1"
+            single-line
+            hide-details
+        ></v-text-field>
+        <v-text-field
+            v-model="research_settings.pos_y_1"
+            append-icon="mdi-eart"
+            label="Lon 1"
+            single-line
+            hide-details
+        ></v-text-field>
+        <br />
+        <v-text-field
+            v-model="research_settings.pos_x_2"
+            append-icon="mdi-eart"
+            label="Lat 2"
+            single-line
+            hide-details
+        ></v-text-field>
+        <v-text-field
+            v-model="research_settings.pos_y_2"
+            append-icon="mdi-eart"
+            label="Lon 2"
+            single-line
+            hide-details
+        ></v-text-field>
+        <br />
         <small>
             <a href="#" @click="downloadResearches">Download onderzoeken</a>
         </small>
@@ -62,6 +92,7 @@
 </template>
 
 <script>
+import { mdiEarth } from "@mdi/js";
 import { mapState } from "vuex";
 export default {
     name: "SelectResearchSettings",
