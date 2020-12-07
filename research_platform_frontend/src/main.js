@@ -1,20 +1,29 @@
-import Vue from "vue";
-import App from "./App.vue";
+import Vue from 'vue'
+import App from './App.vue'
+import vuetify from './plugins/vuetify';
+import Axios from "axios";
 import router from "./router";
 import store from "./store";
-import Axios from "axios";
+import * as VueGoogleMaps from "vue2-google-maps";
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
-Vue.prototype.$http = Axios;
 const token = localStorage.getItem("token");
 
 if (token) {
-    Vue.prototype.$http.defaults.headers.common["Authorization"] = token;
+    Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
+
+Vue.use(VueGoogleMaps, {
+    load: {
+        key: "AIzaSyBc2Pf6i6qNU934cChcEozdBmyFaIvwjSA",
+        libraries: "drawing"
+    }
+});
 
 new Vue({
     router,
     store,
-    render: (h) => h(App),
-}).$mount("#app");
+    vuetify,
+    render: h => h(App)
+}).$mount('#app')
