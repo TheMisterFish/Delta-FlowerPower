@@ -1,8 +1,5 @@
 <template>
     <div>
-        <!-- <h2>Controlleer of alle info goed is</h2>
-
-                <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card> -->
         <v-btn @click="detectImages"> Start detectie </v-btn>
         <v-row>
             <v-col v-for="(image, index) in images" :key="index" cols="12">
@@ -16,7 +13,7 @@
 
 <script>
 //TODO CREATE A NEW COMPONENT WHERE WE DO THE ACTUAL DETECTION. KEEP THIS AS A CONFIRM PAGE
-import { DETECT_IMAGES, FILESYSTEM, IPC_MESSAGES } from "../../constants";
+import { IPC_CHANNELS, IPC_MESSAGES, SOCKET_CHANNELS } from "../../constants";
 import { IpcMessage } from "../../IpcMessage";
 import AnnotatedImage from "../../components/AnnotatedImage.vue";
 import { mapState } from "vuex";
@@ -49,14 +46,19 @@ export default {
     },
     methods: {
         detectImages() {
-            //TODO CHANGE HARDCODED VALUES WITH VALUES FROM THE STORE
+            const imagesPath = this.$store.getters.getPath
+            const weightsPath = this.$store.getters.getWeightsPath
+            const confidence = this.$store.getters.getConfidence
+            const imageSize = this.$store.getters.getImageSize
+
             this.$store.dispatch(
                 "sendWebSocketMessage",
                 JSON.stringify([
-                    DETECT_IMAGES,
-                    "C:\\Users\\sueno\\Documents\\baboo\\YoloV5 best weights.pt",
-                    this.$store.getters.getPath,
-                    this.outputFolder,
+                    SOCKET_CHANNELS.DETECT_IMAGES,
+                    weightsPath,
+                    imagesPath,
+                    confidence/100,
+                    imageSize
                 ])
             );
         },
@@ -69,8 +71,8 @@ export default {
             path
         );
 
-        const response = await window.electron.invoke(FILESYSTEM, ipcMessage);
-
+        const response = await window.electron.invoke(IPC_CHANNELS.FILESYSTEM, ipcMessage);
+        
         response.forEach((r) => {
             this.images.push({
                 image: r,

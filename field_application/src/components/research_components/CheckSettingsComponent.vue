@@ -1,6 +1,18 @@
 <template>
     <div>
-        <div class="text--primary mb-5">
+        <v-card v-if="sd_research" class="mx-auto card-spacer mb-5">
+            <v-card-text>
+                <h4>Onderzoek: {{research_settings.name}}</h4>
+                <h4>Model: {{process_settings.model}}</h4>
+                <h4>Weights: {{process_settings.weights && process_settings.weights.name}}</h4>
+                <h4>Image width: {{process_settings.image_width}}</h4>
+                <h4>Confidence score: {{process_settings.confidence}}</h4>
+                <v-btn @click="go_back">Terug</v-btn>
+                <v-btn @click="saveSettings" class="primary">Opslaan en verder</v-btn>
+            </v-card-text>
+        </v-card>
+
+        <div v-else class="text--primary mb-5">
             <p class="subtitle-2 text-center">Foto instellingen</p>
             <v-simple-table dense>
                 <template v-slot:default>
@@ -47,16 +59,28 @@ export default {
         },
         photo_settings: {
             type: Object,
-            required: true,
+            required: false
         },
         drone_settings: {
             type: Object,
-            required: true,
+            required: false
         },
         process_settings: {
             type: Object,
             required: true,
         },
+        sd_research: {
+            type: Boolean,
+            required: false
+        },
+        save_settings: {
+            type: Function,
+            required: false
+        },
+        go_back: {
+            type: Function,
+            required: false
+        }
     },
     data() {
         return {};
@@ -76,7 +100,7 @@ export default {
         },
         m_per_image_height: function () {
             return (this.cm_per_px * this.photo_settings.image_height) / 100;
-        },
+        }
     },
     mounted() {
         // TODO
@@ -206,6 +230,10 @@ export default {
         },
 
         saveSettings() {
+            this.$store.dispatch("setWeightsPath", this.process_settings.weights.path)
+            this.$store.dispatch("setAiSettings", {confidence: this.process_settings.confidence, image_size: this.process_settings.image_width })
+
+            this.save_settings();
             //setAiSettings
             //setDroneSettings
             //setResearchSettings

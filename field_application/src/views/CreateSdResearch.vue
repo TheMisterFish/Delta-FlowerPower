@@ -3,19 +3,25 @@
         <v-stepper v-model="e1" style="height: 100%; min-height: 100vh">
             <v-stepper-header>
                 <v-stepper-step :complete="e1 > 1" step="1">
-                    Name of step 1
+                    Onderzoek instellingen
                 </v-stepper-step>
 
                 <v-divider></v-divider>
 
                 <v-stepper-step :complete="e1 > 2" step="2">
-                    Name of step 2
+                    Process instellingen
                 </v-stepper-step>
 
                 <v-divider></v-divider>
 
                 <v-stepper-step :complete="e1 > 3" step="3">
-                    Name of step 3
+                    Bevestiging
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step :complete="e1 > 4" step="4">
+                    Detectie
                 </v-stepper-step>
             </v-stepper-header>
 
@@ -27,7 +33,7 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
+                    <v-btn :disabled="!research_settings.name" color="primary" @click="e1 = 2"> Verder </v-btn>
                     <v-btn text @click="$router.go(-1)"> Terug </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="2">
@@ -42,12 +48,13 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
-                    <detect></detect>
+                    <check-settings sd_research :go_back="() => e1 = 2" :save_settings="() => e1 =  4" :research_settings="research_settings" :process_settings="process_settings"></check-settings>
 
                     <v-spacer></v-spacer>
+                </v-stepper-content>
 
-                    <v-btn color="primary" @click="e1 = 3"> Verder </v-btn>
-                    <v-btn text @click="e1 = 1"> Terug </v-btn>
+                <v-stepper-content step="4">
+                    <detect></detect>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
@@ -57,7 +64,9 @@
 <script>
 import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
+import CheckSettings from "@/components/research_components/CheckSettingsComponent.vue";
 import Detect from "@/components/research_components/DetectComponent.vue";
+
 export default {
     name: "DroneResearch",
     data() {
@@ -67,11 +76,6 @@ export default {
                 name: null,
                 pos_1: null,
                 pos_2: null,
-            },
-            photo_settings: {
-                sensor_width: null,
-                focal_length: null,
-                image_width: null,
             },
             process_settings: {
                 model: null,
@@ -85,6 +89,7 @@ export default {
         CreateProcessSettings,
         Detect,
         SelectResearchSettings,
+        CheckSettings
     },
     created: function () {
         this.$store.dispatch("getResearches");

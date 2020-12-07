@@ -5,7 +5,8 @@ Vue.use(Vuex);
 
 const ai_settings_store = {
     state: {
-        path: null,
+        images_path: null,
+        weights_path: null,
         model: null,
         weight: null,
         image_size: null,
@@ -13,7 +14,10 @@ const ai_settings_store = {
     },
     mutations: {
         setPath(state, path) {
-            state.path = path;
+            state.images_path = path;
+        },
+        setWeightsPath(state, path) {
+            state.weights_path = path;
         },
         setAiSettings(state, payload) {
             state.model = payload.model;
@@ -36,6 +40,11 @@ const ai_settings_store = {
         }, path) {
             commit("setPath", path);
         },
+        setWeightsPath({
+            commit
+        }, path) {
+            commit("setWeightsPath", path);
+        },
         setAiSettings({
             commit
         }, payload) {
@@ -49,7 +58,10 @@ const ai_settings_store = {
     },
     getters: {
         getPath: state => {
-            return state.path
+            return state.images_path
+        },
+        getWeightsPath: state => {
+            return state.weights_path
         },
         getModel: state => {
             return state.model

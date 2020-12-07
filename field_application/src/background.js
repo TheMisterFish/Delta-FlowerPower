@@ -20,12 +20,15 @@ import installExtension, {
 import path from 'path'
 import fs from 'fs'
 import {
-    DOWNLOAD,
-    FILESYSTEM,
+    IPC_CHANNELS,
     IPC_MESSAGES
 } from './constants'
+import * as Datastore from "nedb"
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+let researchesDb = null;
+let modelsDb = null;
 let pythonProcess = null;
 const PYTHON_DIST_FOLDER = 'backend_dist';
 const PYTHON_FOLDER = 'backend';
@@ -59,11 +62,11 @@ function createPythonProcess() {
         pythonProcess = require('child_process').spawn('python', [script]);
     }
 
-    pythonProcess.stdout.on('data', function (data) {
+    pythonProcess.stdout.on('data', function(data) {
         console.log('PYTHON: stdout:', data.toString());
     })
 
-    pythonProcess.stderr.on('data', function (data) {
+    pythonProcess.stderr.on('data', function(data) {
         //Here is where the error output goes
         console.log('PYTON: stderr:', data.toString());
     });
@@ -92,7 +95,7 @@ protocol.registerSchemesAsPrivileged([{
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 420,
+        width: 470,
         height: 800,
         webPreferences: {
             // enableRemoteModule: true,
@@ -111,7 +114,7 @@ async function createWindow() {
         if (!process.env.IS_TEST) win.webContents.openDevTools()
     } else {
         createProtocol('app')
-        // Load the index.html when not in development
+            // Load the index.html when not in development
         win.loadURL('app://./index.html')
     }
 }
@@ -134,7 +137,7 @@ app.on('activate', () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {
+app.on('ready', async() => {
     protocol.registerFileProtocol('file', (request, callback) => {
         const pathname = decodeURI(request.url.replace('file:///', ''));
         callback(pathname)
@@ -165,8 +168,22 @@ if (isDevelopment) {
     }
 }
 
+
+function createDbs() {
+    researchesDb = new Datastore({ filename: path.join(__dirname, "database", "researches.db"), autoload: true })
+    modelsDb = new Datastore({ filename: path.join(__dirname, "database", "models.db"), autoload: true })
+
+    researchesDb.insert({ "name": "aloha", "age": "What" })
+
+    const result = researchesDb.find({}, function(error, docs) {
+        console.log(docs)
+    })
+}
+
+app.on('ready', createDbs)
+
 //--------------------------------------- IPC MAIN PROCESS ---------------------------------------//
-ipcMain.handle(FILESYSTEM, async (event, args) => {
+ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async(event, args) => {
     if (args.message === IPC_MESSAGES.SELECT_FOLDER) {
         try {
             const response = await dialog.showOpenDialog({
@@ -186,7 +203,18 @@ ipcMain.handle(FILESYSTEM, async (event, args) => {
     }
 })
 
-ipcMain.on(DOWNLOAD, (event, args) => {
-    download(BrowserWindow.getFocusedWindow(), args.url, args.properties)
-        .then(dl => window.webContents.send("download complete", dl.getSavePath()));
+ipcMain.handle(IPC_CHANNELS.DOWNLOAD_WEIGHTS, async(event, args) => {
+    const response = await download(BrowserWindow.getFocusedWindow(), args.url, { directory: path.join(__dirname, "weights", args.modelName) })
+
+    return response.getSavePath();
+})
+
+ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async(event, args) => {
+    try {
+        const response = await fs.promises.readdir(path.join(__dirname, "weights", args.modelName))
+
+        return response.map(w => ({ path: path.join(__dirname, "weights", args.modelName, w), name: w, modelName: args.modelName }))
+    } catch (error) {
+        console.log(error);
+    }
 })
