@@ -27,7 +27,7 @@
                         </tr>
                         <tr @click="calculateLongestRoute()">
                             <td>Meter per afbeelding:</td>
-                            <td>{{ cm_per_image_width.toFixed(5) }} m</td>
+                            <td>{{ m_per_image_width.toFixed(5) }} m</td>
                         </tr>
                     </tbody>
                 </template>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { CalculateActions } from "../../actions"
+import { CalculateActions } from "../../actions";
 export default {
     name: "CheckSettings",
     props: {
@@ -71,10 +71,10 @@ export default {
                     this.photo_settings.image_width)
             );
         },
-        cm_per_image_width: function () {
+        m_per_image_width: function () {
             return (this.cm_per_px * this.photo_settings.image_width) / 100;
         },
-        cm_per_image_height: function () {
+        m_per_image_height: function () {
             return (this.cm_per_px * this.photo_settings.image_height) / 100;
         },
     },
@@ -88,11 +88,11 @@ export default {
     methods: {
         calculateLongestRoute() {
             const start_pos = [
-                this.research_settings.pos_x_1,
-                this.research_settings.pos_y_1,
+                this.research_settings.pos_x_1, //s - x 1
+                this.research_settings.pos_y_1, // s - y 1
             ];
             const pos_1 = [
-                this.research_settings.pos_x_1,
+                this.research_settings.pos_x_1, //
                 this.research_settings.pos_y_2,
             ];
             const pos_2 = [
@@ -100,6 +100,7 @@ export default {
                 this.research_settings.pos_y_1,
             ];
 
+            // Get longest side
             const length_1 = CalculateActions.distanceInMBetweenEarthCoordinates(
                 start_pos[0],
                 start_pos[1],
@@ -112,31 +113,94 @@ export default {
                 pos_2[0],
                 pos_2[1]
             );
+
+            var width, height;
+            var images_taken_width, images_taken_height;
             var heading;
-            var images_taken_width;
-            var images_taken_height;
-            const a = { lon: start_pos[0], lat: start_pos[1], elv: this.drone_settings.fly_height};
-            var b = {lon: null, lat: null, elv: null};
+
             if (length_1 > length_2) {
-                images_taken_width = length_1 / this.cm_per_image_width;
-                images_taken_height = length_2 / this.cm_per_image_height;
-                b = { lat: pos_1[0], lon: pos_1[1], elv: this.drone_settings.fly_height};
+                //van links naar rechts
+                images_taken_width = Math.ceil(length_1 / this.m_per_image_width);
+                images_taken_height = Math.ceil(length_2 / this.m_per_image_height);
+                width = length_1;
+                height = length_2;
+                heading = CalculateActions.bearing( start_pos[0], start_pos[1], pos_1[0], pos_1[1]);
             } else {
-                images_taken_width = length_2 / this.cm_per_image_width;
-                images_taken_height = length_1 / this.cm_per_image_height;
-                b = { lon: pos_2[0], lat: pos_2[1], elv: this.drone_settings.fly_height};
+                // van boven naar onder
+                images_taken_width = Math.ceil(length_2 / this.m_per_image_width);
+                images_taken_height = Math.ceil(length_1 / this.m_per_image_height);
+                width = length_2;
+                height = length_1;
+                heading = CalculateActions.bearing( start_pos[0], start_pos[1], pos_2[0], pos_2[1] );
             }
-            heading = CalculateActions.CalculateAzimuth(a, b);
-            var total_images = Math.ceil(
-                Math.ceil(images_taken_width) * Math.ceil(images_taken_height)
+
+            // Get total images we will take
+            const total_images = Math.ceil(
+                images_taken_width * images_taken_height
             );
+            // Get offsets in meters
+            const width_offset =
+                (images_taken_width * this.m_per_image_width - width) / 2;
+            const height_offset =
+                (images_taken_height * this.m_per_image_height - height) / 2;
+
+            // Get all positions on left axis
+            var points_lat = [];
+            var points_lon = [];
+
+            for (let i = 0; i < images_taken_width; i++) {
+                const offset = (i * this.m_per_image_height) * -1;
+                console.log(offset);
+                points_lat[i] = CalculateActions.add_distance_2( start_pos[0], start_pos[1], offset, 0);
+            }
+            for (let i = 0; i < images_taken_height; i++) {
+                const offset = (i * this.m_per_image_height);
+                console.log(offset);
+                points_lon[i] = CalculateActions.add_distance_2( start_pos[0], start_pos[1], 0, offset);
+            }
             
-            console.log(total_images);
-            console.log(Math.ceil(images_taken_width));
-            console.log(Math.ceil(images_taken_height));
-            console.log(heading);
-            console.log(length_1);
-            console.log(length_2);
+            for (let i = 0; i < points_lat.length; i++) {
+                points_lat[i] = CalculateActions.rotate( start_pos[0], start_pos[1], points_lat[i][0], points_lat[i][1], heading); 
+            }
+            for (let i = 0; i < points_lon.length; i++) {
+                points_lon[i] = CalculateActions.rotate( start_pos[0], start_pos[1], points_lon[i][0], points_lon[i][1], heading);
+            }
+            console.log(points_lat);
+            console.log(points_lon);
+
+            // console.log(
+            //     CalculateActions.distanceInMBetweenEarthCoordinates(
+            //         start_pos[0],
+            //         start_pos[1],
+            //         points_lat[points_lat.length - 1][0],
+            //         points_lat[points_lat.length - 1][1]
+            //     )
+            // );
+            // console.log(width);
+
+            // console.log(total_images);
+            // console.log(Math.ceil(images_taken_width));
+            // console.log(Math.ceil(images_taken_height));
+            // console.log(heading_a, heading_b);
+            // console.log(length_1);
+            // console.log(length_2);
+            // var object = {x: start_pos[0], y: start_pos[1]}
+            // var polar = CalculateActions.cartesian_to_polar(object);
+            // var test = CalculateActions.polar_to_cartesian(polar)
+            // console.log("#################################")
+            // console.log("lan/lon: " + start_pos[0], start_pos[1], this.drone_settings.fly_height)
+            // console.log("Polar: ")
+            // console.log(polar)
+            // console.log("back: " + test)
+            // console.log(test)
+            // console.log("#################################")
+            // console.log(CalculateActions.toRadians(90));
+            // console.log(CalculateActions.toDegrees(1.57));
+
+            // console.log("#################################")
+            // console.log("#################################")
+            // console.log(pos_1)
+            // console.log(pos_2)
 
             // CalculateActions.CalculateAzimuth();
         },
@@ -152,8 +216,6 @@ export default {
                 3. Check if all inputs are set up correct
             */
         },
-
-       
     },
 };
 </script>

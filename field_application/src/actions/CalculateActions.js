@@ -7,7 +7,6 @@ const CalculateActions = {
     toDegrees(radians) {
         return (radians * 180) / Math.PI;
     },
-
     distanceInMBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
         var earthRadiusKm = 6371;
 
@@ -20,13 +19,12 @@ const CalculateActions = {
         var a =
             Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.sin(dLon / 2) *
-                Math.sin(dLon / 2) *
-                Math.cos(lat1) *
-                Math.cos(lat2);
+            Math.sin(dLon / 2) *
+            Math.cos(lat1) *
+            Math.cos(lat2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return earthRadiusKm * c * 1000;
     },
-
     EarthRadiusInMeters(latitudeRadians) // latitude is geodetic, i.e. that reported by GPS
     {
         // http://en.wikipedia.org/wiki/Earth_radius
@@ -40,7 +38,6 @@ const CalculateActions = {
         var t4 = b * sin;
         return Math.sqrt((t1 * t1 + t2 * t2) / (t3 * t3 + t4 * t4));
     },
-
     GeocentricLatitude(lat) {
         // Convert geodetic latitude 'lat' to a geocentric latitude 'clat'.
         // Geodetic latitude is the latitude as given by GPS.
@@ -123,25 +120,92 @@ const CalculateActions = {
             nz: nz
         };
     },
-    CalculateAzimuth(a, b) {
-        var ap = this.LocationToPoint(a, true);
-        var bp = this.LocationToPoint(b, true);
+    bearing(startLat, startLng, destLat, destLng) {
+        startLat = this.toRadians(startLat);
+        startLng = this.toRadians(startLng);
+        destLat = this.toRadians(destLat);
+        destLng = this.toRadians(destLng);
 
-        var br = this.RotateGlobe(b, a, bp.radius, ap.radius, true);
-        if (br.z * br.z + br.y * br.y > 1.0e-6) {
-            var theta = (Math.atan2(br.z, br.y) * 180.0) / Math.PI;
-            var azimuth = 90.0 - theta;
-            if (azimuth < 0.0) {
-                azimuth += 360.0;
-            }
-            if (azimuth > 360.0) {
-                azimuth -= 360.0;
-            }
-            return azimuth.toFixed(4);
-        } else {
-            return false;
-        }
+        var y = Math.sin(destLng - startLng) * Math.cos(destLat);
+        var x = Math.cos(startLat) * Math.sin(destLat) -
+            Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+        var brng = Math.atan2(y, x);
+        brng = this.toDegrees(brng);
+        return (brng + 360) % 360;
     },
+    cartesian_to_polar({
+        x,
+        y
+    }) {
+        return {
+            r: Math.sqrt(x * x + y * y),
+            theta: Math.atan2(y, x)
+        };
+    },
+    polar_to_cartesian({
+        r,
+        theta
+    }) {
+        return {
+            x: r * Math.cos(theta),
+            y: r * Math.sin(theta)
+        };
+    },
+    ComputeFormDir(lon, lat, heading, meter) {
+        const R = this.EarthRadiusInMeters(lat) // Radius of the Earth
+        const brng = this.toRadians(heading) // Bearing is 90 degrees converted to radians.
+        const d = meter / 1000 // Distance to km
+
+        const lat1 = this.toRadians(lat) //# Current lat point converted to radians
+        const lon1 = this.toRadians(lon) //# Current long point converted to radians
+
+        var lat2 = Math.asin(Math.sin(lat1) * Math.cos(d / R) +
+            Math.cos(lat1) * Math.sin(d / R) * Math.cos(brng))
+
+        var lon2 = lon1 + Math.atan2(Math.sin(brng) * Math.sin(d / R) * Math.cos(lat1),
+            Math.cos(d / R) - Math.sin(lat1) * Math.sin(lat2))
+
+        lat2 = this.toDegrees(lat2)
+        lon2 = this.toDegrees(lon2)
+
+        return [lat2, lon2];
+    },
+    add_distance(lat, lon, dx, dy) {
+        dx = dx / 100;
+        dy = dy / 100;
+        const lat0 = this.toRadians(lat) //# Current lat point converted to radians
+        const lon0 = this.toRadians(lon) //# Current long point converted to radians
+
+        var lat1 = lat0 + (180 / Math.PI) * (dy / 6378137);
+        var lon1 = lon0 + (180 / Math.PI) * (dx / 6378137) / Math.cos(lat0);
+
+        lat1 = this.toDegrees(lat1)
+        lon1 = this.toDegrees(lon1)
+
+        return [lat1, lon1];
+    },
+    add_distance_2(pLatitude, pLongitude, disX, disY) {
+
+        var latRadian = this.toRadians(pLatitude);
+
+        var degLatKm = 110.574235;
+        var degLongKm = 110.572833 * Math.cos(latRadian);
+        var deltaLat = disX / 1000.0 / degLatKm;
+        var deltaLong = disY / 1000.0 / degLongKm;
+
+        var maxLat = pLatitude + deltaLat;
+        var maxLong = pLongitude + deltaLong;
+
+        return [maxLat, maxLong];
+    },
+    rotate(cx, cy, x, y, angle) {
+        var radians = (Math.PI / 180) * angle,
+            cos = Math.cos(radians),
+            sin = Math.sin(radians),
+            nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+            ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+        return [nx, ny];
+    }
 };
 
 export default CalculateActions;

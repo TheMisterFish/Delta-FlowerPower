@@ -89,13 +89,13 @@ export default {
     name: "DroneResearch",
     data() {
         return {
-            e1: 1,
+            e1: 4,
             research_settings: {
                 name: null,
-                pos_x_1: 51.45090284955446,
-                pos_y_1: 5.455004957022852,
-                pos_x_2: 51.450658808081045,
-                pos_y_2: 5.455190029447212,
+                pos_x_1: 51.45038144396875,
+                pos_y_1: 5.454680317715481,
+                pos_x_2: 51.45017607181976,
+                pos_y_2: 5.455296999908435,
             },
             photo_settings: {
                 sensor_width: 6.17,
