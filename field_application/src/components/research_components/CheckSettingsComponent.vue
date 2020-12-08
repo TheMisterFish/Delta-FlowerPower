@@ -2,13 +2,21 @@
     <div>
         <v-card v-if="sd_research" class="mx-auto card-spacer mb-5">
             <v-card-text>
-                <h4>Onderzoek: {{research_settings.name}}</h4>
-                <h4>Model: {{process_settings.model}}</h4>
-                <h4>Weights: {{process_settings.weights && process_settings.weights.name}}</h4>
-                <h4>Image width: {{process_settings.image_width}}</h4>
-                <h4>Confidence score: {{process_settings.confidence}}</h4>
+                <h4>Onderzoek: {{ research_settings.name }}</h4>
+                <h4>Model: {{ process_settings.model }}</h4>
+                <h4>
+                    Weights:
+                    {{
+                        process_settings.weights &&
+                        process_settings.weights.name
+                    }}
+                </h4>
+                <h4>Image width: {{ process_settings.image_width }}</h4>
+                <h4>Confidence score: {{ process_settings.confidence }}</h4>
                 <v-btn @click="go_back">Terug</v-btn>
-                <v-btn @click="saveSettings" class="primary">Opslaan en verder</v-btn>
+                <v-btn @click="saveSettings" class="primary"
+                    >Opslaan en verder</v-btn
+                >
             </v-card-text>
         </v-card>
 
@@ -33,7 +41,7 @@
                             <td>Afbeelding breedte (pixels):</td>
                             <td>{{ photo_settings.image_width }} px</td>
                         </tr>
-                        <tr>
+                        <tr @click="test()">
                             <td>CM per pixel:</td>
                             <td>{{ cm_per_px.toFixed(5) }} cm/px</td>
                         </tr>
@@ -45,6 +53,46 @@
                 </template>
             </v-simple-table>
         </div>
+        <br />
+        <br />
+        <GmapMap
+            :center="{
+                lat: this.research_settings.pos_x_1,
+                lng: this.research_settings.pos_y_1,
+            }"
+            :zoom="17.6"
+            map-type-id="terrain"
+            style="width: 500px; height: 300px"
+        >
+            <GmapMarker
+                :key="index"
+                v-for="(m, index) in homemarkers"
+                :position="m.position"
+                :clickable="true"
+                :draggable="false"
+                @click="center = m.position"
+                icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+            />
+            <GmapMarker
+                :key="index"
+                v-for="(m, index) in computed_matrixmarkers"
+                :position="m.position"
+                :clickable="true"
+                :draggable="false"
+                @click="center = m.position"
+                icon="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
+            />
+            <GmapMarker
+                :key="index"
+                v-for="(m, index) in computed_rotatedmarkers"
+                :position="m.position"
+                :clickable="true"
+                :draggable="false"
+                @click="center = m.position"
+                icon="http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
+            />
+        </GmapMap>
+        {{ computed_matrixmarkers }}
     </div>
 </template>
 
@@ -59,11 +107,11 @@ export default {
         },
         photo_settings: {
             type: Object,
-            required: false
+            required: false,
         },
         drone_settings: {
             type: Object,
-            required: false
+            required: false,
         },
         process_settings: {
             type: Object,
@@ -71,19 +119,40 @@ export default {
         },
         sd_research: {
             type: Boolean,
-            required: false
+            required: false,
         },
         save_settings: {
             type: Function,
-            required: false
+            required: false,
         },
         go_back: {
             type: Function,
-            required: false
-        }
+            required: false,
+        },
     },
     data() {
-        return {};
+        return {
+            homemarkers: [
+                {
+                    position: {
+                        lat: this.research_settings.pos_x_1,
+                        lng: this.research_settings.pos_y_1,
+                    },
+                },
+                {
+                    position: {
+                        lat: this.research_settings.pos_x_2,
+                        lng: this.research_settings.pos_y_2,
+                    },
+                },
+            ],
+            matrixmarkers: [
+
+            ],
+            rotatedmarkers: [
+                
+            ]
+        };
     },
     computed: {
         cm_per_px: function () {
@@ -100,6 +169,12 @@ export default {
         },
         m_per_image_height: function () {
             return (this.cm_per_px * this.photo_settings.image_height) / 100;
+        },
+        computed_matrixmarkers: function() {
+            return this.matrixmarkers;
+        },
+        computed_rotatedmarkers: function() {
+            return this.rotatedmarkers;
         }
     },
     mounted() {
@@ -111,6 +186,9 @@ export default {
     },
     methods: {
         calculateLongestRoute() {
+            this.matrixmarkers = [];
+            this.rotatedmarkers = [];
+            
             const start_pos = [
                 this.research_settings.pos_x_1, //s - x 1
                 this.research_settings.pos_y_1, // s - y 1
@@ -140,22 +218,52 @@ export default {
 
             var width, height;
             var images_taken_width, images_taken_height;
-            var heading;
+            var heading_width, heading_height;
 
             if (length_1 > length_2) {
                 //van links naar rechts
-                images_taken_width = Math.ceil(length_1 / this.m_per_image_width);
-                images_taken_height = Math.ceil(length_2 / this.m_per_image_height);
+                images_taken_width = Math.ceil(
+                    length_1 / this.m_per_image_width
+                );
+                images_taken_height = Math.ceil(
+                    length_2 / this.m_per_image_height
+                );
                 width = length_1;
                 height = length_2;
-                heading = CalculateActions.bearing( start_pos[0], start_pos[1], pos_1[0], pos_1[1]);
+                heading_width = CalculateActions.bearing(
+                    start_pos[0],
+                    start_pos[1],
+                    pos_1[0],
+                    pos_1[1]
+                );
+                heading_height = CalculateActions.bearing(
+                    start_pos[0],
+                    start_pos[1],
+                    pos_2[0],
+                    pos_2[1]
+                );
             } else {
                 // van boven naar onder
-                images_taken_width = Math.ceil(length_2 / this.m_per_image_width);
-                images_taken_height = Math.ceil(length_1 / this.m_per_image_height);
+                images_taken_width = Math.ceil(
+                    length_2 / this.m_per_image_width
+                );
+                images_taken_height = Math.ceil(
+                    length_1 / this.m_per_image_height
+                );
                 width = length_2;
                 height = length_1;
-                heading = CalculateActions.bearing( start_pos[0], start_pos[1], pos_2[0], pos_2[1] );
+                heading_width = CalculateActions.bearing(
+                    start_pos[0],
+                    start_pos[1],
+                    pos_2[0],
+                    pos_2[1]
+                );
+                heading_height = CalculateActions.bearing(
+                    start_pos[0],
+                    start_pos[1],
+                    pos_1[0],
+                    pos_1[1]
+                );
             }
 
             // Get total images we will take
@@ -168,70 +276,47 @@ export default {
             const height_offset =
                 (images_taken_height * this.m_per_image_height - height) / 2;
 
-            // Get all positions on left axis
+            // Get real startpos (with image offset)
+            var real_start_pos = CalculateActions.destVincenty(start_pos[0], start_pos[1], heading_width*-1, width_offset);
+            real_start_pos = CalculateActions.destVincenty(real_start_pos[0], real_start_pos[1], heading_height*-1, height_offset);
+
             var points_lat = [];
             var points_lon = [];
 
-            for (let i = 0; i < images_taken_width; i++) {
-                const offset = (i * this.m_per_image_height) * -1;
-                console.log(offset);
-                points_lat[i] = CalculateActions.add_distance_2( start_pos[0], start_pos[1], offset, 0);
+            for (let i = 0; i <= images_taken_width; i++) {
+                const offset = i * this.m_per_image_width;
+                let point = CalculateActions.destVincenty(start_pos[0], start_pos[1], heading_width, offset);
+                let object = {
+                    position: {
+                        lat: point[0],
+                        lng: point[1],
+                    }
+                }; 
+                this.matrixmarkers.push(object);
             }
-            for (let i = 0; i < images_taken_height; i++) {
-                const offset = (i * this.m_per_image_height);
-                console.log(offset);
-                points_lon[i] = CalculateActions.add_distance_2( start_pos[0], start_pos[1], 0, offset);
+            for (let i = 0; i <= images_taken_height; i++) {
+                const offset = i * this.m_per_image_height;
+                let point = CalculateActions.destVincenty(start_pos[0], start_pos[1], heading_height, offset);
+                let object = {
+                    position: {
+                        lat: point[0],
+                        lng: point[1],
+                    }
+                }; 
+                this.matrixmarkers.push(object);
             }
-            
-            for (let i = 0; i < points_lat.length; i++) {
-                points_lat[i] = CalculateActions.rotate( start_pos[0], start_pos[1], points_lat[i][0], points_lat[i][1], heading); 
-            }
-            for (let i = 0; i < points_lon.length; i++) {
-                points_lon[i] = CalculateActions.rotate( start_pos[0], start_pos[1], points_lon[i][0], points_lon[i][1], heading);
-            }
-            console.log(points_lat);
-            console.log(points_lon);
 
-            // console.log(
-            //     CalculateActions.distanceInMBetweenEarthCoordinates(
-            //         start_pos[0],
-            //         start_pos[1],
-            //         points_lat[points_lat.length - 1][0],
-            //         points_lat[points_lat.length - 1][1]
-            //     )
-            // );
-            // console.log(width);
-
-            // console.log(total_images);
-            // console.log(Math.ceil(images_taken_width));
-            // console.log(Math.ceil(images_taken_height));
-            // console.log(heading_a, heading_b);
-            // console.log(length_1);
-            // console.log(length_2);
-            // var object = {x: start_pos[0], y: start_pos[1]}
-            // var polar = CalculateActions.cartesian_to_polar(object);
-            // var test = CalculateActions.polar_to_cartesian(polar)
-            // console.log("#################################")
-            // console.log("lan/lon: " + start_pos[0], start_pos[1], this.drone_settings.fly_height)
-            // console.log("Polar: ")
-            // console.log(polar)
-            // console.log("back: " + test)
-            // console.log(test)
-            // console.log("#################################")
-            // console.log(CalculateActions.toRadians(90));
-            // console.log(CalculateActions.toDegrees(1.57));
-
-            // console.log("#################################")
-            // console.log("#################################")
-            // console.log(pos_1)
-            // console.log(pos_2)
-
-            // CalculateActions.CalculateAzimuth();
         },
 
         saveSettings() {
-            this.$store.dispatch("setWeightsPath", this.process_settings.weights.path)
-            this.$store.dispatch("setAiSettings", {confidence: this.process_settings.confidence, image_size: this.process_settings.image_width })
+            this.$store.dispatch(
+                "setWeightsPath",
+                this.process_settings.weights.path
+            );
+            this.$store.dispatch("setAiSettings", {
+                confidence: this.process_settings.confidence,
+                image_size: this.process_settings.image_width,
+            });
 
             this.save_settings();
             //setAiSettings
@@ -243,6 +328,9 @@ export default {
                 2. Save all settings to store, go to new page where we start the drone kit and stuff.
                 3. Check if all inputs are set up correct
             */
+        },
+        test() {
+            console.log(CalculateActions.rotate(0, 0, 1, 1, 90));
         },
     },
 };

@@ -133,78 +133,40 @@ const CalculateActions = {
         brng = this.toDegrees(brng);
         return (brng + 360) % 360;
     },
-    cartesian_to_polar({
-        x,
-        y
-    }) {
-        return {
-            r: Math.sqrt(x * x + y * y),
-            theta: Math.atan2(y, x)
-        };
-    },
-    polar_to_cartesian({
-        r,
-        theta
-    }) {
-        return {
-            x: r * Math.cos(theta),
-            y: r * Math.sin(theta)
-        };
-    },
-    ComputeFormDir(lon, lat, heading, meter) {
-        const R = this.EarthRadiusInMeters(lat) // Radius of the Earth
-        const brng = this.toRadians(heading) // Bearing is 90 degrees converted to radians.
-        const d = meter / 1000 // Distance to km
-
-        const lat1 = this.toRadians(lat) //# Current lat point converted to radians
-        const lon1 = this.toRadians(lon) //# Current long point converted to radians
-
-        var lat2 = Math.asin(Math.sin(lat1) * Math.cos(d / R) +
-            Math.cos(lat1) * Math.sin(d / R) * Math.cos(brng))
-
-        var lon2 = lon1 + Math.atan2(Math.sin(brng) * Math.sin(d / R) * Math.cos(lat1),
-            Math.cos(d / R) - Math.sin(lat1) * Math.sin(lat2))
-
-        lat2 = this.toDegrees(lat2)
-        lon2 = this.toDegrees(lon2)
-
-        return [lat2, lon2];
-    },
-    add_distance(lat, lon, dx, dy) {
-        dx = dx / 100;
-        dy = dy / 100;
-        const lat0 = this.toRadians(lat) //# Current lat point converted to radians
-        const lon0 = this.toRadians(lon) //# Current long point converted to radians
-
-        var lat1 = lat0 + (180 / Math.PI) * (dy / 6378137);
-        var lon1 = lon0 + (180 / Math.PI) * (dx / 6378137) / Math.cos(lat0);
-
-        lat1 = this.toDegrees(lat1)
-        lon1 = this.toDegrees(lon1)
-
-        return [lat1, lon1];
-    },
-    add_distance_2(pLatitude, pLongitude, disX, disY) {
-
-        var latRadian = this.toRadians(pLatitude);
-
-        var degLatKm = 110.574235;
-        var degLongKm = 110.572833 * Math.cos(latRadian);
-        var deltaLat = disX / 1000.0 / degLatKm;
-        var deltaLong = disY / 1000.0 / degLongKm;
-
-        var maxLat = pLatitude + deltaLat;
-        var maxLong = pLongitude + deltaLong;
-
-        return [maxLat, maxLong];
-    },
-    rotate(cx, cy, x, y, angle) {
-        var radians = (Math.PI / 180) * angle,
-            cos = Math.cos(radians),
-            sin = Math.sin(radians),
-            nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-            ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
-        return [nx, ny];
+    destVincenty(lat1, lon1, brng, dist) {
+        var a = 6378137,
+            b = 6356752.3142,
+            f = 1 / 298.257223563, // WGS-84 ellipsiod
+            s = dist,
+            alpha1 = this.toRadians(brng),
+            sinAlpha1 = Math.sin(alpha1),
+            cosAlpha1 = Math.cos(alpha1),
+            tanU1 = (1 - f) * Math.tan(this.toRadians(lat1)),
+            cosU1 = 1 / Math.sqrt((1 + tanU1 * tanU1)),
+            sinU1 = tanU1 * cosU1,
+            sigma1 = Math.atan2(tanU1, cosAlpha1),
+            sinAlpha = cosU1 * sinAlpha1,
+            cosSqAlpha = 1 - sinAlpha * sinAlpha,
+            uSq = cosSqAlpha * (a * a - b * b) / (b * b),
+            A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq))),
+            B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq))),
+            sigma = s / (b * A),
+            sigmaP = 2 * Math.PI;
+        while (Math.abs(sigma - sigmaP) > 1e-12) {
+            var cos2SigmaM = Math.cos(2 * sigma1 + sigma),
+                sinSigma = Math.sin(sigma),
+                cosSigma = Math.cos(sigma),
+                deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+            sigmaP = sigma;
+            sigma = s / (b * A) + deltaSigma;
+        }
+        var tmp = sinU1 * sinSigma - cosU1 * cosSigma * cosAlpha1,
+            lat2 = Math.atan2(sinU1 * cosSigma + cosU1 * sinSigma * cosAlpha1, (1 - f) * Math.sqrt(sinAlpha * sinAlpha + tmp * tmp)),
+            lambda = Math.atan2(sinSigma * sinAlpha1, cosU1 * cosSigma - sinU1 * sinSigma * cosAlpha1),
+            C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha)),
+            L = lambda - (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM))),
+            revAz = Math.atan2(sinAlpha, -tmp); // final bearing
+        return [this.toDegrees(lat2), lon1 + this.toDegrees(L)];
     }
 };
 
