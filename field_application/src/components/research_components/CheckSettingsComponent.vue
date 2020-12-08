@@ -146,12 +146,8 @@ export default {
                     },
                 },
             ],
-            matrixmarkers: [
-
-            ],
-            rotatedmarkers: [
-                
-            ]
+            matrixmarkers: [],
+            rotatedmarkers: [],
         };
     },
     computed: {
@@ -170,12 +166,12 @@ export default {
         m_per_image_height: function () {
             return (this.cm_per_px * this.photo_settings.image_height) / 100;
         },
-        computed_matrixmarkers: function() {
+        computed_matrixmarkers: function () {
             return this.matrixmarkers;
         },
-        computed_rotatedmarkers: function() {
+        computed_rotatedmarkers: function () {
             return this.rotatedmarkers;
-        }
+        },
     },
     mounted() {
         // TODO
@@ -188,7 +184,7 @@ export default {
         calculateLongestRoute() {
             this.matrixmarkers = [];
             this.rotatedmarkers = [];
-            
+
             const start_pos = [
                 this.research_settings.pos_x_1, //s - x 1
                 this.research_settings.pos_y_1, // s - y 1
@@ -277,35 +273,61 @@ export default {
                 (images_taken_height * this.m_per_image_height - height) / 2;
 
             // Get real startpos (with image offset)
-            var real_start_pos = CalculateActions.destVincenty(start_pos[0], start_pos[1], heading_width*-1, width_offset);
-            real_start_pos = CalculateActions.destVincenty(real_start_pos[0], real_start_pos[1], heading_height*-1, height_offset);
+            console.log(width_offset, height_offset)
+            var real_start_pos = CalculateActions.destVincenty(
+                start_pos[0],
+                start_pos[1],
+                heading_width,
+                width_offset * -1
+            );
+            let object1 = {
+                position: {
+                    lat: real_start_pos[0],
+                    lng: real_start_pos[1],
+                },
+            };
+            real_start_pos = CalculateActions.destVincenty(
+                real_start_pos[0],
+                real_start_pos[1],
+                heading_height,
+                height_offset * -1
+            );
+            let object = {
+                position: {
+                    lat: real_start_pos[0],
+                    lng: real_start_pos[1],
+                },
+            };
 
             var points_lat = [];
             var points_lon = [];
 
-            for (let i = 0; i <= images_taken_width; i++) {
-                const offset = i * this.m_per_image_width;
-                let point = CalculateActions.destVincenty(start_pos[0], start_pos[1], heading_width, offset);
-                let object = {
-                    position: {
-                        lat: point[0],
-                        lng: point[1],
-                    }
-                }; 
-                this.matrixmarkers.push(object);
+            var point;
+            for (let i = 0; i < images_taken_height; i++) {
+                const height_offset = (i * this.m_per_image_height) + (this.m_per_image_height / 2);
+                point = CalculateActions.destVincenty(
+                    real_start_pos[0],
+                    real_start_pos[1],
+                    heading_height,
+                    height_offset
+                );
+                for (let i = 0; i < images_taken_width; i++) {
+                const width_offset = (i * this.m_per_image_width) + (this.m_per_image_width / 2);
+                    let new_point = CalculateActions.destVincenty(
+                        point[0],
+                        point[1],
+                        heading_width,
+                        width_offset
+                    );
+                    let object = {
+                        position: {
+                            lat: new_point[0],
+                            lng: new_point[1],
+                        },
+                    };
+                    this.matrixmarkers.push(object);
+                }
             }
-            for (let i = 0; i <= images_taken_height; i++) {
-                const offset = i * this.m_per_image_height;
-                let point = CalculateActions.destVincenty(start_pos[0], start_pos[1], heading_height, offset);
-                let object = {
-                    position: {
-                        lat: point[0],
-                        lng: point[1],
-                    }
-                }; 
-                this.matrixmarkers.push(object);
-            }
-
         },
 
         saveSettings() {
