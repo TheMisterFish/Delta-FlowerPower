@@ -41,11 +41,11 @@
                             <td>Afbeelding breedte (pixels):</td>
                             <td>{{ photo_settings.image_width }} px</td>
                         </tr>
-                        <tr @click="test()">
+                        <tr>
                             <td>CM per pixel:</td>
                             <td>{{ cm_per_px.toFixed(5) }} cm/px</td>
                         </tr>
-                        <tr @click="calculateLongestRoute()">
+                        <tr @click="test()">
                             <td>Meter per afbeelding:</td>
                             <td>{{ m_per_image_width.toFixed(5) }} m</td>
                         </tr>
@@ -81,15 +81,6 @@
                 :draggable="false"
                 @click="center = m.position"
                 icon="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
-            />
-            <GmapMarker
-                :key="index"
-                v-for="(m, index) in computed_rotatedmarkers"
-                :position="m.position"
-                :clickable="true"
-                :draggable="false"
-                @click="center = m.position"
-                icon="http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
             />
         </GmapMap>
         {{ computed_matrixmarkers }}
@@ -147,7 +138,6 @@ export default {
                 },
             ],
             matrixmarkers: [],
-            rotatedmarkers: [],
         };
     },
     computed: {
@@ -169,9 +159,6 @@ export default {
         computed_matrixmarkers: function () {
             return this.matrixmarkers;
         },
-        computed_rotatedmarkers: function () {
-            return this.rotatedmarkers;
-        },
     },
     mounted() {
         // TODO
@@ -181,154 +168,38 @@ export default {
         */
     },
     methods: {
-        calculateLongestRoute() {
+        test() {
             this.matrixmarkers = [];
-            this.rotatedmarkers = [];
-
-            const start_pos = [
-                this.research_settings.pos_x_1, //s - x 1
-                this.research_settings.pos_y_1, // s - y 1
-            ];
-            const pos_1 = [
-                this.research_settings.pos_x_1, //
-                this.research_settings.pos_y_2,
-            ];
-            const pos_2 = [
-                this.research_settings.pos_x_2,
+            // Create startpoint
+            let point_1 = [
+                this.research_settings.pos_x_1,
                 this.research_settings.pos_y_1,
             ];
-
-            // Get longest side
-            const length_1 = CalculateActions.distanceInMBetweenEarthCoordinates(
-                start_pos[0],
-                start_pos[1],
-                pos_1[0],
-                pos_1[1]
-            );
-            const length_2 = CalculateActions.distanceInMBetweenEarthCoordinates(
-                start_pos[0],
-                start_pos[1],
-                pos_2[0],
-                pos_2[1]
+            // Create second point
+            let point_2 = [
+                this.research_settings.pos_x_2,
+                this.research_settings.pos_y_2,
+            ];
+            // Get all gps cordinate info from those two points
+            var points = CalculateActions.calculateGpsCords(
+                point_1,
+                point_2,
+                this.m_per_image_width,
+                this.m_per_image_height
             );
 
-            var width, height;
-            var images_taken_width, images_taken_height;
-            var heading_width, heading_height;
-
-            if (length_1 > length_2) {
-                //van links naar rechts
-                images_taken_width = Math.ceil(
-                    length_1 / this.m_per_image_width
-                );
-                images_taken_height = Math.ceil(
-                    length_2 / this.m_per_image_height
-                );
-                width = length_1;
-                height = length_2;
-                heading_width = CalculateActions.bearing(
-                    start_pos[0],
-                    start_pos[1],
-                    pos_1[0],
-                    pos_1[1]
-                );
-                heading_height = CalculateActions.bearing(
-                    start_pos[0],
-                    start_pos[1],
-                    pos_2[0],
-                    pos_2[1]
-                );
-            } else {
-                // van boven naar onder
-                images_taken_width = Math.ceil(
-                    length_2 / this.m_per_image_width
-                );
-                images_taken_height = Math.ceil(
-                    length_1 / this.m_per_image_height
-                );
-                width = length_2;
-                height = length_1;
-                heading_width = CalculateActions.bearing(
-                    start_pos[0],
-                    start_pos[1],
-                    pos_2[0],
-                    pos_2[1]
-                );
-                heading_height = CalculateActions.bearing(
-                    start_pos[0],
-                    start_pos[1],
-                    pos_1[0],
-                    pos_1[1]
-                );
-            }
-
-            // Get total images we will take
-            const total_images = Math.ceil(
-                images_taken_width * images_taken_height
-            );
-            // Get offsets in meters
-            const width_offset =
-                (images_taken_width * this.m_per_image_width - width) / 2;
-            const height_offset =
-                (images_taken_height * this.m_per_image_height - height) / 2;
-
-            // Get real startpos (with image offset)
-            console.log(width_offset, height_offset)
-            var real_start_pos = CalculateActions.destVincenty(
-                start_pos[0],
-                start_pos[1],
-                heading_width,
-                width_offset * -1
-            );
-            let object1 = {
-                position: {
-                    lat: real_start_pos[0],
-                    lng: real_start_pos[1],
-                },
-            };
-            real_start_pos = CalculateActions.destVincenty(
-                real_start_pos[0],
-                real_start_pos[1],
-                heading_height,
-                height_offset * -1
-            );
-            let object = {
-                position: {
-                    lat: real_start_pos[0],
-                    lng: real_start_pos[1],
-                },
-            };
-
-            var points_lat = [];
-            var points_lon = [];
-
-            var point;
-            for (let i = 0; i < images_taken_height; i++) {
-                const height_offset = (i * this.m_per_image_height) + (this.m_per_image_height / 2);
-                point = CalculateActions.destVincenty(
-                    real_start_pos[0],
-                    real_start_pos[1],
-                    heading_height,
-                    height_offset
-                );
-                for (let i = 0; i < images_taken_width; i++) {
-                const width_offset = (i * this.m_per_image_width) + (this.m_per_image_width / 2);
-                    let new_point = CalculateActions.destVincenty(
-                        point[0],
-                        point[1],
-                        heading_width,
-                        width_offset
-                    );
-                    let object = {
-                        position: {
-                            lat: new_point[0],
-                            lng: new_point[1],
-                        },
-                    };
-                    this.matrixmarkers.push(object);
-                }
-            }
+            // Show them on the minimap (TODO: remove later)
+            points.forEach((new_point) => {
+                let object = {
+                    position: {
+                        lat: new_point[0],
+                        lng: new_point[1],
+                    },
+                };
+                this.matrixmarkers.push(object);
+            });
         },
+        
 
         saveSettings() {
             this.$store.dispatch(
@@ -350,9 +221,6 @@ export default {
                 2. Save all settings to store, go to new page where we start the drone kit and stuff.
                 3. Check if all inputs are set up correct
             */
-        },
-        test() {
-            console.log(CalculateActions.rotate(0, 0, 1, 1, 90));
         },
     },
 };

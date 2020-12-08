@@ -167,7 +167,130 @@ const CalculateActions = {
             L = lambda - (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM))),
             revAz = Math.atan2(sinAlpha, -tmp); // final bearing
         return [this.toDegrees(lat2), lon1 + this.toDegrees(L)];
-    }
+    },
+    calculateGpsCords(my_pos_1, my_pos_2, image_size_width, image_size_height) {
+        const start_pos = my_pos_1;
+        const pos_1 = [my_pos_1[0], my_pos_2[1]];
+        const pos_2 = [my_pos_2[0], my_pos_1[1]];
+
+        // Get longest side
+        const length_1 = CalculateActions.distanceInMBetweenEarthCoordinates(
+            start_pos[0],
+            start_pos[1],
+            pos_1[0],
+            pos_1[1]
+        );
+        const length_2 = CalculateActions.distanceInMBetweenEarthCoordinates(
+            start_pos[0],
+            start_pos[1],
+            pos_2[0],
+            pos_2[1]
+        );
+
+        var width, height;
+        var images_taken_width, images_taken_height;
+        var heading_width, heading_height;
+
+        if (length_1 > length_2) {
+            //van links naar rechts
+            images_taken_width = Math.ceil(length_1 / image_size_width);
+            images_taken_height = Math.ceil(length_2 / image_size_height);
+            width = length_1;
+            height = length_2;
+            heading_width = CalculateActions.bearing(
+                start_pos[0],
+                start_pos[1],
+                pos_1[0],
+                pos_1[1]
+            );
+            heading_height = CalculateActions.bearing(
+                start_pos[0],
+                start_pos[1],
+                pos_2[0],
+                pos_2[1]
+            );
+        } else {
+            // van boven naar onder
+            images_taken_width = Math.ceil(length_2 / image_size_width);
+            images_taken_height = Math.ceil(length_1 / image_size_height);
+            width = length_2;
+            height = length_1;
+            heading_width = CalculateActions.bearing(
+                start_pos[0],
+                start_pos[1],
+                pos_2[0],
+                pos_2[1]
+            );
+            heading_height = CalculateActions.bearing(
+                start_pos[0],
+                start_pos[1],
+                pos_1[0],
+                pos_1[1]
+            );
+        }
+
+        // Get total images we will take
+        const total_images = Math.ceil(
+            images_taken_width * images_taken_height
+        );
+        // Get offsets in meters
+        const width_offset =
+            (images_taken_width * image_size_width - width) / 2;
+        const height_offset =
+            (images_taken_height * image_size_height - height) / 2;
+
+        // Get real startpos (with image offset)
+        var real_start_pos = CalculateActions.destVincenty(
+            start_pos[0],
+            start_pos[1],
+            heading_width,
+            width_offset * -1
+        );
+        let object1 = {
+            position: {
+                lat: real_start_pos[0],
+                lng: real_start_pos[1],
+            },
+        };
+        real_start_pos = CalculateActions.destVincenty(
+            real_start_pos[0],
+            real_start_pos[1],
+            heading_height,
+            height_offset * -1
+        );
+        let object = {
+            position: {
+                lat: real_start_pos[0],
+                lng: real_start_pos[1],
+            },
+        };
+
+        var gps_cords = [];
+        var point;
+
+        for (let i = 0; i < images_taken_height; i++) {
+            const height_offset =
+                i * image_size_height + image_size_height / 2;
+            point = CalculateActions.destVincenty(
+                real_start_pos[0],
+                real_start_pos[1],
+                heading_height,
+                height_offset
+            );
+            for (let i = 0; i < images_taken_width; i++) {
+                const width_offset =
+                    i * image_size_width + image_size_width / 2;
+                let new_point = CalculateActions.destVincenty(
+                    point[0],
+                    point[1],
+                    heading_width,
+                    width_offset
+                );
+                gps_cords.push(new_point);
+            }
+        }
+        return gps_cords;
+    },
 };
 
 export default CalculateActions;
