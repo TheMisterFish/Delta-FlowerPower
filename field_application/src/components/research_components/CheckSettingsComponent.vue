@@ -53,42 +53,33 @@
                 </template>
             </v-simple-table>
         </div>
-        <br />
-        <br />
-        <GmapMap
-            :center="{
-                lat: this.research_settings.pos_x_1,
-                lng: this.research_settings.pos_y_1,
-            }"
-            :zoom="17.6"
-            map-type-id="terrain"
-            style="width: 500px; height: 300px"
-        >
-            <GmapMarker
-                :key="index"
-                v-for="(m, index) in homemarkers"
-                :position="m.position"
-                :clickable="true"
-                :draggable="false"
-                @click="center = m.position"
-                icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-            />
-            <GmapMarker
-                :key="index"
-                v-for="(m, index) in computed_matrixmarkers"
-                :position="m.position"
-                :clickable="true"
-                :draggable="false"
-                @click="center = m.position"
-                icon="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
-            />
-        </GmapMap>
-        {{ computed_matrixmarkers }}
+        <div>
+            <v-btn
+                @click="calculateWaypoints()"
+                color="primary"
+                class="mb-5 mr-5"
+                >Waypoints uitrekenen</v-btn
+            >
+            <v-btn
+                @click="showMap = true"
+                :disabled="!pointsCalculated"
+                color="primary"
+                class="mb-5 mr-5"
+                >Googlemaps laten zien</v-btn
+            >
+        </div>
+        <div v-if="showMap">
+            <maps-component
+                :points="points"
+                :research_settings="research_settings"
+            ></maps-component>
+        </div>
     </div>
 </template>
 
 <script>
 import { CalculateActions } from "../../actions";
+import MapsComponent from "../MapsComponent";
 export default {
     name: "CheckSettings",
     props: {
@@ -123,21 +114,10 @@ export default {
     },
     data() {
         return {
-            homemarkers: [
-                {
-                    position: {
-                        lat: this.research_settings.pos_x_1,
-                        lng: this.research_settings.pos_y_1,
-                    },
-                },
-                {
-                    position: {
-                        lat: this.research_settings.pos_x_2,
-                        lng: this.research_settings.pos_y_2,
-                    },
-                },
-            ],
             matrixmarkers: [],
+            showMap: false,
+            points: [],
+            pointsCalculated: false,
         };
     },
     computed: {
@@ -156,9 +136,6 @@ export default {
         m_per_image_height: function () {
             return (this.cm_per_px * this.photo_settings.image_height) / 100;
         },
-        computed_matrixmarkers: function () {
-            return this.matrixmarkers;
-        },
     },
     mounted() {
         // TODO
@@ -167,8 +144,11 @@ export default {
             2. Try to calculate how many images will be taken
         */
     },
+    components: {
+        MapsComponent,
+    },
     methods: {
-        test() {
+        calculateWaypoints() {
             this.matrixmarkers = [];
             // Create startpoint
             let point_1 = [
@@ -181,25 +161,16 @@ export default {
                 this.research_settings.pos_y_2,
             ];
             // Get all gps cordinate info from those two points
-            var points = CalculateActions.calculateGpsCords(
+            this.points = CalculateActions.calculateGpsCords(
                 point_1,
                 point_2,
                 this.m_per_image_width,
                 this.m_per_image_height
             );
+            this.pointsCalculated = true;
 
             // Show them on the minimap (TODO: remove later)
-            points.forEach((new_point) => {
-                let object = {
-                    position: {
-                        lat: new_point[0],
-                        lng: new_point[1],
-                    },
-                };
-                this.matrixmarkers.push(object);
-            });
         },
-        
 
         saveSettings() {
             this.$store.dispatch(
