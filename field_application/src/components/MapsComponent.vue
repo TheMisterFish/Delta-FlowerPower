@@ -8,6 +8,9 @@
             :zoom="17.6"
             map-type-id="terrain"
             style="width: 100%; height: 400px"
+            :options="{
+                disableDefaultUI : true
+            }"
         >
             <GmapMarker
                 :key="index"
@@ -28,6 +31,9 @@
                 icon="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
             />
         </GmapMap>
+        <p>
+            De blauwe punten zijn de twee locatie punten. De rode punten zijn de punten waar de drone foto's zal maken.
+        </p>
         <!-- {{ computed_matrixmarkers }} -->
     </div>
 </template>

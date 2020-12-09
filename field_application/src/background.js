@@ -95,8 +95,8 @@ protocol.registerSchemesAsPrivileged([{
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 470,
-        height: 800,
+        width: 740,
+        height: 820,
         webPreferences: {
             // enableRemoteModule: true,
             // Use pluginOptions.nodeIntegration, leave this alone

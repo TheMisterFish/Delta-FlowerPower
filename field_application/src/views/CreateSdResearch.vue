@@ -18,11 +18,11 @@
                     Bevestiging
                 </v-stepper-step>
 
-                <v-divider></v-divider>
-
+                <!-- <v-divider></v-divider> -->
+<!-- 
                 <v-stepper-step :complete="e1 > 4" step="4">
                     Detectie
-                </v-stepper-step>
+                </v-stepper-step> -->
             </v-stepper-header>
 
             <v-stepper-items>
@@ -33,7 +33,7 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-btn :disabled="!research_settings.name" color="primary" @click="e1 = 2"> Verder </v-btn>
+                    <v-btn :disabled="research_settings.name" color="primary" @click="e1 = 2"> Verder </v-btn>
                     <v-btn text @click="$router.go(-1)"> Terug </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="2">
@@ -44,18 +44,21 @@
                     <v-spacer></v-spacer>
 
                     <v-btn color="primary" @click="e1 = 3"> Verder </v-btn>
-                    <v-btn text @click="$router.go(-1)"> Terug </v-btn>
+                    <v-btn text @click="e1 = 1"> Terug </v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
                     <check-settings sd_research :go_back="() => e1 = 2" :save_settings="() => e1 =  4" :research_settings="research_settings" :process_settings="process_settings"></check-settings>
 
                     <v-spacer></v-spacer>
+
+                    <v-btn color="primary" @click="e1 = 3"> Start </v-btn>
+                    <v-btn text @click="e1 = 2"> Terug </v-btn>
                 </v-stepper-content>
 
-                <v-stepper-content step="4">
+                <!-- <v-stepper-content step="4">
                     <detect></detect>
-                </v-stepper-content>
+                </v-stepper-content> -->
             </v-stepper-items>
         </v-stepper>
     </v-layout>
@@ -65,7 +68,7 @@
 import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
 import CheckSettings from "@/components/research_components/CheckSettingsComponent.vue";
-import Detect from "@/components/research_components/DetectComponent.vue";
+// import Detect from "@/components/research_components/DetectComponent.vue";
 
 export default {
     name: "DroneResearch",
@@ -87,9 +90,9 @@ export default {
     },
     components: {
         CreateProcessSettings,
-        Detect,
         SelectResearchSettings,
-        CheckSettings
+        CheckSettings,
+        // Detect
     },
     created: function () {
         this.$store.dispatch("getResearches");

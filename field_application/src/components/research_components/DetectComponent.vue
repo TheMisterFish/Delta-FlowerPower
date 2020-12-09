@@ -72,14 +72,15 @@ export default {
         );
 
         const response = await window.electron.invoke(IPC_CHANNELS.FILESYSTEM, ipcMessage);
-        
-        response.forEach((r) => {
-            this.images.push({
-                image: r,
-                filePath: `${path}\\${r}`,
-                boundingBoxes: [],
+        if(response){
+            response.forEach((r) => {
+                this.images.push({
+                    image: r,
+                    filePath: `${path}\\${r}`,
+                    boundingBoxes: [],
+                });
             });
-        });
+        }
     },
 };
 </script>

@@ -55,6 +55,14 @@
             v-model="drone_settings.use_ftp"
             label="Gebruik maken van FTP"
         ></v-checkbox>
+        <v-text-field
+            append-icon="mdi-wifi"
+            label="Drone connectie ip adress"
+            type="string"
+            hint="127.0.0.1:16670"
+            v-model="drone_settings.connection_url"
+        ></v-text-field>
+        
     </div>
 </template>
 

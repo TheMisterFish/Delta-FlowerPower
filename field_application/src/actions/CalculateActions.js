@@ -246,24 +246,13 @@ const CalculateActions = {
             heading_width,
             width_offset * -1
         );
-        let object1 = {
-            position: {
-                lat: real_start_pos[0],
-                lng: real_start_pos[1],
-            },
-        };
+        
         real_start_pos = CalculateActions.destVincenty(
             real_start_pos[0],
             real_start_pos[1],
             heading_height,
             height_offset * -1
         );
-        let object = {
-            position: {
-                lat: real_start_pos[0],
-                lng: real_start_pos[1],
-            },
-        };
 
         var gps_cords = [];
         var point;
@@ -289,7 +278,12 @@ const CalculateActions = {
                 gps_cords.push(new_point);
             }
         }
-        return gps_cords;
+        return {
+            points: gps_cords,
+            width: images_taken_width,
+            height: images_taken_height,
+            heading: heading_height
+        }
     },
 };
 

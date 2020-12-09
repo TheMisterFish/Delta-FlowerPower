@@ -92,10 +92,10 @@ export default {
             e1: 4,
             research_settings: {
                 name: null,
-                pos_x_1: 51.68679695307608,
-                pos_y_1: 5.86916210177831,
-                pos_x_2: 51.68689627875036,
-                pos_y_2: 5.8687963176998235
+                pos_x_1: 51.450762458205254, 
+                pos_y_1: 5.454901457596913,
+                pos_x_2: 51.45058745837186, 
+                pos_y_2: 5.455550550835136
             },
             photo_settings: {
                 sensor_width: 6.17,
@@ -106,13 +106,14 @@ export default {
             drone_settings: {
                 fly_height: 3,
                 use_ftp: true,
+                connection_url: '127.0.0.1:16670'
             },
             process_settings: {
                 model: null,
                 weight: null,
                 image_width: null,
                 confidence: 25,
-            },
+            }
         };
     },
     components: {
@@ -125,6 +126,10 @@ export default {
         cancelFunction() {
             this.$router.push({ path: "Landing" });
         },
+    },
+    created() {
+        this.$store.dispatch("getResearches");
+        this.$store.dispatch("getModels");
     },
 };
 </script>

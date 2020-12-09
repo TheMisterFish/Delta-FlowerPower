@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card v-if="sd_research" class="mx-auto card-spacer mb-5">
+        <!-- <v-card v-if="sd_research" class="mx-auto card-spacer mb-5">
             <v-card-text>
                 <h4>Onderzoek: {{ research_settings.name }}</h4>
                 <h4>Model: {{ process_settings.model }}</h4>
@@ -18,17 +18,33 @@
                     >Opslaan en verder</v-btn
                 >
             </v-card-text>
-        </v-card>
-
-        <div v-else class="text--primary mb-5">
-            <p class="subtitle-2 text-center">Foto instellingen</p>
+        </v-card> -->
+        <div  v-if="!sd_research" class="text--primary mb-5">
+            <p class="subtitle-2 text-center">Drone instellingen</p>
             <v-simple-table dense>
                 <template v-slot:default>
                     <tbody>
                         <tr>
+                            <td>Connectie ip adress:</td>
+                            <td>{{ drone_settings.connection_url }}</td>
+                        </tr>
+                        <tr>
                             <td>Vlieg hoogte (meters):</td>
                             <td>{{ drone_settings.fly_height }} m</td>
                         </tr>
+                        <tr>
+                            <td>Gebruik maken van FTP:</td>
+                            <td>{{ drone_settings.use_ftp ? "Ja" : "Nee" }}</td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
+        </div>
+        <div  v-if="!sd_research" class="text--primary mb-5">
+            <p class="subtitle-2 text-center">Foto instellingen</p>
+            <v-simple-table dense>
+                <template v-slot:default>
+                    <tbody>
                         <tr>
                             <td>Sensor breedte (mm):</td>
                             <td>{{ photo_settings.sensor_width }} mm</td>
@@ -42,10 +58,14 @@
                             <td>{{ photo_settings.image_width }} px</td>
                         </tr>
                         <tr>
+                            <td>Afbeelding hoogte (pixels):</td>
+                            <td>{{ photo_settings.image_height }} px</td>
+                        </tr>
+                        <tr>
                             <td>CM per pixel:</td>
                             <td>{{ cm_per_px.toFixed(5) }} cm/px</td>
                         </tr>
-                        <tr @click="test()">
+                        <tr>
                             <td>Meter per afbeelding:</td>
                             <td>{{ m_per_image_width.toFixed(5) }} m</td>
                         </tr>
@@ -53,7 +73,37 @@
                 </template>
             </v-simple-table>
         </div>
-        <div>
+        <div v-if="drone_settings && drone_settings.use_ftp || sd_research" class="text--primary mb-5">
+            <p class="subtitle-2 text-center">AI instellingen</p>
+            <v-simple-table dense>
+                <template v-slot:default>
+                    <tbody>
+                        <tr>
+                            <td>AI Model gebruikt voor herkenning:</td>
+                            <td>{{ process_settings.model }}</td>
+                        </tr>
+                        <tr>
+                            <td>AI Gewichten gebruikt voor herkenning:</td>
+                            <td>{{ process_settings.weight }}</td>
+                        </tr>
+                        <tr>
+                            <td>De grootte van een gesneden afbeelding voor herkenning</td>
+                            <td>{{ process_settings.image_width }} px</td>
+                        </tr>
+                        <tr>
+                            <td>Hoe zeker de AI moet zijn</td>
+                            <td>{{ process_settings.confidence }}%</td>
+                        </tr>
+                        <tr v-if="sd_research">
+                            <td>Pad van de foto's</td>
+                            <td>{{ $store.getters.getPath }}</td>
+                        </tr>
+                        
+                    </tbody>
+                </template>
+            </v-simple-table>
+        </div>
+        <div v-if="!sd_research">
             <v-btn
                 @click="calculateWaypoints()"
                 color="primary"
@@ -73,6 +123,31 @@
                 :points="points"
                 :research_settings="research_settings"
             ></maps-component>
+        </div>
+        <div v-if="!sd_research" class="text--primary mb-5 mt-2">
+            <p class="subtitle-2 text-center">Waypoints</p>
+            <v-simple-table dense>
+                <template>
+                    <tbody>
+                        <tr>
+                            <td>Aantal waypoints:</td>
+                            <td>{{ points.length }}</td>
+                        </tr>
+                        <tr>
+                            <td>Waypoints in de breedte</td>
+                            <td>{{ images_width }}</td>
+                        </tr>
+                        <tr>
+                            <td>Waypoints in de hoogte</td>
+                            <td>{{ images_height }}</td>
+                        </tr>
+                        <tr>
+                            <td>Drone richting</td>
+                            <td>{{ heading }}°</td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
         </div>
     </div>
 </template>
@@ -116,8 +191,11 @@ export default {
         return {
             matrixmarkers: [],
             showMap: false,
-            points: [],
             pointsCalculated: false,
+            images_width: 0,
+            images_height: 0,
+            points: [],
+            heading: 0
         };
     },
     computed: {
@@ -137,13 +215,6 @@ export default {
             return (this.cm_per_px * this.photo_settings.image_height) / 100;
         },
     },
-    mounted() {
-        // TODO
-        /* 
-            1. Calculate the image cm/px
-            2. Try to calculate how many images will be taken
-        */
-    },
     components: {
         MapsComponent,
     },
@@ -161,15 +232,17 @@ export default {
                 this.research_settings.pos_y_2,
             ];
             // Get all gps cordinate info from those two points
-            this.points = CalculateActions.calculateGpsCords(
+            const data = CalculateActions.calculateGpsCords(
                 point_1,
                 point_2,
                 this.m_per_image_width,
                 this.m_per_image_height
             );
+            this.points = data.points
+            this.images_width = data.width;
+            this.images_height = data.height;
+            this.heading = Math.ceil(data.heading);
             this.pointsCalculated = true;
-
-            // Show them on the minimap (TODO: remove later)
         },
 
         saveSettings() {
