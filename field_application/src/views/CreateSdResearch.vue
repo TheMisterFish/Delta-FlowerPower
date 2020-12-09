@@ -52,7 +52,7 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-btn color="primary" @click="e1 = 3"> Start </v-btn>
+                    <v-btn color="primary" :disabled="!settings_ready" @click="start()"> Start </v-btn>
                     <v-btn text @click="e1 = 2"> Terug </v-btn>
                 </v-stepper-content>
 
@@ -93,6 +93,17 @@ export default {
         SelectResearchSettings,
         CheckSettings,
         // Detect
+    },
+    computed: {
+        settings_ready: function() {
+            return false;
+        }
+    },
+    methods: {
+        start() {
+            //  Save settings
+            this.$router.push({ path: "Research" });
+        }
     },
     created: function () {
         this.$store.dispatch("getResearches");

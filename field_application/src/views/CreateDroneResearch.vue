@@ -71,7 +71,7 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-btn color="primary" @click="e1 = 1"> Start </v-btn>
+                    <v-btn color="primary" :disabled="!settings_ready" @click="start()"> Start </v-btn>
                     <v-btn text @click="e1 = 3"> Terug </v-btn>
                 </v-stepper-content>
             </v-stepper-items>
@@ -124,8 +124,18 @@ export default {
     },
     methods: {
         cancelFunction() {
+            // TODO: Reset all given settings
             this.$router.push({ path: "Landing" });
         },
+        start(){
+            // SAVE ALL DATA AND GO TO THE RESEARCH PAGE
+            this.$router.push({ path: "Research" });
+        }
+    },
+    computed: {
+        settings_ready: function() {
+            return true;
+        }
     },
     created() {
         this.$store.dispatch("getResearches");

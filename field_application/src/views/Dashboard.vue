@@ -100,6 +100,15 @@
                 </v-col>
             </v-row>
         </v-container>
+        <v-btn
+            class="settings_button"
+            color="primary"
+            fab
+            dark
+            to="settings"
+            >
+                <v-icon>mdi-settings</v-icon>
+        </v-btn>
     </div>
 </template>
 
@@ -148,5 +157,10 @@ export default Vue.extend({
 
 .v-btn__content {
     width: 100%;
+}
+.settings_button{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
 }
 </style>

@@ -37,12 +37,28 @@ const routes = [{
         },
     },
     {
+        path: "/research",
+        name: "Research",
+        component: () =>
+            import("../views/Research.vue"),
+        meta: {
+            researcher: true,
+        },
+    },
+    {
+        path: "/settings",
+        name: "Settings",
+        component: () =>
+            import("../views/Settings.vue"),
+    },
+    {
         path: "*",
         redirect: "/",
         name: "Landing",
         component: () =>
             import("../views/Landing.vue"),
     },
+    
 ];
 
 const router = new VueRouter({
