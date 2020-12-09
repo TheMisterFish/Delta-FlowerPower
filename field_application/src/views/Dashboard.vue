@@ -55,7 +55,7 @@
 
             <v-row>
                 <v-col cols="12" sm="12">
-                    <h3 class="text-center">Vorige onderzoeken.</h3>
+                    <h3 class="text-center">Uitgevoerde onderzoeken.</h3>
                 </v-col>
                 <v-col cols="12" sm="12">
                     <v-text-field
@@ -69,11 +69,10 @@
                 <v-col cols="12" sm="12">
                     <v-card class="mx-auto card-spacer">
                         <v-card-text>
-                            <div>Word of the Day</div>
+                            <div>Onderzoek 1</div>
                             <div class="text--primary">
-                                relating to or dependent on charity;
-                                charitable.<br />
-                                "an eleemosynary educational institution."
+                                Dit is een onderzoek voorbeeld<br />
+                                van onderzoek 1.
                             </div>
                         </v-card-text>
                         <v-card-actions>
@@ -84,11 +83,10 @@
                     </v-card>
                     <v-card class="mx-auto card-spacer">
                         <v-card-text>
-                            <div>Word of the Day</div>
+                            <div>Onderzoek 2</div>
                             <div class="text--primary">
-                                relating to or dependent on charity;
-                                charitable.<br />
-                                "an eleemosynary educational institution."
+                                Dit is een onderzoek voorbeeld<br />
+                                van onderzoek 2.
                             </div>
                         </v-card-text>
                         <v-card-actions>

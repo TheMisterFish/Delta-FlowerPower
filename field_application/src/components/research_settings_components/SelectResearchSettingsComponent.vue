@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p class="subtitle-2 text-center">Onderzoek instellingen</p>
+        <p class="subtitle-2 text-center" @click="showCustom = true">Onderzoek instellingen</p>
         <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -9,35 +9,37 @@
             hide-details
         ></v-text-field>
         <br>
-        <v-text-field
-            v-model="research_settings.pos_x_1"
-            append-icon="mdi-eart"
-            label="Lat 1"
-            single-line
-            hide-details
-        ></v-text-field>
-        <v-text-field
-            v-model="research_settings.pos_y_1"
-            append-icon="mdi-eart"
-            label="Lon 1"
-            single-line
-            hide-details
-        ></v-text-field>
-        <br />
-        <v-text-field
-            v-model="research_settings.pos_x_2"
-            append-icon="mdi-eart"
-            label="Lat 2"
-            single-line
-            hide-details
-        ></v-text-field>
-        <v-text-field
-            v-model="research_settings.pos_y_2"
-            append-icon="mdi-eart"
-            label="Lon 2"
-            single-line
-            hide-details
-        ></v-text-field>
+        <div v-if="showCustom">
+            <v-text-field
+                v-model="research_settings.pos_x_1"
+                append-icon="mdi-eart"
+                label="Lat 1"
+                single-line
+                hide-details
+            ></v-text-field>
+            <v-text-field
+                v-model="research_settings.pos_y_1"
+                append-icon="mdi-eart"
+                label="Lon 1"
+                single-line
+                hide-details
+            ></v-text-field>
+            <br />
+            <v-text-field
+                v-model="research_settings.pos_x_2"
+                append-icon="mdi-eart"
+                label="Lat 2"
+                single-line
+                hide-details
+            ></v-text-field>
+            <v-text-field
+                v-model="research_settings.pos_y_2"
+                append-icon="mdi-eart"
+                label="Lon 2"
+                single-line
+                hide-details
+            ></v-text-field>
+        </div>
         <br />
         <small>
             <a href="#" @click="downloadResearches">Download onderzoeken</a>
@@ -50,8 +52,10 @@
         ></v-progress-linear>
 
         <div class="scroll-box">
+            {{ researches.length }}
             <v-list two-line>
                 <v-list-item-group
+                    v-if="researches.researches && researches.researches.length > 0"
                     v-model="selected"
                     active-class="primary--text"
                     single
@@ -86,6 +90,9 @@
                         ></v-divider>
                     </template>
                 </v-list-item-group>
+                <p v-if="!researches.researches || researches.researches.length == 0">
+                    Geen onderzoeken gedownload.
+                </p>
             </v-list>
         </div>
     </div>
@@ -112,6 +119,7 @@ export default {
             downloading: false,
             search: "",
             selected: 2,
+            showCustom: false,
         };
     },
     computed: {

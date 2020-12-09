@@ -5,7 +5,10 @@ import {
 
 const models_store = {
     state: {
-        models: []
+        models: [
+            "YoloV5",
+            "YoloV3"
+        ]
     },
     mutations: {
         [GET_MODELS](state, models) {

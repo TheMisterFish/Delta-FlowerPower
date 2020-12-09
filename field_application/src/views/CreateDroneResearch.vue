@@ -35,7 +35,7 @@
                     <v-spacer></v-spacer>
 
                     <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
-                    <v-btn text @click="cancelFunction"> Anuleren </v-btn>
+                    <v-btn text @click="cancel()"> Anuleren </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="2">
                     <create-flight-settings
@@ -80,16 +80,16 @@
 </template>
 
     <script>
-import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
-import createFlightSettings from "@/components/research_components/CreateFlightSettingsComponent.vue";
-import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
-import CheckSettings from "@/components/research_components/CheckSettingsComponent.vue";
+import SelectResearchSettings from "@/components/research_settings_components/SelectResearchSettingsComponent.vue";
+import createFlightSettings from "@/components/research_settings_components/CreateFlightSettingsComponent.vue";
+import CreateProcessSettings from "@/components/research_settings_components/CreateProcessSettingsComponent.vue";
+import CheckSettings from "@/components/research_settings_components/CheckSettingsComponent.vue";
 
 export default {
     name: "DroneResearch",
     data() {
         return {
-            e1: 4,
+            e1: 1,
             research_settings: {
                 name: null,
                 pos_x_1: 51.450762458205254, 
@@ -123,7 +123,7 @@ export default {
         SelectResearchSettings,
     },
     methods: {
-        cancelFunction() {
+        cancel() {
             // TODO: Reset all given settings
             this.$router.push({ path: "Landing" });
         },

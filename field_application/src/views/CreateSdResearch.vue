@@ -34,7 +34,7 @@
                     <v-spacer></v-spacer>
 
                     <v-btn :disabled="research_settings.name" color="primary" @click="e1 = 2"> Verder </v-btn>
-                    <v-btn text @click="$router.go(-1)"> Terug </v-btn>
+                    <v-btn text @click="cancel()"> Terug </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="2">
                     <create-process-settings
@@ -65,10 +65,10 @@
 </template>
 
 <script>
-import SelectResearchSettings from "@/components/research_components/SelectResearchSettingsComponent.vue";
-import CreateProcessSettings from "@/components/research_components/CreateProcessSettingsComponent.vue";
-import CheckSettings from "@/components/research_components/CheckSettingsComponent.vue";
-// import Detect from "@/components/research_components/DetectComponent.vue";
+import SelectResearchSettings from "@/components/research_settings_components/SelectResearchSettingsComponent.vue";
+import CreateProcessSettings from "@/components/research_settings_components/CreateProcessSettingsComponent.vue";
+import CheckSettings from "@/components/research_settings_components/CheckSettingsComponent.vue";
+// import Detect from "@/components/research_settings_components/DetectComponent.vue";
 
 export default {
     name: "DroneResearch",
@@ -100,6 +100,10 @@ export default {
         }
     },
     methods: {
+        cancel() {
+            // TODO: Reset all given settings
+            this.$router.push({ path: "Landing" });
+        },
         start() {
             //  Save settings
             this.$router.push({ path: "Research" });
