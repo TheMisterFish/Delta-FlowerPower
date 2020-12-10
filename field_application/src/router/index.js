@@ -37,10 +37,19 @@ const routes = [{
         },
     },
     {
-        path: "/research",
-        name: "Research",
+        path: "/active_drone_research",
+        name: "ActiveDroneResearch",
         component: () =>
-            import("../views/Research.vue"),
+            import("../views/ActiveDroneResearch.vue"),
+        meta: {
+            researcher: true,
+        },
+    },
+    {
+        path: "/active_sd_research",
+        name: "ActiveSdResearch",
+        component: () =>
+            import("../views/ActiveSdResearch.vue"),
         meta: {
             researcher: true,
         },

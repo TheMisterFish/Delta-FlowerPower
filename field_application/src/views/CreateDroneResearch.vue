@@ -129,7 +129,8 @@ export default {
         },
         start(){
             // SAVE ALL DATA AND GO TO THE RESEARCH PAGE
-            this.$router.push({ path: "Research" });
+            console.log("HERE");
+            this.$router.push({ path: "active_drone_research" });
         }
     },
     computed: {

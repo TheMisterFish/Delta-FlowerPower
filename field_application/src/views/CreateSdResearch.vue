@@ -48,7 +48,7 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
-                    <check-settings sd_research :go_back="() => e1 = 2" :save_settings="() => e1 =  4" :research_settings="research_settings" :process_settings="process_settings"></check-settings>
+                    <check-settings sd_research :research_settings="research_settings" :process_settings="process_settings"></check-settings>
 
                     <v-spacer></v-spacer>
 
@@ -106,7 +106,16 @@ export default {
         },
         start() {
             //  Save settings
-            this.$router.push({ path: "Research" });
+            this.$store.dispatch(
+                "setWeightsPath",
+                this.process_settings.weights.path
+            );
+            this.$store.dispatch("setAiSettings", {
+                confidence: this.process_settings.confidence,
+                image_size: this.process_settings.image_width,
+            });
+
+            this.$router.push({ path: "active_sd_research" });
         }
     },
     created: function () {

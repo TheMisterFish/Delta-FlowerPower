@@ -33,7 +33,7 @@
         }, 
         mounted() {
             setInterval(() => {
-                this.value.unshift(this.counter);
+                this.value.unshift(5 - (this.counter));
                 if(this.value.length > 30){
                     this.value.pop();
                 }
@@ -41,7 +41,7 @@
                 if(this.counter > 5){
                     this.counter = 0;
                 }
-            }, 200);
+            }, 100);
         }, 
     }
 </script>
