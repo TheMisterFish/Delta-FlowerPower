@@ -33,7 +33,7 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-btn :disabled="research_settings.name" color="primary" @click="e1 = 2"> Verder </v-btn>
+                    <v-btn :disabled="!research_settings.name" color="primary" @click="e1 = 2"> Verder </v-btn>
                     <v-btn text @click="cancel()"> Terug </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="2">
@@ -96,7 +96,7 @@ export default {
     },
     computed: {
         settings_ready: function() {
-            return false;
+            return true;
         }
     },
     methods: {

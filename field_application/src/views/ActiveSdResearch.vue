@@ -1,6 +1,6 @@
 <template>
     <div>
-        HIER WORD EEN ACTIEF RESEARCH GETOONT!
+        <v-btn class="ma-4" to="landing">Terug</v-btn>
         <detect-component></detect-component>
     </div>
 </template>
