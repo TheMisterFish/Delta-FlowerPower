@@ -115,7 +115,7 @@ pipeline {
         steps {
           script {
             echo "Current branch: " + env.BRANCH_NAME
-            if (env.BRANCH_NAME=='master'){
+            if (env.BRANCH_NAME == "master"){
               echo 'Deploying....'
               sh "docker-compose down"
               sh "docker-compose up --build --force-recreate -d"
@@ -131,8 +131,8 @@ pipeline {
   post { 
       always {
         script {
-          echo env.BROADCAST
-          if(env.BRANCH_NAME=='master'){
+          echo env.BRANCH_NAME
+          if(env.BRANCH_NAME == "master"){
             sh "docker logs fp_nginx"
             sh "docker logs fp_mongodb"
             sh "docker logs fp_nestjs"
@@ -143,14 +143,18 @@ pipeline {
       }
       success {
         script {
-          if(env.BRANCH_NAME=='master'){
+          echo "Succesfully build"
+          if(env.BRANCH_NAME == "master"){
+            echo "Sending success message to discord server"
             discordSend description: env.DIS_DESC, footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
           }
         }
       }
       unsuccessful { 
         script {
-          if(env.BRANCH_NAME=='master'){
+          echo "Unsuccesfully build"
+          if(env.BRANCH_NAME == "master"){
+              echo "Sending unsuccess message to discord server"
             discordSend description: env.DIS_DESC + "- FAILED", footer: env.DIS_FOOT, link: env.BUILD_URL, result: currentBuild.currentResult, title: env.DIS_TITL, webhookURL: env.WEBHOOK_URL
           }
         }
