@@ -9,9 +9,16 @@ mongo -- "$MONGO_INITDB_DATABASE" <<EOF
     });
 
     db.users.insertOne({
+        fullname: "admin",
+        email: "admin@flowerpower.com",
+        role: "admin",
+        password: "$INITIAL_PASSWORD"
+    });
+
+    db.users.insertOne({
         fullname: "researcher",
         email: "researcher@flowerpower.com",
-        role: "admin",
+        role: "researcher",
         password: "$INITIAL_PASSWORD"
     });
 EOF
