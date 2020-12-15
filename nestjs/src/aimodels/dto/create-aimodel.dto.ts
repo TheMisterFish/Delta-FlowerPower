@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsEmpty, MinLength } from 'class-validator';
+import { File } from 'src/common/models/file/file.model';
 
 export class CreateAimodelDto { 
   @IsString()
@@ -11,8 +12,7 @@ export class CreateAimodelDto {
   @MinLength(10)
   description: string;
 
-  @IsEmpty() 
-  path: string;
+  weights: File[]
 
   @IsEmpty() 
   made_by: string;
