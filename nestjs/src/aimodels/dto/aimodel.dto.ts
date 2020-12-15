@@ -1,5 +1,6 @@
+import { prop, Ref } from '@typegoose/typegoose';
 import { IsString, IsNotEmpty, IsEmpty, IsDate, MinLength } from 'class-validator';
-import { File } from '../../sessions/file';
+import { File } from 'src/common/models/file/file.model';
 
 export class AimodelDto { 
   @IsString()
@@ -12,14 +13,13 @@ export class AimodelDto {
   @MinLength(10)
   description: string;
 
-  weights: File[]
+  @prop({ ref: 'File' })
+  weights: File[];
 
   @IsString()
   @IsEmpty()
   made_by: string;
 
-  @IsDate()
-  @IsEmpty()
   created_at: Date;
 
   updated_at: Date;

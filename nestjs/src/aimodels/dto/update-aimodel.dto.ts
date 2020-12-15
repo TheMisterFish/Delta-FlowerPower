@@ -1,11 +1,11 @@
-import { File } from '../../sessions/file';
+import { File } from "src/common/models/file/file.model";
 
 export class UpdateAimodelDto { 
   name: string;
 
   description: string;
 
-  weights: File[]
+  weights: File[];
 
   path: string;
 
