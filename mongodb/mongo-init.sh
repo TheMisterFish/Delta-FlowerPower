@@ -11,7 +11,7 @@ mongo -- "$MONGO_INITDB_DATABASE" <<EOF
     db.users.insertOne({
         fullname: "researcher",
         email: "researcher@flowerpower.com",
-        role: "researcher",
+        role: "admin",
         password: "$INITIAL_PASSWORD"
     });
 EOF
