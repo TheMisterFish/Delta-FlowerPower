@@ -23,6 +23,7 @@
     "electron-dl": "^3.0.2",
     "moment": "^2.29.1",
     "nedb": "^1.8.0",
+    "nedb-promises": "^4.1.0",
     "roboto-fontface": "*",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

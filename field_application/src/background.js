@@ -24,7 +24,7 @@ import {
     IPC_MESSAGES,
     DB_NAMES
 } from './constants'
-import * as Datastore from "nedb"
+import * as Datastore from "nedb-promises"
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -172,18 +172,17 @@ if (isDevelopment) {
 }
 
 
-function createDbs() {
-    DB_NAMES.RESEARCHDB = new Datastore({
+async function createDbs() {
+    DB_NAMES.RESEARCHDB = Datastore.create({
         filename: path.join(__dirname, "database", "researches.db"),
         autoload: true
     })
-    DB_NAMES.MODELDB = new Datastore({
+    DB_NAMES.MODELDB = Datastore.create({
         filename: path.join(__dirname, "database", "models.db"),
         autoload: true
     })
-    const result = DB_NAMES.RESEARCHDB.find({}, function (error, docs) {
-        console.log(docs, error)
-    })
+    const result = await DB_NAMES.RESEARCHDB.find({});
+    console.log(result);
 }
 
 app.on('ready', createDbs)
@@ -232,42 +231,38 @@ ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
 })
 
 ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
-    switch (arg.message) {
+    switch (args.message) {
         case IPC_MESSAGES.SAVE_IN_DB:
-            arg.database.insert(args.data, function (err, newDoc) {
-                if (err)
+            return await DB_NAMES[args.database].insert(args.data, function (err, newDoc) {
+                if (err){
                     return err
+                }
                 return newDoc
             });
-            break;
         case IPC_MESSAGES.UPDATE_IN_DB:
-            arg.database.update(args.to_update, args.data, args.options, function (err, updatedDoc) {
+            return await DB_NAMES[args.database].update(args.to_update, args.data, args.options, function (err, updatedDoc) {
                 if (err)
                     return err
                 return updatedDoc
             });
-            break;
         case IPC_MESSAGES.FIND_IN_DB:
-            arg.database.find(args.data, function (err, docs) {
-                if (err)
-                    return err
+            return await DB_NAMES[args.database].find(args.data, (err, docs) => {
+                if(err)
+                    return err;
                 return docs
             });
-            break;
         case IPC_MESSAGES.COUNT_IN_DB:
-            arg.database.count(args.data, function (err, count) {
+            return await DB_NAMES[args.database].count(args.data, function (err, count) {
                 if (err)
                     return err
                 return count
             });
-            break;
         case IPC_MESSAGES.REMOVE_IN_DATABASE:
-            arg.database.remove(args.data, args.options, function (err, numRemoved) {
+            return await DB_NAMES[args.database].remove(args.data, args.options, function (err, numRemoved) {
                 if (err)
                     return err
                 return numRemoved;
             });
-            break;
         default:
             return false;
     }

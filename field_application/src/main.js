@@ -41,7 +41,7 @@ Vue.prototype.$vuetify = {
     rtl: false
 };
 Vue.prototype.$http = Axios;
-// localStorage.setItem("token", "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicmVzZWFyY2hlciIsInJvbGUiOiJyZXNlYXJjaGVyIiwiZW1haWwiOiJyZXNlYXJjaGVyQGZsb3dlcnBvd2VyLmNvbSIsIl9pZCI6IjVmYzYzMTEyYWI2YmQ5MDQ1MWU4M2E4ZSIsImlhdCI6MTYwNzAwODc2MiwiZXhwIjoxNjQzMjk2NzYyfQ.HDSEaruCXUoITF-a00abxkG2HJ_Es1iTSJDNO69oEJc")
+localStorage.setItem("token", "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsIl9pZCI6IjVmYTMwM2Q4MzA3MDkxNDkwY2FiZDdlNCIsImlhdCI6MTYwODAyNzY0MCwiZXhwIjoxNzAyNzAwNDQwfQ.Z_wa72GWe1UxUob2MHKSC6r4hEQe1xn1ahTVwRc_8bQ")
 const token = localStorage.getItem("token");
 
 if (token) {

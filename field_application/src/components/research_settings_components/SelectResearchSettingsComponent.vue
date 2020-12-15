@@ -1,6 +1,8 @@
 <template>
     <div>
-        <p class="subtitle-2 text-center" @click="showCustom = true">Onderzoek instellingen</p>
+        <p class="subtitle-2 text-center" @click="showCustom = true">
+            Onderzoek instellingen
+        </p>
         <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -8,7 +10,7 @@
             single-line
             hide-details
         ></v-text-field>
-        <br>
+        <br />
         <div v-if="showCustom">
             <v-text-field
                 v-model="research_settings.pos_x_1"
@@ -52,18 +54,23 @@
         ></v-progress-linear>
 
         <div class="scroll-box">
-            {{ researches.length }}
             <v-list two-line>
                 <v-list-item-group
-                    v-if="researches.researches && researches.researches.length > 0"
+                    v-if="
+                        researches &&
+                        researches.length > 0
+                    "
                     v-model="selected"
                     active-class="primary--text"
                     single
                 >
                     <template
-                        v-for="(research, index) in researches.researches"
+                        v-for="(research, index) in researches"
                     >
-                        <v-list-item @click="selectResearch(research)" :key="research._id">
+                        <v-list-item
+                            @click="selectResearch(research)"
+                            :key="research._id"
+                        >
                             <template>
                                 <v-list-item-content>
                                     <v-list-item-title
@@ -90,7 +97,12 @@
                         ></v-divider>
                     </template>
                 </v-list-item-group>
-                <p v-if="!researches.researches || researches.researches.length == 0">
+                <p
+                    v-if="
+                        !researches ||
+                        researches.length == 0
+                    "
+                >
                     Geen onderzoeken gedownload.
                 </p>
             </v-list>
@@ -100,7 +112,9 @@
 
 <script>
 import { mdiEarth } from "@mdi/js";
-import { mapState } from "vuex";
+import { DatabaseActions } from "../../actions";
+import { ResearchesApi } from "../../api";
+
 export default {
     name: "SelectResearchSettings",
     props: {
@@ -120,29 +134,44 @@ export default {
             search: "",
             selected: 2,
             showCustom: false,
+            researches: [],
         };
     },
     computed: {
         filtered_items: function () {
-            return this.researches.filter(r => {
+            return this.researches.filter((r) => {
                 return r.name.toLowerCase().includes(this.search.toLowerCase());
             });
         },
-        ...mapState(["researches"]),
+    },
+    async mounted() {
+        this.researches = await DatabaseActions.getResearches();
     },
     methods: {
         downloadResearches() {
             this.downloading = true;
+            ResearchesApi.getResearches()
+                .then(async (data) => {
+                    await DatabaseActions.saveResearches(data);
+                    this.researches = await DatabaseActions.getResearches();
+                    this.downloading = false;
+                })
+                .catch((err) => {
+                    console.log("err", err);
+                });
         },
-
         selectResearch(research) {
             //TODO USE LAT LONG FROM LOCATION IN RESEARCH
             //TODO RENAME LOCATION_ID TO LOCATION
+            let pos1 = research.location_id.lat_long_point_one.split(',');
+            let pos2 = research.location_id.lat_long_point_two.split(',');
             this.research_settings.name = research.name;
-            this.research_settings.pos_1 = "42.0912390123"//research.location_id
-            this.research_settings.pos_2 = "21.234020823";
-            console.log(research);
-        }
+            this.research_settings.pos_x_1 = Number(pos1[0].trim());
+            this.research_settings.pos_y_1 = Number(pos1[1].trim());
+            this.research_settings.pos_x_2 = Number(pos2[0].trim());
+            this.research_settings.pos_y_2 = Number(pos2[1].trim());
+            console.log(this.research_settings);
+        },
     },
 };
 </script>

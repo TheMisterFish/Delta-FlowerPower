@@ -3,13 +3,57 @@
         <v-container>
             <v-row>
                 <v-col cols="12" sm="12">
-                    Onderzoek settings <br><br>
-                    Hierin komt: 
-                    <p>
-                        - Het downloaden van pre-defined researches <br>
-                        - Het inzien van gedownloade researches <br>
-                        - Het verwijderen van researches van local database
-                    </p>
+                    <p class="subtitle-2 text-left">Onderzoeken downloaden</p>
+                    <v-btn
+                        color="primary"
+                        class="mb-4"
+                        @click="downloadResearches()"
+                        >Downloaden</v-btn
+                    >
+                    <v-progress-linear
+                        v-if="downloading"
+                        indeterminate
+                        color="primary"
+                    ></v-progress-linear>
+                </v-col>
+                <v-col cols="12" sm="12">
+                    <p class="subtitle-2 text-left">Onderzoeken</p>
+                    <v-text-field
+                        v-model="searchResearches"
+                        append-icon="mdi-magnify"
+                        label="Zoeken"
+                        single-line
+                        hide-details
+                        class="mb-2"
+                    ></v-text-field>
+                    <v-simple-table>
+                        <template v-slot:default>
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Onderzoek naam</th>
+                                    <th class="text-left">Locatie</th>
+                                    <th class="text-right">Verwijder</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(research, index) in researches"
+                                    :key="index"
+                                >
+                                    <td>{{ research.name }} </td>
+                                    <td>{{ research.location_id.name }}</td>
+                                    <td class="text-right">
+                                        <v-btn color="error" small @click="remove(research._id)">
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <div class="ma-3" v-if="researches.length == 0">
+                                Geen researches gevonden...
+                            </div>
+                        </template>
+                    </v-simple-table>
                 </v-col>
             </v-row>
         </v-container>
@@ -17,11 +61,39 @@
 </template>
 
 <script>
-    export default {
-        
-    }
+import { ResearchesApi } from "../../api";
+import { DatabaseActions } from "../../actions";
+export default {
+    data() {
+        return {
+            searchResearches: null,
+            downloading: false,
+            researches: [],
+        };
+    },
+    async mounted() {
+        this.researches = await DatabaseActions.getResearches();
+    },
+    methods: {
+        downloadResearches() {
+            this.downloading = true;
+            ResearchesApi.getResearches()
+                .then(async (data) => {
+                    await DatabaseActions.saveResearches(data);
+                    this.researches = await DatabaseActions.getResearches();
+                    this.downloading = false;
+                })
+                .catch((err) => {
+                    console.log("err", err);
+                });
+        },
+        async remove(_id){
+            DatabaseActions.removeResearch(_id);
+            this.researches = await DatabaseActions.getResearches();
+        }
+    },
+};
 </script>
 
 <style lang="css" scoped>
-
 </style>
