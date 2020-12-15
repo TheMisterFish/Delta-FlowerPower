@@ -10,11 +10,11 @@ export class SessionsService {
   ) { }
 
   async findOne(id: string): Promise<SessionsDto> | null {
-    return await this.sessionModel.findById(id).exec();
+    return await this.sessionModel.findById(id).populate("made_by").populate("location_id").exec();
   }
 
   async findAll(): Promise<Session[] | null> {
-    return await this.sessionModel.find().exec();
+    return await this.sessionModel.find().populate("made_by").populate("location_id").exec();
   }
 
   async create(dto: CreateSessionDto): Promise<SessionsDto> {
