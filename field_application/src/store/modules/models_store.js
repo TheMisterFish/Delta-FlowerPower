@@ -1,4 +1,4 @@
-import ModelsApi from "../../api/ModelsApi"
+import WeightsApi from "../../api/WeightsApi"
 import {
     GET_MODELS
 } from "../mutationTypes";
@@ -19,7 +19,7 @@ const models_store = {
         async getModels({
             commit
         }) {
-            const result = await ModelsApi.getModels();
+            const result = await WeightsApi.getModels();
             commit(GET_MODELS, result);
         }
     },

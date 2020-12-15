@@ -142,7 +142,7 @@ export default {
             this.downloading = true;
             //TODO CHANGE HARDCODED DIRECTORY TO THE DIRECTORY WHERE WE WANT TO SAVE THE WEIGHTS
             const filePath = await window.electron.invoke(IPC_CHANNELS.DOWNLOAD_WEIGHTS, {
-                url: `http://localhost:7080/${this.selectedModel.weights[0].filePath.split(/\/(.+)/)[1]}`,
+                url: `http://localhost:3000/${this.selectedModel.weights[0].filePath.split(/\/(.+)/)[1]}`,
                 modelName: this.selectedModel.name
             });
             this.getLocalWeights(this.selectedModel.name)

@@ -118,10 +118,6 @@ export default {
             this.$router.push({ path: "active_sd_research" });
         }
     },
-    created: function () {
-        this.$store.dispatch("getResearches");
-        this.$store.dispatch("getModels");
-    },
 };
 </script>
 

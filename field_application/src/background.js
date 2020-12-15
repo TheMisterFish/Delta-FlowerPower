@@ -28,8 +28,9 @@ import * as Datastore from "nedb-promises"
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-DB_NAMES.RESEARCHDB = null;
-DB_NAMES.MODELDB = null;
+DB_NAMES.LOCAL_RESEARCHDB = null;
+DB_NAMES.API_RESEARCHDB = null;
+DB_NAMES.WEIGHTDB = null;
 
 let pythonProcess = null;
 
@@ -173,16 +174,18 @@ if (isDevelopment) {
 
 
 async function createDbs() {
-    DB_NAMES.RESEARCHDB = Datastore.create({
-        filename: path.join(__dirname, "database", "researches.db"),
+    DB_NAMES.LOCAL_RESEARCHDB = Datastore.create({
+        filename: path.join(__dirname, "database", "local_researches.db"),
         autoload: true
     })
-    DB_NAMES.MODELDB = Datastore.create({
-        filename: path.join(__dirname, "database", "models.db"),
+    DB_NAMES.API_RESEARCHDB = Datastore.create({
+        filename: path.join(__dirname, "database", "api_researches.db"),
         autoload: true
     })
-    const result = await DB_NAMES.RESEARCHDB.find({});
-    console.log(result);
+    DB_NAMES.WEIGHTDB = Datastore.create({
+        filename: path.join(__dirname, "database", "weights.db"),
+        autoload: true
+    })
 }
 
 app.on('ready', createDbs)

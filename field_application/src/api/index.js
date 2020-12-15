@@ -1,9 +1,9 @@
 import UploadApi from "./UploadApi";
-import ModelsApi from "./ModelsApi";
+import WeightsApi from "./WeightsApi";
 import ResearchesApi from "./ResearchesApi";
 
 export {
     UploadApi,
-    ModelsApi,
+    WeightsApi,
     ResearchesApi
 };
