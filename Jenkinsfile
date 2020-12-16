@@ -51,7 +51,7 @@ pipeline {
 
           sh 'Xvfb :0 -screen 0 1024x768x16 & jid=$!'
 
-          sh 'DISPLAY=:0.0 wine cmd ~/.wine/drive_c/python/python-3.8.5.-amd64.exe \
+          sh 'DISPLAY=:0.0 wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe \
               PrependPath=1 \
               && echo "Python Installation complete!"'
               
