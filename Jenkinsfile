@@ -58,8 +58,8 @@ pipeline {
           sh "ls ~/.wine/drive_c/"
           sh "ls ~/.wine/drive_c/windows"
           sh "ls ~/.wine/drive_c/windows/system32"
+          sh "ls ~/.wine/drive_c/windows/syswow64"
          
-          sh 'wine python -m pip --version'
           sh 'wine python3 -m pip --version'
           sh 'wine python36 -m pip --version'
 
