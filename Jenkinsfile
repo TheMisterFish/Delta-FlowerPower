@@ -54,7 +54,7 @@ pipeline {
         //   sh 'DISPLAY=:0.0 wine cmd ~/.wine/drive_c/python/python-3.8.5.-amd64.exe \
         //       PrependPath=1 \
         //       && echo "Python Installation complete!"'
-          sh 'export DISPLAY=:0.0 && ./winetricks ~/.wine/drive_c/python/python-3.8.5.-amd64.exe'
+          sh 'DISPLAY=:0.0 wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /quiet'
           sh "ls ~/.wine/drive_c/"
           sh "ls ~/.wine/drive_c/windows"
           sh "ls ~/.wine/drive_c/windows/system32"
