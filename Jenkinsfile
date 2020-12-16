@@ -54,8 +54,12 @@ pipeline {
           sh 'DISPLAY=:0.0 WINEPREFIX=~/.wine64 wine cmd ~/.wine/drive_c/python/python-3.8.5.-amd64.exe \
               PrependPath=1 \
               && echo "Python Installation complete!"'
+              
           sh 'ls ~/.wine/drive_c/python'
-          sh 'wine "C:\\python\\python.exe" -m pip --version'
+          sh 'ls ~/.wine/drive_c/'
+          sh 'ls ~/.wine/drive_c/Python3'
+          sh 'wine dir'
+          sh 'wine "C:\\Python3\\python.exe" -m pip --version'
 
         //   sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /nogui'
         //   sh 'wine "C:\\Python3\\python.exe" -m pip --version /nogui'
