@@ -82,9 +82,11 @@ pipeline {
 
         sh 'ls ~/.wine/drive_c/'
         sh 'ls ~/.wine/drive_c/Python3'
+        sh 'ls ~/.wine/drive_c/Python3/Scripts'
         sh 'ls ~/.wine/drive_c/Python3 -l'
 
         sh 'wine "C:\\Python3\\python.exe" -V'
+        sh 'wine "C:\\Python3\\python.exe" -m ensurepip -v'
         sh 'wine "C:\\Python3\\python.exe" -m pip --version'
 
         //   sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /nogui'
