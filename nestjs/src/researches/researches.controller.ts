@@ -4,21 +4,19 @@ import {
   Post,
   Body,
   UseGuards,
-  Req,
   Param,
   HttpException,
   HttpStatus,
   Delete,
   Put,
+  Request,
 } from '@nestjs/common';
 import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { HasRoles } from '../common/decorators/roles.decorator';
 import { ResearchesService } from './researches.service';
 import { Research } from './researches.model';
-import { CreateResearchDto } from './dto/create-research.dto';
-import { UpdateResearchDto } from './dto/update-research.dto';
+import { CreateResearchDto, UpdateResearchDto } from './dto';
 import { Roles } from '../common/interfaces/roles.interface';
-
 
 @Controller('researches')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -27,7 +25,10 @@ export class ResearchesController {
   constructor(private readonly researchesService: ResearchesService) {}
 
   @Post()
-  async create(@Req() req, @Body() dto: CreateResearchDto): Promise<Research> {
+  async create(
+    @Request() req,
+    @Body() dto: CreateResearchDto,
+  ): Promise<Research> {
     dto.made_by = req.user;
     return await this.researchesService.create(dto);
   }

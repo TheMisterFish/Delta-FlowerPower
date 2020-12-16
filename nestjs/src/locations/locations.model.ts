@@ -26,7 +26,7 @@ export class Location {
 
   @IsString()
   @IsNotEmpty()
-  @prop({ ref: 'User' })
+  @prop({ ref: User })
   made_by: Ref<User>;
 
   @IsNotEmpty()

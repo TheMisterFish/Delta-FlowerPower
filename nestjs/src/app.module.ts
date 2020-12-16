@@ -12,7 +12,6 @@ import { SessionsController } from './sessions/sessions.controller';
 import { SessionsModule } from './sessions/sessions.module';
 import { AimodelsController } from './aimodels/aimodels.controller';
 import { AimodelsModule } from './aimodels/aimodels.module';
-import { LocationsController } from './locations/locations.controller';
 import { LocationsModule } from './locations/locations.module';
 import { ResearchesModule } from './researches/researches.module';
 
@@ -36,14 +35,9 @@ import { ResearchesModule } from './researches/researches.module';
     SessionsModule,
     AimodelsModule,
     LocationsModule,
-    ResearchesModule
+    ResearchesModule,
   ],
-  controllers: [
-    AppController,
-    SessionsController,
-    AimodelsController,
-    LocationsController,
-  ],
+  controllers: [AppController, SessionsController, AimodelsController],
   providers: [AppService],
 })
 export class AppModule {}

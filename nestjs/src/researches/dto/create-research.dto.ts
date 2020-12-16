@@ -1,4 +1,3 @@
-import { prop, Ref } from '@typegoose/typegoose';
 import { IsString, IsNotEmpty, MinLength } from 'class-validator';
 import { Location } from 'src/locations/locations.model';
 import { User } from 'src/users/users.model';
@@ -15,9 +14,9 @@ export class CreateResearchDto {
   description: string;
 
   @IsNotEmpty()
-  location: Ref<Location>;
+  location: Location;
 
-  made_by: Ref<User>;
+  made_by: User;
 
   created_at: Date;
 

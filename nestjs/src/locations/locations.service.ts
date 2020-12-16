@@ -1,37 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from "nestjs-typegoose";
 import { ReturnModelType } from "@typegoose/typegoose";
-import { CreateLocationDto, UpdateLocationDto, LocationsDto } from './dto';
+import { CreateLocationDto, UpdateLocationDto } from './dto';
 
 import { Location } from "./locations.model";
 
 @Injectable()
 export class LocationsService {
   constructor(
-    @InjectModel(Location) private readonly locationModel: ReturnModelType<typeof LocationsDto>
+    @InjectModel(Location) private readonly locations: ReturnModelType<typeof Location>
   ) { }
 
-  async findOne(id: string): Promise<LocationsDto> | null {
-    return await this.locationModel.findById(id).populate('made_by').exec();
+  async findOne(id: string): Promise<Location> | null {
+    return await this.locations.findById(id).populate('made_by').exec();
   }
 
-  async findAll(): Promise<LocationsDto[] | null> {
-    return await this.locationModel.find().populate('made_by').exec();
+  async findAll(): Promise<Location[] | null> {
+    return await this.locations.find().populate('made_by').exec();
   }
 
-  async create(dto: CreateLocationDto): Promise<LocationsDto> {
-    const createdLocation = new this.locationModel(dto);
-    return await createdLocation.save();
+  async create(dto: CreateLocationDto): Promise<Location> {
+    const location = await new this.locations(dto).save();
+    return await location.populate('made_by').execPopulate();
   }
 
-  async update(id: string, dto: UpdateLocationDto): Promise<LocationsDto> {
+  async update(id: string, dto: UpdateLocationDto): Promise<Location> {
     dto.updated_at = new Date();
-    return await this.locationModel.findByIdAndUpdate(id, { $set: dto }, { new: true });
+    return await this.locations.findByIdAndUpdate(id, { $set: dto }, { new: true }).populate('made_by');
   }
 
-  async deleteOne(id: string): Promise<any> {
-    const destroyed: any = await this.locationModel.deleteOne({ _id: id });
-    destroyed.id = id;
-    return destroyed;
+  async deleteOne(id: string): Promise<void> {
+    await this.locations.findByIdAndDelete(id);
   }
 }

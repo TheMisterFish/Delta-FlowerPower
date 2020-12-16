@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { Research } from './researches.model';
-import { CreateResearchDto } from './dto/create-research.dto';
-import { UpdateResearchDto } from './dto/update-research.dto';
+import { CreateResearchDto, UpdateResearchDto } from './dto';
 
 @Injectable()
 export class ResearchesService {
@@ -38,14 +37,15 @@ export class ResearchesService {
   }
 
   async update(id: string, dto: UpdateResearchDto): Promise<Research> {
-    return await this.researches.findByIdAndUpdate(
-      id,
-      { $set: dto },
-      { new: true },
-    );
+    dto.updated_at = new Date();
+
+    return await this.researches
+      .findByIdAndUpdate(id, { $set: dto }, { new: true })
+      .populate('made_by')
+      .populate('location');
   }
 
-  async deleteOne(id: string) {
+  async deleteOne(id: string): Promise<void> {
     await this.researches.findByIdAndDelete(id);
   }
 }

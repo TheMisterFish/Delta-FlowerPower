@@ -2,33 +2,30 @@ import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, HttpExcepti
 import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { HasRoles } from '../common/decorators/roles.decorator';
 import { LocationsService } from './locations.service';
-import { CreateLocationDto, UpdateLocationDto, LocationsDto } from "./dto";
+import { CreateLocationDto, UpdateLocationDto } from "./dto";
 import { Location } from "./locations.model";
+import { Roles } from 'src/common/interfaces/roles.interface';
 
 @Controller('locations')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@HasRoles(Roles.researcher)
 export class LocationsController {
 
   constructor(private readonly locationsService: LocationsService) { }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Post()
-  async create(@Request() req, @Body() createLocationDto: CreateLocationDto) {
-    createLocationDto.made_by = req.user._id;
-    return await this.locationsService.create(createLocationDto);
+  async create(@Request() req, @Body() dto: CreateLocationDto) {
+    dto.made_by = req.user;
+    return await this.locationsService.create(dto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Get()
   async findAll(): Promise<Location[]> {
     return await this.locationsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<LocationsDto> {
+  async findOne(@Param('id') id: string): Promise<Location> {
     return await this.locationsService.findOne(id).catch(err => {
       if (err.name === 'CastError')
         err.message = "Could not find " + id;
@@ -38,11 +35,9 @@ export class LocationsController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateLocationDto: UpdateLocationDto) {
-    return await this.locationsService.update(id, updateLocationDto).catch(err => {
+  async update(@Param('id') id: string, @Body() dto: UpdateLocationDto) {
+    return await this.locationsService.update(id, dto).catch(err => {
       if (err.name === 'CastError')
         err.message = "Could not update " + id;
       throw new HttpException({
@@ -51,8 +46,7 @@ export class LocationsController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('admin')
+  @HasRoles(Roles.admin)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.locationsService.deleteOne(id).catch(err => {
