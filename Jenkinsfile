@@ -79,7 +79,7 @@ pipeline {
 
         sh 'ls ~/.wine/drive_c/'
 
-        sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /quiet'
+        sh 'DISPLAY=:0.0 wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /quiet'
         sh 'wine "C:\\Python3\\python.exe" -m pip --version'
 
         //   sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /nogui'
