@@ -35,22 +35,29 @@ pipeline {
       }
       steps {
           sh 'apt-get update && pip3 install --upgrade pip'
-          sh 'apt-get install -y wine'
+          sh 'apt-get install -y wine xvfb'
           
           sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32'
           sh 'wget -N https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
 
           // Make dir
           sh 'winecfg'
+          // get python   
           sh 'mkdir ~/.wine/drive_c/python'
           sh 'wget -O ~/.wine/drive_c/python/python-3.8.5.-amd64.exe https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
-
+    
           sh 'chmod +x winetricks'
           sh './winetricks -q win10'
 
-          sh 'ls ~/.wine/drive_c/'
-          sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /nogui'
-          sh 'wine "C:\\Python3\\python.exe" -m pip --version /nogui'
+          sh 'Xvfb :0 -screen 0 1024x768x16 & jid=$!'
+
+          sh 'DISPLAY=:0.0 WINEPREFIX=~/.wine64 wine cmd ~/.wine/drive_c/python/python-3.8.5.-amd64.exe \
+              PrependPath=1 \
+              && echo "Python Installation complete!"'
+          sh 'wine "C:\\Python3\\python.exe" -m pip --version'
+
+        //   sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /nogui'
+        //   sh 'wine "C:\\Python3\\python.exe" -m pip --version /nogui'
       }
       // steps { 
       //   script {
