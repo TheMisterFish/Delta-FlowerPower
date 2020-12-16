@@ -55,10 +55,10 @@ pipeline {
               PrependPath=1 \
               && echo "Python Installation complete!"'
               
-          sh "ls '~/.wine/drive_c/'"
-          sh "ls '~/.wine/drive_c/Program Files'"
-          sh "ls '~/.wine/drive_c/Program Files (x86)'"
-          sh "ls '~/.wine/drive_c/ProgramData'"
+          sh "ls ~/.wine/drive_c/"
+          sh "ls ~/.wine/drive_c/'Program Files'"
+          sh "ls ~/.wine/drive_c/'Program Files (x86)'"
+          sh "ls ~/.wine/drive_c/'ProgramData'"
           sh "wine dir"
           sh 'wine "C:\\Python3\\python.exe" -m pip --version'
 
