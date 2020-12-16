@@ -49,7 +49,7 @@ pipeline {
           sh './winetricks -q win10'
 
           sh 'ls ~/.wine/drive_c/'
-
+          sh 'export DISPLAY=:0'
           sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe'
           sh 'wine "C:\\Python3\\python.exe" -m pip --version'
       }
