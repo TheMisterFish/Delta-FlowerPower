@@ -65,7 +65,7 @@ pipeline {
         sh 'apt-get update && pip3 install --upgrade pip'
         sh 'apt-get install -y wine'
         
-        sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32 xvfb'
+        sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine xvfb'
         sh 'wget -N https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
 
         // Make dir
