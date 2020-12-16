@@ -71,14 +71,14 @@ pipeline {
         // Make dir
         sh 'winecfg'
         sh 'mkdir ~/.wine/drive_c/python'
-        sh 'wget -O ~/.wine/drive_c/python/python-3.8.5.-amd64.exe https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe'
+        sh 'wget -O ~/.wine/drive_c/python/python-3.6.5.-amd64.exe https://www.python.org/ftp/python/3.6.5/python-3.6.5-amd64.exe'
         //   sh 'apt-get install -y wine xvfb'
 
         sh 'chmod +x winetricks'
         sh './winetricks -q win10'
 
         sh 'Xvfb :0 -screen 0 1024x768x16 & jid=$!'
-        sh 'DISPLAY=:0.0 wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir="C:/Python3"'
+        sh 'DISPLAY=:0.0 wine ~/.wine/drive_c/python/python-3.6.5.-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir="C:/Python3"'
 
         sh 'ls ~/.wine/drive_c/'
         sh 'ls ~/.wine/drive_c/Python3'
