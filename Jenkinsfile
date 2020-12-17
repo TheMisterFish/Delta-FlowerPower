@@ -34,7 +34,7 @@ pipeline {
     //       }
     //   }
       steps {
-        sh 'docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows -c "apt-get update -y && apt-get install -y wget && /wine python --version && /wine python -m pip --version"'
+        sh 'docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows -c "apt-get update -y && apt-get install -y wget && whoami && wine python --version && wine python -m pip --version"'
         // sh 'ls ~/.'
         // sh 'ls ./'
         // sh 'ls ./winetricks'
