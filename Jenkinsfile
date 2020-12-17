@@ -25,11 +25,18 @@ pipeline {
         writeFile file: '.env', text: ''
       }
     }
+    stage("Empty docker") {
+      steps {
+        sh 'docker rm -f $(docker ps -a -q)'
+        sh 'docker volume rm $(docker volume ls -q)'
+        sh 'docker system prune'
+      }
+    }
     // Run field application tests
     stage('Buid Field Application - Python') {
       agent {
           docker { 
-            image 'cdrx/pyinstaller-windows:latest'
+            image 'cdrx/pyinstaller-windows:python3-32bit'
             args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
           }
       }
