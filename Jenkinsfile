@@ -29,7 +29,7 @@ pipeline {
     stage('Buid Field Application - Python') {
       agent {
           docker { 
-            image 'cdrx/pyinstaller-windows:python3-32bit'
+            image 'cdrx/pyinstaller-windows:latest'
             args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
           }
       }
@@ -38,7 +38,7 @@ pipeline {
         sh 'ls'
         sh 'wine --version'
         sh 'wine python --version'
-        sh 'wine python -c \'print("hello world")\''
+        sh 'sudo wine python -c \'print("hello world")\''
         sh 'wine python -m pip install -U pip'
         sh 'wine python -m pip --version'
       }
