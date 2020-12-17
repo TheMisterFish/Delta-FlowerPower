@@ -29,7 +29,7 @@ pipeline {
     stage('Buid Field Application - Python') {
       agent {
           docker { 
-            image 'alpine:latest'
+            image 'ubuntu:16.04'
             args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
           }
       }
@@ -61,7 +61,7 @@ pipeline {
          
         //   sh 'wine python3 -m pip --version'
         //   sh 'wine python36 -m pip --version'
-
+        sh 'ENV DEBIAN_FRONTEND noninteractive'
         sh 'apt-get update && pip3 install --upgrade pip'
         sh 'apt-get install -y wine'
         
