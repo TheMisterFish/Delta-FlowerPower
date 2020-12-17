@@ -38,6 +38,7 @@ pipeline {
         sh 'ls'
         sh 'wine --version'
         sh 'wine python --version'
+        sh 'wine python -c \'print("hello world")\''
         sh 'wine python -m pip install -U pip'
         sh 'wine python -m pip --version'
       }
