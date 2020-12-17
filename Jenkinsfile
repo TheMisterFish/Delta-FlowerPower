@@ -61,7 +61,6 @@ pipeline {
          
         //   sh 'wine python3 -m pip --version'
         //   sh 'wine python36 -m pip --version'
-        sh 'ENV DEBIAN_FRONTEND noninteractive'
         sh 'apt-get update && pip3 install --upgrade pip'
         sh 'apt-get install -y wine'
         
