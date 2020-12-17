@@ -25,13 +25,6 @@ pipeline {
         writeFile file: '.env', text: ''
       }
     }
-    stage("Empty docker") {
-      steps {
-        sh 'docker system prune -f'
-        // sh 'docker volume rm $(docker volume ls -q)'
-        // sh 'docker system prune'
-      }
-    }
     // Run field application tests
     stage('Buid Field Application - Python') {
       agent {
@@ -46,9 +39,7 @@ pipeline {
         sh 'whoami'
         sh 'wine --version'
         sh 'wine python --version'
-        sh 'wine python -c \'print("hello world")\''
-        sh 'wine python -m pip install -U pip'
-        sh 'wine python -m pip --version'
+        sh 'wine py -m pip --version'
       }
       // steps { 
       //   script {
