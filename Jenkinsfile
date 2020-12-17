@@ -27,7 +27,7 @@ pipeline {
     }
     stage("Empty docker") {
       steps {
-        sh 'docker system prune'
+        sh 'docker system prune -f'
         // sh 'docker volume rm $(docker volume ls -q)'
         // sh 'docker system prune'
       }
