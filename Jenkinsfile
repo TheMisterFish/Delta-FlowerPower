@@ -29,7 +29,7 @@ pipeline {
     stage('Buid Field Application - Python') {
       agent {
           docker { 
-            image 'ubuntu:18.04'
+            image 'cdrx/pyinstaller-windows:python3-32bit'
             args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
           }
       }
@@ -62,30 +62,32 @@ pipeline {
         //   sh 'wine python3 -m pip --version'
         //   sh 'wine python36 -m pip --version'
         sh 'apt-get update'
-        sh 'apt-get install -y wine'
+        // sh 'apt-get install -y wine'
         
-        sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32 xvfb'
-        sh 'wget -N https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
+        // sh 'dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32 xvfb'
+        // sh 'wget -N https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
 
-        // Make dir
-        sh 'winecfg'
-        sh 'mkdir ~/.wine/drive_c/python'
-        sh 'wget -O ~/.wine/drive_c/python/python-3.8.5.exe https://www.python.org/ftp/python/3.8.5/python-3.8.5.exe'
-        //   sh 'apt-get install -y wine xvfb'
+        // // Make dir
+        // sh 'winecfg'
+        // sh 'mkdir ~/.wine/drive_c/python'
+        // sh 'wget -O ~/.wine/drive_c/python/python-3.8.5.exe https://www.python.org/ftp/python/3.8.5/python-3.8.5.exe'
+        // //   sh 'apt-get install -y wine xvfb'
 
-        sh 'chmod +x winetricks'
-        sh './winetricks -q win10'
+        // sh 'chmod +x winetricks'
+        // sh './winetricks -q win10'
 
-        sh 'Xvfb :0 -screen 0 1024x768x16 & jid=$!'
-        sh 'DISPLAY=:0.0 wine ~/.wine/drive_c/python/python-3.8.5.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir="C:/Python3"'
+        // sh 'Xvfb :0 -screen 0 1024x768x16 & jid=$!'
+        // sh 'DISPLAY=:0.0 wine ~/.wine/drive_c/python/python-3.8.5.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir="C:/Python3"'
 
-        sh 'ls ~/.wine/drive_c/'
-        sh 'ls ~/.wine/drive_c/Python3'
-        sh 'ls ~/.wine/drive_c/Python3/Scripts'
-        sh 'ls ~/.wine/drive_c/Python3 -l'
-
-        sh 'wine "C:\\Python3\\python.exe" -V'
-        sh 'wine "C:\\Python3\\python.exe" -m pip --version'
+        // sh 'ls ~/.wine/drive_c/'
+        // sh 'ls ~/.wine/drive_c/Python3'
+        // sh 'ls ~/.wine/drive_c/Python3/Scripts'
+        // sh 'ls ~/.wine/drive_c/Python3 -l'
+        sh 'ls'
+        sh 'wine --version'
+        sh 'wine python --version'
+        // sh 'wine "C:\\Python3\\python.exe" -V'
+        // sh 'wine "C:\\Python3\\python.exe" -m pip --version'
 
         //   sh 'wine ~/.wine/drive_c/python/python-3.8.5.-amd64.exe /nogui'
         //   sh 'wine "C:\\Python3\\python.exe" -m pip --version /nogui'
