@@ -26,22 +26,43 @@ pipeline {
       }
     }
     // Run field application tests
-    stage('Buid Field Application - Python') {
-      agent {
-          docker { 
-            image 'cdrx/pyinstaller-windows:latest'
-            args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
-          }
-      }
-      steps {
-        sh 'apt-get update'
-        sh 'ls'
-        sh 'wine --version'
-        sh 'wine python --version'
-        sh 'sudo wine python -c \'print("hello world")\''
-        sh 'wine python -m pip install -U pip'
-        sh 'wine python -m pip --version'
-      }
+    stage ('Build Docker Image') {
+        steps {
+            script {
+                // Build the Docker image for compiling
+                dockerImage = docker.build("cdrx/pyinstaller-windows:latest")
+            }
+        }
+    }
+    stage ('Run UnitTests') {
+        steps {
+            script {
+                dockerImage.inside("-itu root") {
+                    sh 'ls'
+                    sh 'wine --version'
+                    sh 'wine python --version'
+                    sh 'wine python -m pip install -U pip'
+                    sh 'wine python -m pip --version'
+                }
+            }
+        }
+    }
+    // stage('Buid Field Application - Python') {
+    //   agent {
+    //       docker { 
+    //         image 'cdrx/pyinstaller-windows:latest'
+    //         args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
+    //       }
+    //   }
+    //   steps {
+    //     sh 'apt-get update'
+    //     sh 'ls'
+    //     sh 'wine --version'
+    //     sh 'wine python --version'
+    //     sh 'sudo wine python -c \'print("hello world")\''
+    //     sh 'wine python -m pip install -U pip'
+    //     sh 'wine python -m pip --version'
+    //   }
       // steps { 
       //   script {
       //     withPythonEnv('System-CPython-3'){
