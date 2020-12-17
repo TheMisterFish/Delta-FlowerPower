@@ -40,6 +40,7 @@ pipeline {
         sh 'whoami'
         sh 'wine --version'
         sh 'wine python --version'
+        sh 'wine pip help'
         sh 'wine py -m pip --version'
       }
       // steps { 
