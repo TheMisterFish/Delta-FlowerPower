@@ -84,7 +84,7 @@ pipeline {
       //     }   
       //   }
       // }   
-    }
+    // }
     // stage('Buid Field Application - Electron') {
     //   steps { 
     //     dir("field_application") {
