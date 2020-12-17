@@ -38,7 +38,7 @@ pipeline {
         sh 'ls'
         sh 'wine --version'
         sh 'wine python --version'
-        sh 'wine pip3 --version'
+        sh 'wine python -m pip --version'
       }
       // steps { 
       //   script {
