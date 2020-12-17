@@ -27,24 +27,24 @@ pipeline {
     }
     // Run field application tests
     stage('Buid Field Application - Python') {
-      agent {
-          docker { 
-            image 'cdrx/pyinstaller-windows:python3-32bit'
-            args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
-          }
-      }
+    //   agent {
+    //       docker { 
+    //         image 'cdrx/pyinstaller-windows:python3-32bit'
+    //         args '-u root:sudo -v $HOME/workspace/build_field_application:/build_field_application'
+    //       }
+    //   }
       steps {
-        sh 'apt-get update'
-        sh 'ls ~/.'
-        sh 'ls ./'
-        sh 'ls ./winetricks'
-        sh 'whoami'
-        sh 'wine --version'
-        sh 'wine python --version'
-        sh 'winetricks --version'
-        sh 'winetricks python --version'
-        sh 'wine pip help'
-        sh 'wine py -m pip --version'
+        sh 'docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows -c "apt-get update -y && apt-get install -y wget && /wine python --version && /wine python -m pip --version"'
+        // sh 'ls ~/.'
+        // sh 'ls ./'
+        // sh 'ls ./winetricks'
+        // sh 'whoami'
+        // sh 'wine --version'
+        // sh 'wine python --version'
+        // sh 'winetricks --version'
+        // sh 'winetricks python --version'
+        // sh 'wine pip help'
+        // sh 'wine py -m pip --version'
       }
       // steps { 
       //   script {
