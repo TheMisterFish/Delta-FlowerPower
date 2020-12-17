@@ -27,9 +27,9 @@ pipeline {
     }
     stage("Empty docker") {
       steps {
-        sh 'docker rm -f $(docker ps -a -q)'
-        sh 'docker volume rm $(docker volume ls -q)'
         sh 'docker system prune'
+        // sh 'docker volume rm $(docker volume ls -q)'
+        // sh 'docker system prune'
       }
     }
     // Run field application tests
