@@ -36,7 +36,8 @@ pipeline {
       steps {
         sh 'apt-get update'
         sh 'ls ~/.'
-        sh 'ls winetricks/winetricks'
+        sh 'ls ./'
+        sh 'ls ./winetricks'
         sh 'whoami'
         sh 'wine --version'
         sh 'wine python --version'
