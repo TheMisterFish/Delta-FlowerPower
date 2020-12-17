@@ -35,48 +35,14 @@ pipeline {
       }
       steps {
         sh 'apt-get update'
-        sh 'ls'
+        sh 'ls ~/.'
         sh 'ls winetricks'
         sh 'whoami'
         sh 'wine --version'
         sh 'wine python --version'
-        sh 'wine pip help'
+        sh 'pip help'
         sh 'wine py -m pip --version'
       }
-      // steps { 
-      //   script {
-      //     withPythonEnv('System-CPython-3'){
-      //       echo 'Installing python requirements'
-      //       // wine  "--version"
-      //       sh "ls"
-      //       sh "ls .."
-      //       sh "ls ../.."
-      //       sh "ls ../../.."
-      //       dir("field_application/pycalc") {
-      //         // sh "python -V"
-      //         // sh "python3 -V"
-      //         // sh "pip3 install -r requirements.txst"
-      //       }
-      //       echo 'Building field application'
-      //       dir("field_application") {
-      //         // sh 'pyinstaller pycalc/api.py --noconfirm --distpath pycalcdist'
-      //       }
-      //     }   
-      //   }
-      // }   
-    }
-    // stage('Buid Field Application - Electron') {
-    //   steps { 
-    //     dir("field_application") {
-    //       // sh 'npm prune'
-    //       // sh 'npm install'
-    //       // sh 'npm run rebuild_electron'
-    //       // sh "npm run electron_build"
-    //       // sh "ls"
-    //       // sh "ls ./release-builds"
-    //     }
-    //   }      
-    // }
     
     // Run NestJS jest test
     stage('NestJS API Test') {
@@ -84,9 +50,6 @@ pipeline {
         echo 'Testing NestJS API using Jest'
         sh 'node -v'
         dir("nestjs") {
-          // sh 'npm prune'
-          // sh 'npm install'
-          // sh 'npm test'
         }
       }
     }
