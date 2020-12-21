@@ -1,5 +1,5 @@
+import { File } from "src/common/models/file/file.model"
 import { BoundingBox } from "./boundingBox"
-import { File } from "./file"
 
 export class SessionResult {
     file: File
