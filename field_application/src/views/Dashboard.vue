@@ -67,28 +67,124 @@
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="12">
-                    <v-card class="mx-auto card-spacer">
-                        <v-card-text>
-                            <div>Onderzoek 1</div>
-                            <div class="text--primary">
-                                Dit is een onderzoek voorbeeld<br />
-                                van onderzoek 1.
+                    <v-card
+                        class="mx-auto card-spacer"
+                        v-for="(research, index) in researches"
+                        :key="index"
+                    >
+                        <div class="row">
+                            <div class="col-4">
+                                <v-card-text>
+                                    <v-list-item two-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Onderzoek:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>
+                                                {{
+                                                    research.research_settings
+                                                        .research.name
+                                                }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item three-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Locatie:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>
+                                                {{
+                                                    research.research_settings
+                                                        .research.location_id
+                                                        .name
+                                                }}
+                                            </v-list-item-subtitle>
+                                            <v-list-item-subtitle>
+                                                {{
+                                                    research.research_settings
+                                                        .research.location_id
+                                                        .description
+                                                }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-card-text>
                             </div>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn text color="primary accent-4">
-                                Bekijk data en opties
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                    <v-card class="mx-auto card-spacer">
-                        <v-card-text>
-                            <div>Onderzoek 2</div>
-                            <div class="text--primary">
-                                Dit is een onderzoek voorbeeld<br />
-                                van onderzoek 2.
+                            <div class="col-4">
+                                <v-card-text>
+                                    <v-list-item two-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Type
+                                                onderzoek:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>{{
+                                                research.research_type
+                                            }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item two-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Uitgevoerd:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>{{
+                                                research.executed ? research.executed_date : "Nee"
+                                            }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item two-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Aantal waypoints:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>{{
+                                                research.waypoint_settings.points.length
+                                            }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-card-text>
                             </div>
-                        </v-card-text>
+                            <div class="col-4">
+                                <v-card-text>
+                                    <v-list-item two-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Type
+                                                onderzoek:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>{{
+                                                research.research_type
+                                            }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item two-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Uitgevoerd:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>{{
+                                                research.executed ? research.executed_date : "Nee"
+                                            }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item two-line>
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                >Date
+                                                geupload:</v-list-item-title
+                                            >
+                                            <v-list-item-subtitle>{{
+                                                research.uploaded == true
+                                                    ? research.upload_date
+                                                    : "Nee"
+                                            }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-card-text>
+                            </div>
+                        </div>
                         <v-card-actions>
                             <v-btn text color="primary accent-4">
                                 Bekijk data en opties
@@ -98,14 +194,8 @@
                 </v-col>
             </v-row>
         </v-container>
-        <v-btn
-            class="settings_button"
-            color="primary"
-            fab
-            dark
-            to="settings"
-            >
-                <v-icon>mdi-settings</v-icon>
+        <v-btn class="settings_button" color="primary" fab dark to="settings">
+            <v-icon>mdi-settings</v-icon>
         </v-btn>
     </div>
 </template>
@@ -116,13 +206,19 @@ import { mdiMicroSd, mdiQuadcopter } from "@mdi/js";
 import { IPC_MESSAGES, IPC_CHANNELS } from "../constants.js";
 import { IpcMessage } from "../IpcMessage.js";
 import { mapState } from "vuex";
+import { LocalDatabaseActions } from "../actions";
 
 export default Vue.extend({
     name: "dashboard",
     data() {
         return {
             search_prev_research: null,
+            researches: [],
         };
+    },
+    async mounted() {
+        this.researches = await LocalDatabaseActions.getLocalResearches();
+        console.log(this.researches);
     },
     methods: {
         async selectInputFolder() {
@@ -132,7 +228,7 @@ export default Vue.extend({
                 ipcMessage
             );
 
-            if(response !== undefined) {
+            if (response !== undefined) {
                 this.$store.dispatch("setPath", response);
                 this.$router.push("/create_sd_research");
             }
@@ -156,7 +252,7 @@ export default Vue.extend({
 .v-btn__content {
     width: 100%;
 }
-.settings_button{
+.settings_button {
     position: fixed;
     bottom: 10px;
     right: 10px;

@@ -6,6 +6,7 @@
             <v-tabs v-model="tabs" right>
                 <v-tab>Onderzoeken</v-tab>
                 <v-tab>AI</v-tab>
+                <v-tab>Lokale onderzoeken</v-tab>
             </v-tabs>
         </v-toolbar>
 
@@ -17,7 +18,7 @@
                 <ai-settings></ai-settings>
             </v-tab-item>
             <v-tab-item>
-                
+                <local-research-settings></local-research-settings>
             </v-tab-item>
         </v-tabs-items>
         </div>
@@ -26,6 +27,7 @@
 <script>
 import AiSettings from "@/components/setting_components/AiSettingsComponent.vue";
 import ResearchSettings from "@/components/setting_components/ResearchSettingsComponent.vue";
+import LocalResearchSettings from "@/components/setting_components/LocalResearchSettingsComponent.vue";
 export default {
     data () {
     return {
@@ -34,7 +36,8 @@ export default {
     },
     components: {
         AiSettings,
-        ResearchSettings
+        ResearchSettings,
+        LocalResearchSettings
     },
 }
 </script>

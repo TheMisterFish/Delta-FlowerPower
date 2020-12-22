@@ -112,7 +112,7 @@
 
 <script>
 import { mdiEarth } from "@mdi/js";
-import { DatabaseActions } from "../../actions";
+import { ApiDatabaseActions } from "../../actions";
 import { ResearchesApi } from "../../api";
 
 export default {
@@ -145,19 +145,20 @@ export default {
         },
     },
     async mounted() {
-        this.researches = await DatabaseActions.getResearches();
+        this.researches = await ApiDatabaseActions.getResearches();
     },
     methods: {
         downloadResearches() {
             this.downloading = true;
             ResearchesApi.getResearches()
                 .then(async (data) => {
-                    await DatabaseActions.saveResearches(data);
-                    this.researches = await DatabaseActions.getResearches();
+                    await ApiDatabaseActions.saveResearches(data);
+                    this.researches = await ApiDatabaseActions.getResearches();
                     this.downloading = false;
                 })
                 .catch((err) => {
                     console.log("err", err);
+                    this.downloading = false;
                 });
         },
         selectResearch(research) {
@@ -165,12 +166,11 @@ export default {
             //TODO RENAME LOCATION_ID TO LOCATION
             let pos1 = research.location_id.lat_long_point_one.split(',');
             let pos2 = research.location_id.lat_long_point_two.split(',');
-            this.research_settings.name = research.name;
             this.research_settings.pos_x_1 = Number(pos1[0].trim());
             this.research_settings.pos_y_1 = Number(pos1[1].trim());
             this.research_settings.pos_x_2 = Number(pos2[0].trim());
             this.research_settings.pos_y_2 = Number(pos2[1].trim());
-            console.log(this.research_settings);
+            this.research_settings.research = research
         },
     },
 };

@@ -33,7 +33,7 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-btn :disabled="!research_settings.name" color="primary" @click="e1 = 2"> Verder </v-btn>
+                    <v-btn :disabled="!research_settings.research.name" color="primary" @click="e1 = 2"> Verder </v-btn>
                     <v-btn text @click="cancel()"> Terug </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="2">
@@ -76,14 +76,21 @@ export default {
         return {
             e1: 1,
             research_settings: {
-                name: null,
-                pos_1: null,
-                pos_2: null,
+                research: {
+                    name: null,
+                    description: null,
+                },
+                pos_x_1: 51.450762458205254,
+                pos_y_1: 5.454901457596913,
+                pos_x_2: 51.45058745837186,
+                pos_y_2: 5.455550550835136,
             },
             process_settings: {
                 model: null,
-                weight: null,
-                image_width: null,
+                weights: {
+                    name: null,
+                },
+                detect_width: 640,
                 confidence: 25,
             },
         };
@@ -112,7 +119,7 @@ export default {
             );
             this.$store.dispatch("setAiSettings", {
                 confidence: this.process_settings.confidence,
-                image_size: this.process_settings.image_width,
+                image_size: this.process_settings.detect_width,
             });
 
             this.$router.push({ path: "active_sd_research" });

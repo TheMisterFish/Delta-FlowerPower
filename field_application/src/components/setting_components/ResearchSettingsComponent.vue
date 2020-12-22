@@ -55,6 +55,15 @@
                         </template>
                     </v-simple-table>
                 </v-col>
+                <v-col cols="12 mt-10" sm="12">
+                    <p class="subtitle-2 text-left">Onderzoeken database resetten</p>
+                    <v-btn
+                        color="error"
+                        class="mb-4"
+                        @click="resetDatabase()"
+                        >Reset database</v-btn
+                    >
+                </v-col>
             </v-row>
         </v-container>
     </div>
@@ -62,7 +71,7 @@
 
 <script>
 import { ResearchesApi } from "../../api";
-import { DatabaseActions } from "../../actions";
+import { ApiDatabaseActions } from "../../actions";
 export default {
     data() {
         return {
@@ -72,15 +81,15 @@ export default {
         };
     },
     async mounted() {
-        this.researches = await DatabaseActions.getResearches();
+        this.researches = await ApiDatabaseActions.getResearches();
     },
     methods: {
         downloadResearches() {
             this.downloading = true;
             ResearchesApi.getResearches()
                 .then(async (data) => {
-                    await DatabaseActions.saveResearches(data);
-                    this.researches = await DatabaseActions.getResearches();
+                    await ApiDatabaseActions.saveResearches(data);
+                    this.researches = await ApiDatabaseActions.getResearches();
                     this.downloading = false;
                 })
                 .catch((err) => {
@@ -88,8 +97,13 @@ export default {
                 });
         },
         async remove(_id){
-            DatabaseActions.removeResearch(_id);
-            this.researches = await DatabaseActions.getResearches();
+            ApiDatabaseActions.removeResearch(_id);
+            this.researches = await ApiDatabaseActions.getResearches();
+        },
+        async resetDatabase(){
+            if(confirm("Weet je zeker dat je de lokale database wilt resetten?")){
+                await ApiDatabaseActions.resetApiResearches();
+            }
         }
     },
 };

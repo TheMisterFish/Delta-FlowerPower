@@ -62,7 +62,7 @@
 
 <script>
 import { WeightsApi } from "../../api";
-import { DatabaseActions } from "../../actions";
+import { WeightDatabase } from "../../actions";
 export default {
     data() {
         return {
@@ -72,15 +72,15 @@ export default {
         };
     },
     async mounted() {
-        this.weights = await DatabaseActions.getWeights();
+        this.weights = await WeightDatabase.getWeights();
     },
     methods: {
         downloadWeights() {
             this.downloading = true;
             WeightsApi.getWeights()
                 .then(async (data) => {
-                    await DatabaseActions.saveWeights(data);
-                    this.weights = await DatabaseActions.getWeights();
+                    await WeightDatabase.saveWeights(data);
+                    this.weights = await WeightDatabase.getWeights();
                     this.downloading = false;
                 })
                 .catch((err) => {
@@ -88,8 +88,8 @@ export default {
                 });
         },
         async remove(_id){
-            DatabaseActions.removeWeight(_id);
-            this.weights = await DatabaseActions.getWeights();
+            WeightDatabase.removeWeight(_id);
+            this.weights = await WeightDatabase.getWeights();
         }
     },
 };

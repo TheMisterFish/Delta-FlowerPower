@@ -11,11 +11,7 @@ const alerts_store = {
     },
     mutations: {
         alert(state, payload) {
-            if (payload.alert_text) {
-                state.alert_text = payload.alert_text
-            } else {
-                state.alert_text = "Onbekende bericht"
-            }
+            state.alert_text = payload.alert_text
             if(state.alert_active){
                 state.alert_active = false;
             }
@@ -34,8 +30,11 @@ const alerts_store = {
         api_response({
             commit
         }, payload) {
+            var error = {
+                alert_text: "Netwerk error"
+            };
             if (payload.err) {
-                let error = {
+                error = {
                     alert_text: "Error code: " + payload.err.status
                 };
                 switch (payload.err.status) {
@@ -68,8 +67,9 @@ const alerts_store = {
                             error.alert_text = "Er is iets fouts gegaan, sorry voor het ongemak.";
                         }
                 }
-                commit("alert", error);
             }
+            commit("alert", error);
+
         },
     },
     getters: {

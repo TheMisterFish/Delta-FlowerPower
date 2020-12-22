@@ -8,7 +8,7 @@
         <v-select
             :disabled="process_disabled"
             v-model="selectedModel"
-            :items="models.models"
+            :items="models"
             item-text="name"
             item-value="_id"
             label="Select"
@@ -53,7 +53,7 @@
             label="Detectie afbeelding grote (px)"
             type="number"
             hint="Standaard: 640 pixels"
-            v-model="process_settings.image_width"
+            v-model="process_settings.detect_width"
         ></v-text-field>
         <br />
         <v-slider
@@ -80,7 +80,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import * as axios from "axios";
 import { IPC_CHANNELS } from "../../constants";
 
@@ -115,6 +114,7 @@ export default {
                 "☹️",
             ],
             downloading: false,
+            models: ["YoloV5"]
         };
     },
     computed: {
@@ -122,30 +122,33 @@ export default {
             if(!this.selectedModel) return [];
             
             return this.ai_weights.filter((w) => {
-                return w.modelName === "YoloV5";
+                return w.modelName.toLowerCase() === "yolov5";
             });
         },
-        ...mapState(["models"]),
     },
     watch: {
         selectedModel: async function (ai_type) {
-            await this.getLocalWeights(ai_type.name)
-            this.process_settings.model = ai_type.name;
+            await this.getLocalWeights(ai_type)
+            this.process_settings.model = ai_type;
         },
         selected_ai_weight: function (ai_weight) {
+            console.log(ai_weight);
             this.process_settings.weights = {name: ai_weight.name, path: ai_weight.path};
         },
     },
     methods: {
         async downloadWeight() {   
             if(!this.selectedModel) return
+            console.log(this.selectedModel);
             this.downloading = true;
+            console.log("HERE");
             //TODO CHANGE HARDCODED DIRECTORY TO THE DIRECTORY WHERE WE WANT TO SAVE THE WEIGHTS
             const filePath = await window.electron.invoke(IPC_CHANNELS.DOWNLOAD_WEIGHTS, {
                 url: `http://localhost:3000/${this.selectedModel.weights[0].filePath.split(/\/(.+)/)[1]}`,
-                modelName: this.selectedModel.name
+                modelName: this.process_settings.model
             });
-            this.getLocalWeights(this.selectedModel.name)
+            console.log(filePath);
+            this.getLocalWeights(this.process_settings.model)
             this.downloading = false;
         },
 
@@ -153,7 +156,10 @@ export default {
             const weights = await window.electron.invoke(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, {
                 modelName: modelName
             })
+            console.log(weights);
+            console.log(this.ai_weights);
             this.ai_weights = (weights !== undefined) ? weights : [];
+            console.log(this.ai_weights);
         }
     },
 };

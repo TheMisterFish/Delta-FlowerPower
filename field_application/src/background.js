@@ -212,21 +212,21 @@ ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async (event, args) => {
 })
 
 ipcMain.handle(IPC_CHANNELS.DOWNLOAD_WEIGHTS, async (event, args) => {
+    console.log("HERE");
     const response = await download(BrowserWindow.getFocusedWindow(), args.url, {
         directory: path.join(__dirname, "weights", args.modelName)
     })
-
     return response.getSavePath();
 })
 
 ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
+    const modelName = args.modelName.toLowerCase();
     try {
-        const response = await fs.promises.readdir(path.join(__dirname, "weights", args.modelName))
-
+        const response = await fs.promises.readdir(path.join(__dirname, "weights", modelName))
         return response.map(w => ({
-            path: path.join(__dirname, "weights", args.modelName, w),
+            path: path.join(__dirname, "weights", modelName, w),
             name: w,
-            modelName: args.modelName
+            modelName: modelName
         }))
     } catch (error) {
         console.log(error);
@@ -234,10 +234,14 @@ ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
 })
 
 ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
+    console.log("HERE");
+    console.log(args);
     switch (args.message) {
         case IPC_MESSAGES.SAVE_IN_DB:
+            console.log("D:", args.data);
             return await DB_NAMES[args.database].insert(args.data, function (err, newDoc) {
                 if (err){
+                    console.log("E", err);
                     return err
                 }
                 return newDoc
@@ -265,6 +269,14 @@ ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
                 if (err)
                     return err
                 return numRemoved;
+            });
+        case IPC_MESSAGES.RESET_DATABASE:
+            return await DB_NAMES[args.database].remove({ }, { multi: true }, function (err, numRemoved) {
+                DB_NAMES[args.database].loadDatabase(function (err) {
+                    if (err)
+                        return err
+                    return true;
+                });
             });
         default:
             return false;
