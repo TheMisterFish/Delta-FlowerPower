@@ -1,0 +1,1124 @@
+{
+	"info": {
+		"_postman_id": "956deb0c-8079-4445-910f-d85f181b8bf4",
+		"name": "flowerPower",
+		"description": "Flower power nestjs tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "researches",
+			"item": [
+				{
+					"name": "get researches",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/researches",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"researches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get research",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/researches/5fd90cf39cd01400120e9b58",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"researches",
+								"5fd90cf39cd01400120e9b58"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add research",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Een heel mooi gebied in Eindhoven\",\r\n    \"location\": \"-1\",\r\n    \"name\": \"Eindhoven Strijp TQ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/researches",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"researches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update research",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"De descriptie is geupdate!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/researches/5fd90cf39cd01400120e9b58",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"researches",
+								"5fd90cf39cd01400120e9b58"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete research",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/researches/5fd9fa5a148f020012f05bf5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"researches",
+								"5fd9fa5a148f020012f05bf5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sessions",
+			"item": [
+				{
+					"name": "get sessions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/sessions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/sessions/5fda24ef852fc50013f50a66",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sessions",
+								"5fda24ef852fc50013f50a66"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": "/C:/Users/sueno/Downloads/file1.png"
+								},
+								{
+									"key": "description",
+									"value": "Een heel mooi gebied in Eindhoven",
+									"type": "text"
+								},
+								{
+									"key": "research",
+									"value": "5fda20ab2e0c59001387bece",
+									"type": "text"
+								},
+								{
+									"key": "aimodel",
+									"value": "5fc638a866a665001197d1a3",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Eindhoven Strijp TQ",
+									"type": "text"
+								},
+								{
+									"key": "results",
+									"value": "[{\"file\": {\"fileName\": \"file1.png\"}, \"boundingBoxes\": [{\"x1\": 1, \"x2\": 3, \"y1\": 4, \"y2\": 5}]}]",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sessions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/sessions/5fda24ce852fc50013f50a65",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sessions",
+								"5fda24ce852fc50013f50a65"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Nieuwe naam\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sessions/5fda24ef852fc50013f50a66",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sessions",
+								"5fda24ef852fc50013f50a66"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "locations",
+			"item": [
+				{
+					"name": "get locations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/locations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/location/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"location",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"hoge zwaluwe\",\r\n    \"description\": \"Erg mooi buitengebied\",\r\n    \"lat_long_point_one\": \"12.12093, 29.1032\",\r\n    \"lat_long_point_two\": \"12.12093, 29.1032\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/locations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"asjdna\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/locations/5faaba39a28e440011f3ed36",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"locations",
+								"5faaba39a28e440011f3ed36"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Nieuwe locatie naam\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/locations/5faaba39a28e440011f3ed36",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"locations",
+								"5faaba39a28e440011f3ed36"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "get users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/5f9c24ee9275bb3d1c55dd62",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"5f9c24ee9275bb3d1c55dd62"
+							]
+						},
+						"description": "Gets a user"
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    console.log(data._id);\r",
+									"\r",
+									"    pm.collectionVariables.set(\"guid\", data._id);\r",
+									"    console.log(pm.collectionVariables.get(\"guid\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@flowerpower.com",
+									"type": "text"
+								},
+								{
+									"key": "created_at",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "admin1234",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/users/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						},
+						"description": "Create a user as admin?\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{guid}}xx",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{guid}}xx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "new name",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/users/{{guid}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{guid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "aimodels",
+			"item": [
+				{
+					"name": "weights",
+					"item": [
+						{
+							"name": "delete weights",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/aimodels/5fd8a838db9e8a00135ae493/weights/5fd8a896db9e8a00135ae497",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"aimodels",
+										"5fd8a838db9e8a00135ae493",
+										"weights",
+										"5fd8a896db9e8a00135ae497"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get aimodels",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/aimodels",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"aimodels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get aimodel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/aimodels/id",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"aimodels",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add aimodel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"FasterRCNN\",\r\n    \"description\": \"Flower detection with the FasterRCNN algorithm!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/aimodels",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"aimodels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete aimodel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fasterrcnnnnn\",\r\n    \"description\": \"qwinueiuqwhewqoejhqwoieq\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/aimodels",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"aimodels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update aimodel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"YoloV5\",\r\n    \"description\": \"Flower detection with the YoloV5 algorithm!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/aimodels/5fc8b31dd43ab700111e4abc",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"aimodels",
+								"5fc8b31dd43ab700111e4abc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Your test name\", function () {\r",
+							"    var data = pm.response.json();\r",
+							"    console.log(data.access_token);\r",
+							"\r",
+							"    pm.collectionVariables.set(\"token\", data.access_token);\r",
+							"    console.log(pm.collectionVariables.get(\"token\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "researcher@flowerpower.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Admin1234",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/auth/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Login           "
+			},
+			"response": []
+		},
+		{
+			"name": "get me",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(pm.collectionVariables.get(\"token\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/me",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "guid",
+			"value": "u"
+		},
+		{
+			"key": "token",
+			"value": "token"
+		},
+		{
+			"key": "host",
+			"value": "localhost:7080"
+		},
+		{
+			"key": "host",
+			"value": ""
+		}
+	]
+}
