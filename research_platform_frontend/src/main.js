@@ -16,7 +16,7 @@ if (token) {
 
 Vue.use(VueGoogleMaps, {
     load: {
-        key: "AIzaSyBc2Pf6i6qNU934cChcEozdBmyFaIvwjSA",
+        key: "AIzaSyBoQL0WXDWYdlgWW4W0xk96NsoONQ1RC4E",
         libraries: "drawing"
     }
 });

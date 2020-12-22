@@ -74,8 +74,7 @@ export default {
       const response = await this.$store.dispatch("addResearch", {
         name: this.name,
         description: this.description,
-        location_id: this.area_id,
-        model_id: this.mlitems[0]._id,
+        location: this.area_id,
       });
 
       if (response.status === STATUS.SUCCESS) {

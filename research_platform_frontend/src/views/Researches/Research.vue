@@ -56,10 +56,10 @@ export default {
   },
   methods: {
     async deleteResearch() {
-      const response = await this.$store.dispatch("deleteArea", this._id);
+      const response = await this.$store.dispatch("deleteResearch", this._id);
 
       if (response.status === STATUS.SUCCESS) {
-        this.$router.push({ name: "areas" });
+        this.$router.push({ name: "researches" });
       } else {
         this.$store.dispatch("showSnackbar", response.message);
       }

@@ -51,17 +51,17 @@ export default {
       const data = new FormData();
       data.append("weights", this.weights);
 
-      const response = await this.$store.dispatch("updateModel", {
+      const response = await this.$store.dispatch("addModelWeights", {
         _id: this._id,
-        model: data,
+        weights: data,
       });
       this.weights = null
     },
 
     async deleteWeights(weights) {
-      const response = await this.$store.dispatch("updateModel", {
+      const response = await this.$store.dispatch("deleteModelWeights", {
         _id: this._id,
-        model: { weights: [weights] },
+        weightsid: weights._id,
       });
     },
   },
