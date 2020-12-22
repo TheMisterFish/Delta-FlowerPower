@@ -1,8 +1,11 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
-import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsDate, MinLength, IsArray, ArrayMinSize, ValidateNested } from 'class-validator';
 import { Location } from "../locations/locations.model";
 import { User } from "src/users/users.model";
 import { SessionResult } from "./sessionResult";
+import { Aimodel } from "src/aimodels/aimodels.model";
+import { Research } from "src/researches/researches.model";
+import { plainToClass, Transform, Type } from "class-transformer";
 
 @pre<Session>('save', function (next) {
   if (!this.isNew) {
@@ -28,21 +31,20 @@ export class Session {
 
   @IsString()
   @IsNotEmpty()
-  @prop({ ref: 'Location' })
-  location_id: Ref<Location>;
-
-  @IsString()
-  @IsNotEmpty()
-  @prop({ ref: 'User' })
+  @prop({ ref: User })
   made_by: Ref<User>;
 
+  @IsNotEmpty()
+  @prop({Ref: Research})
+  research: Ref<Research>
+  
   @prop()
-  results: Ref<SessionResult[]>;
+  results: any;
 
   @IsString()
   @IsNotEmpty()
-  @prop({ ref: 'AIModel' })
-  model_id: string;
+  @prop({ ref: Aimodel })
+  aimodel: Ref<Aimodel>;
 
   @IsDate()
   @prop()

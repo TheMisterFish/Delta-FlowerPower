@@ -23,6 +23,4 @@ export class CreateLocationDto {
   lat_long_point_two: string;
 
   created_at: Date;
-
-  updated_at: Date;
 }

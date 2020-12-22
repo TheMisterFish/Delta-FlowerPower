@@ -20,6 +20,7 @@ export class ResearchesService {
   }
 
   async create(dto: CreateResearchDto): Promise<Research> {
+    console.log(dto.location);
     const research = await new this.researches(dto).save();
 
     return await research

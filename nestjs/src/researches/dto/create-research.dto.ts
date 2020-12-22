@@ -1,5 +1,4 @@
-import { IsString, IsNotEmpty, MinLength } from 'class-validator';
-import { Location } from 'src/locations/locations.model';
+import { IsString, IsNotEmpty, MinLength, IsMongoId } from 'class-validator';
 import { User } from 'src/users/users.model';
 
 export class CreateResearchDto {
@@ -14,11 +13,10 @@ export class CreateResearchDto {
   description: string;
 
   @IsNotEmpty()
-  location: Location;
+  @IsMongoId()
+  location: string;
 
   made_by: User;
 
   created_at: Date;
-
-  updated_at: Date;
 }
