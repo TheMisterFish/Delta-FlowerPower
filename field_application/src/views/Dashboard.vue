@@ -1,6 +1,6 @@
 <template>
     <div id="dashboard">
-        <v-container>
+        <v-container class="mb-5">
             <v-row>
                 <v-col cols="12" sm="12">
                     <h3 class="text-center">Nieuw onderzoek.</h3>
@@ -130,17 +130,9 @@
                                                 >Uitgevoerd:</v-list-item-title
                                             >
                                             <v-list-item-subtitle>{{
-                                                research.executed ? research.executed_date : "Nee"
-                                            }}</v-list-item-subtitle>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                    <v-list-item two-line>
-                                        <v-list-item-content>
-                                            <v-list-item-title
-                                                >Aantal waypoints:</v-list-item-title
-                                            >
-                                            <v-list-item-subtitle>{{
-                                                research.waypoint_settings.points.length
+                                                research.executed
+                                                    ? research.executed_date
+                                                    : "Nee"
                                             }}</v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
@@ -151,33 +143,23 @@
                                     <v-list-item two-line>
                                         <v-list-item-content>
                                             <v-list-item-title
-                                                >Type
-                                                onderzoek:</v-list-item-title
+                                                >Aantal
+                                                waypoints:</v-list-item-title
                                             >
                                             <v-list-item-subtitle>{{
-                                                research.research_type
+                                                research.waypoint_settings
+                                                    .points.length
                                             }}</v-list-item-subtitle>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                    <v-list-item two-line>
+                                        </v-list-item-content> </v-list-item
+                                    ><v-list-item two-line>
                                         <v-list-item-content>
                                             <v-list-item-title
-                                                >Uitgevoerd:</v-list-item-title
-                                            >
-                                            <v-list-item-subtitle>{{
-                                                research.executed ? research.executed_date : "Nee"
-                                            }}</v-list-item-subtitle>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                    <v-list-item two-line>
-                                        <v-list-item-content>
-                                            <v-list-item-title
-                                                >Date
+                                                >Data
                                                 geupload:</v-list-item-title
                                             >
                                             <v-list-item-subtitle>{{
                                                 research.uploaded == true
-                                                    ? research.upload_date
+                                                    ? (research.upload_date | dateTime)
                                                     : "Nee"
                                             }}</v-list-item-subtitle>
                                         </v-list-item-content>
@@ -185,10 +167,14 @@
                                 </v-card-text>
                             </div>
                         </div>
-                        <v-card-actions>
+                        <v-card-actions class="justify-space-between">
                             <v-btn text color="primary accent-4">
                                 Bekijk data en opties
                             </v-btn>
+                            <div class="float-right">
+                                <small>Gemaakt op:</small><br>
+                                {{ research.create_date | dateTime }}
+                            </div>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -216,9 +202,13 @@ export default Vue.extend({
             researches: [],
         };
     },
+    filters: {
+        dateTime: function (thing) {
+            return window.moment().format("LLL");
+        },
+    },
     async mounted() {
         this.researches = await LocalDatabaseActions.getLocalResearches();
-        console.log(this.researches);
     },
     methods: {
         async selectInputFolder() {

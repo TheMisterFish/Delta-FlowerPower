@@ -9,23 +9,27 @@ LocalResearchSettingsComponent
                         <v-list-item-content>
                             <v-list-item-title>Totaal</v-list-item-title>
                             <v-list-item-subtitle
-                                >Secondary text</v-list-item-subtitle
+                                >{{ researches.length }}</v-list-item-subtitle
                             >
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item two-line>
                         <v-list-item-content>
-                            <v-list-item-title>Drone onderzoeken</v-list-item-title>
+                            <v-list-item-title
+                                >Drone onderzoeken</v-list-item-title
+                            >
                             <v-list-item-subtitle
-                                >Secondary text</v-list-item-subtitle
+                                >{{ drone_research_count }}</v-list-item-subtitle
                             >
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item two-line>
                         <v-list-item-content>
-                            <v-list-item-title>SD onderzoeken</v-list-item-title>
+                            <v-list-item-title
+                                >SD onderzoeken</v-list-item-title
+                            >
                             <v-list-item-subtitle
-                                >Secondary text</v-list-item-subtitle
+                                >{{ sd_research_count }}</v-list-item-subtitle
                             >
                         </v-list-item-content>
                     </v-list-item>
@@ -54,9 +58,21 @@ export default {
             researches: [],
         };
     },
+    computed: {
+        drone_research_count: function () {
+            return this.researches.filter(
+                (obj) => obj.research_type === "drone"
+            ).length;
+        },
+        sd_research_count: function () {
+            return this.researches.filter(
+                (obj) => obj.research_type === "sd"
+            ).length;
+        },
+    },
     async mounted() {
         this.researches = await LocalDatabaseActions.getLocalResearches();
-        console.log(this.researches);
+        console.log("R:", this.researches);
     },
     methods: {
         async resetDatabase() {
