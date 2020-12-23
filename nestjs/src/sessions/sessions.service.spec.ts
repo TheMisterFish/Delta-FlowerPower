@@ -13,6 +13,10 @@ describe('SessionsService', () => {
           provide: getModelToken('Session'),
           useValue: {},
         },
+        {
+          provide: getModelToken("Research"),
+          useValue: {}
+        }
       ],
     }).compile();
 

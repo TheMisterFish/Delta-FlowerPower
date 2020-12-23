@@ -1,7 +1,7 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
 import { Location } from "../locations/locations.model";
-import { User } from "src/users/users.model";
+import { User } from "../users/users.model";
 
 @pre<Research>('save', function (next) {
   if (!this.isNew) {

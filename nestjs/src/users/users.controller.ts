@@ -5,7 +5,7 @@ import { UsersService } from './users.service';
 
 import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { HasRoles } from '../common/decorators/roles.decorator';
-import { Roles } from 'src/common/interfaces/roles.interface';
+import { Roles } from '../common/interfaces/roles.interface';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)

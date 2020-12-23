@@ -7,7 +7,7 @@ import { Session } from "./sessions.model";
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
-import { Roles } from 'src/common/interfaces/roles.interface';
+import { Roles } from '../common/interfaces/roles.interface';
 import * as fs from 'fs';
 
 @Controller('sessions')

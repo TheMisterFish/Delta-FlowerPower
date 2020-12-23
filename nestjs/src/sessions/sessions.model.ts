@@ -1,8 +1,8 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
-import { User } from "src/users/users.model";
-import { Aimodel } from "src/aimodels/aimodels.model";
-import { Research } from "src/researches/researches.model";
+import { User } from "../users/users.model";
+import { Aimodel } from "../aimodels/aimodels.model";
+import { Research } from "../researches/researches.model";
 
 @pre<Session>('save', function (next) {
   if (!this.isNew) {

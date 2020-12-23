@@ -1,4 +1,4 @@
-import { Aimodel } from 'src/aimodels/aimodels.model';
+import { Aimodel } from '../../aimodels/aimodels.model';
 
 export class UpdateSessionDto {
   name: string;

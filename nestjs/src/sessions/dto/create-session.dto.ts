@@ -8,8 +8,8 @@ import {
   ValidateNested,
   ArrayMinSize,
 } from 'class-validator';
-import { SessionResult } from 'src/common/models/sessionResult/sessionResult.model';
-import { User } from 'src/users/users.model';
+import { SessionResult } from '../../common/models/sessionResult/sessionResult.model';
+import { User } from '../../users/users.model';
 
 export class CreateSessionDto {
   @IsString()

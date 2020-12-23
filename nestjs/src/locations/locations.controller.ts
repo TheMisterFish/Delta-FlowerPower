@@ -4,7 +4,7 @@ import { HasRoles } from '../common/decorators/roles.decorator';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto, UpdateLocationDto } from "./dto";
 import { Location } from "./locations.model";
-import { Roles } from 'src/common/interfaces/roles.interface';
+import { Roles } from '../common/interfaces/roles.interface';
 
 @Controller('locations')
 @UseGuards(JwtAuthGuard, RolesGuard)

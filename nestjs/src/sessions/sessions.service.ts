@@ -4,7 +4,7 @@ import { ReturnModelType } from '@typegoose/typegoose';
 import { CreateSessionDto, UpdateSessionDto } from './dto';
 import { Session } from './sessions.model';
 import { join } from 'path';
-import { Research } from 'src/researches/researches.model';
+import { Research } from '../researches/researches.model';
 import * as fs from 'fs';
 
 function copyFiles(files, destDir): any[] {
