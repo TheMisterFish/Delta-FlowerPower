@@ -132,7 +132,6 @@ export default {
             this.process_settings.model = ai_type;
         },
         selected_ai_weight: function (ai_weight) {
-            console.log(ai_weight);
             this.process_settings.weights = {name: ai_weight.name, path: ai_weight.path};
         },
     },
@@ -141,7 +140,6 @@ export default {
             if(!this.selectedModel) return
             console.log(this.selectedModel);
             this.downloading = true;
-            console.log("HERE");
             //TODO CHANGE HARDCODED DIRECTORY TO THE DIRECTORY WHERE WE WANT TO SAVE THE WEIGHTS
             const filePath = await window.electron.invoke(IPC_CHANNELS.DOWNLOAD_WEIGHTS, {
                 url: `http://localhost:3000/${this.selectedModel.weights[0].filePath.split(/\/(.+)/)[1]}`,
