@@ -31,12 +31,10 @@ export class Location {
 
   @IsNotEmpty()
   @IsLatLong()
-  @prop()
   lat_long_point_one: string;
 
   @IsNotEmpty()
   @IsLatLong()
-  @prop()
   lat_long_point_two: string;
 
   @IsDate()
