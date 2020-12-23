@@ -37,7 +37,7 @@ import { ResearchesModule } from './researches/researches.module';
     LocationsModule,
     ResearchesModule,
   ],
-  controllers: [AppController, AimodelsController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

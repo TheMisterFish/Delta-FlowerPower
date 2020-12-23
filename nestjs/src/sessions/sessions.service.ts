@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
+import { ReturnModelType } from '@typegoose/typegoose';
 import { CreateSessionDto, UpdateSessionDto } from './dto';
 import { Session } from './sessions.model';
-import * as fs from 'fs';
 import { join } from 'path';
 import { Research } from 'src/researches/researches.model';
-import { plainToClass } from 'class-transformer';
-import { SessionResult } from 'src/common/models/sessionResult/sessionResult.model';
+import * as fs from 'fs';
 
 function copyFiles(files, destDir): any[] {
   files.map(f => {
@@ -69,8 +67,6 @@ export class SessionsService {
         }
       });
     });
-
-    console.log(session.results);
 
     return session;
   }

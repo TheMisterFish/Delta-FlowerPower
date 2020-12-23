@@ -1,4 +1,3 @@
-import { prop, Ref } from "@typegoose/typegoose";
 import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, ValidateNested } from "class-validator";
 import { BoundingBox } from "../boundingBox/boundingBox.model";

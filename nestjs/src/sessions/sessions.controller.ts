@@ -7,9 +7,8 @@ import { Session } from "./sessions.model";
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
-import * as fs from 'fs';
 import { Roles } from 'src/common/interfaces/roles.interface';
-import * as util from 'util'
+import * as fs from 'fs';
 
 @Controller('sessions')
 @UseGuards(JwtAuthGuard, RolesGuard)

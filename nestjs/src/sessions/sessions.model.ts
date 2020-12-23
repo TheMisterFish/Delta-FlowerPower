@@ -1,11 +1,8 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
-import { IsString, IsNotEmpty, IsDate, MinLength, IsArray, ArrayMinSize, ValidateNested } from 'class-validator';
-import { Location } from "../locations/locations.model";
+import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
 import { User } from "src/users/users.model";
-import { SessionResult } from "./sessionResult";
 import { Aimodel } from "src/aimodels/aimodels.model";
 import { Research } from "src/researches/researches.model";
-import { plainToClass, Transform, Type } from "class-transformer";
 
 @pre<Session>('save', function (next) {
   if (!this.isNew) {
