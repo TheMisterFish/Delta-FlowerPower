@@ -766,6 +766,48 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "change password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"admin1234\",\r\n    \"new_password\": \"admin4321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users/change_password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"change_password"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -800,6 +842,50 @@
 										"5fd8a838db9e8a00135ae493",
 										"weights",
 										"5fd8a896db9e8a00135ae497"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add weights",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsInN1YiI6IjVmOWIxZTk5MzNhNGUwMGUwNDY3NzhkMyIsImlhdCI6MTYwNDA4Nzk1NCwiZXhwIjoxNjA0MDg4MDE0fQ.4f5kcDuZasIfFydDRlGhpeq-PYJdbwWogkf3qdgI_zI}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "weights",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/aimodels/5fe346cbd73ea00012d54b44/weights",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"aimodels",
+										"5fe346cbd73ea00012d54b44",
+										"weights"
 									]
 								}
 							},
