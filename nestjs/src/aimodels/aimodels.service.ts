@@ -5,7 +5,7 @@ import { AimodelDto, CreateAimodelDto } from './dto';
 import { Aimodel } from './aimodels.model';
 import { UpdateAimodelDto } from './dto/update-aimodel.dto';
 import { CreateaAimodelWeightsDto } from './dto/create-aimodel-weights.dto';
-import { File } from 'src/common/models/file/file.model';
+import { File } from '../common/models/file/file.model';
 import * as fs from 'fs';
 
 @Injectable()
