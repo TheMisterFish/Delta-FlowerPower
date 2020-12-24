@@ -30,7 +30,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 
 DB_NAMES.LOCAL_RESEARCHDB = null;
 DB_NAMES.API_RESEARCHDB = null;
-DB_NAMES.WEIGHTDB = null;
+DB_NAMES.MODELDB = null;
 
 let pythonProcess = null;
 
@@ -182,8 +182,8 @@ async function createDbs() {
         filename: path.join(__dirname, "database", "api_researches.db"),
         autoload: true
     })
-    DB_NAMES.WEIGHTDB = Datastore.create({
-        filename: path.join(__dirname, "database", "weights.db"),
+    DB_NAMES.MODELDB = Datastore.create({
+        filename: path.join(__dirname, "database", "ai_models.db"),
         autoload: true
     })
 }
@@ -203,7 +203,7 @@ ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async (event, args) => {
         }
     } else if (args.message === IPC_MESSAGES.GET_IMAGE_FILES_FROM_FOLDER) {
         try {
-            const response = await fs.promises.readdir(args.data);
+            const response = await fs.promises.readdir(args.data.toLowerCase());
             return response;
         } catch (error) {
             console.error(error);
@@ -212,11 +212,21 @@ ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async (event, args) => {
 })
 
 ipcMain.handle(IPC_CHANNELS.DOWNLOAD_WEIGHTS, async (event, args) => {
-    console.log("HERE");
     const response = await download(BrowserWindow.getFocusedWindow(), args.url, {
-        directory: path.join(__dirname, "weights", args.modelName)
+        directory: path.join(__dirname, "weights", args.modelName.toLowerCase())
     })
     return response.getSavePath();
+})
+
+ipcMain.handle(IPC_CHANNELS.REMOVE_WEIGHT, async (event, args) => {
+    console.log(args.path);
+    try {
+        fs.unlinkSync(args.path.toLowerCase())
+        return true;
+    } catch (err) {
+        console.error(err)
+        return false;
+    }
 })
 
 ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
@@ -234,14 +244,10 @@ ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
 })
 
 ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
-    console.log("HERE");
-    console.log(args);
     switch (args.message) {
         case IPC_MESSAGES.SAVE_IN_DB:
-            console.log("D:", args.data);
             return await DB_NAMES[args.database].insert(args.data, function (err, newDoc) {
-                if (err){
-                    console.log("E", err);
+                if (err) {
                     return err
                 }
                 return newDoc
@@ -254,7 +260,7 @@ ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
             });
         case IPC_MESSAGES.FIND_IN_DB:
             return await DB_NAMES[args.database].find(args.data, (err, docs) => {
-                if(err)
+                if (err)
                     return err;
                 return docs
             });
@@ -271,7 +277,9 @@ ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
                 return numRemoved;
             });
         case IPC_MESSAGES.RESET_DATABASE:
-            return await DB_NAMES[args.database].remove({ }, { multi: true }, function (err, numRemoved) {
+            return await DB_NAMES[args.database].remove({}, {
+                multi: true
+            }, function (err, numRemoved) {
                 DB_NAMES[args.database].loadDatabase(function (err) {
                     if (err)
                         return err

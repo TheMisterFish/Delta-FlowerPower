@@ -96,14 +96,14 @@
                                             <v-list-item-subtitle>
                                                 {{
                                                     research.research_settings
-                                                        .research.location_id
+                                                        .research.location
                                                         .name
                                                 }}
                                             </v-list-item-subtitle>
                                             <v-list-item-subtitle>
                                                 {{
                                                     research.research_settings
-                                                        .research.location_id
+                                                        .research.location
                                                         .description
                                                 }}
                                             </v-list-item-subtitle>

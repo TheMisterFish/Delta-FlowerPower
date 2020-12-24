@@ -78,11 +78,11 @@
                     <tbody>
                         <tr>
                             <td>AI Model gebruikt voor herkenning:</td>
-                            <td>{{ process_settings.model }}</td>
+                            <td>{{ process_settings.model ? process_settings.model.name : ""}}</td>
                         </tr>
                         <tr>
                             <td>AI Gewichten gebruikt voor herkenning:</td>
-                            <td>{{ process_settings.weights.name }}</td>
+                            <td>{{ process_settings.weights ? process_settings.weights.name : "" }}</td>
                         </tr>
                         <tr>
                             <td>De grootte van een gesneden afbeelding voor herkenning</td>
@@ -129,19 +129,19 @@
                     <tbody>
                         <tr>
                             <td>Aantal waypoints:</td>
-                            <td>{{ points.length }}</td>
+                            <td>{{ waypoint_settings.points.length }}</td>
                         </tr>
                         <tr>
                             <td>Waypoints in de breedte</td>
-                            <td>{{ images_width }}</td>
+                            <td>{{ waypoint_settings.images_width }}</td>
                         </tr>
                         <tr>
                             <td>Waypoints in de hoogte</td>
-                            <td>{{ images_height }}</td>
+                            <td>{{ waypoint_settings.images_height }}</td>
                         </tr>
                         <tr>
                             <td>Drone richting</td>
-                            <td>{{ heading }}°</td>
+                            <td>{{ waypoint_settings.heading }}°</td>
                         </tr>
                     </tbody>
                 </template>

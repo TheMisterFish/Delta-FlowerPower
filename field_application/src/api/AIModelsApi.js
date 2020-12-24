@@ -1,7 +1,7 @@
 import store from "../store";
 import * as axios from "axios"
 
-const WeightsApi = {
+const AIModelsApi = {
     getModels() {
         return axios
             .get("http://localhost:3000/aimodels")
@@ -14,4 +14,4 @@ const WeightsApi = {
     }
 }
 
-export default WeightsApi
+export default AIModelsApi

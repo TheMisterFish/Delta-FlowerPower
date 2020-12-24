@@ -163,9 +163,8 @@ export default {
         },
         selectResearch(research) {
             //TODO USE LAT LONG FROM LOCATION IN RESEARCH
-            //TODO RENAME LOCATION_ID TO LOCATION
-            let pos1 = research.location_id.lat_long_point_one.split(',');
-            let pos2 = research.location_id.lat_long_point_two.split(',');
+            let pos1 = research.location.lat_long_point_one.split(',');
+            let pos2 = research.location.lat_long_point_two.split(',');
             this.research_settings.pos_x_1 = Number(pos1[0].trim());
             this.research_settings.pos_y_1 = Number(pos1[1].trim());
             this.research_settings.pos_x_2 = Number(pos2[0].trim());

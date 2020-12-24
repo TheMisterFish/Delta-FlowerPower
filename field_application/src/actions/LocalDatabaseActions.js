@@ -12,7 +12,6 @@ const LocalDatabaseActions = {
             data: clone,
             database: DB_NAMES.LOCAL_RESEARCHDB
         });
-        console.log("DONE");
     },
     async getLocalResearches() {
         return await window.electron.invoke(IPC_CHANNELS.DATABASE, {
