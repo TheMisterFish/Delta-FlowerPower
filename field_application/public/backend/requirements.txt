@@ -1,0 +1,22 @@
+# pip install -r requirements.txt
+
+# base for API ----------------------------------------
+autobahn
+twisted
+
+# Comon ----------------------------------------
+pillow
+#### YoloV5 ####
+Cython
+matplotlib>=3.2.2
+numpy
+opencv-python>=4.1.2
+# pillow
+PyYAML
+scipy
+tensorboard>=2.2
+torch
+torchvision
+tqdm>=4.41.0
+#### F_RCNN ####
+#### Detectron2 ####

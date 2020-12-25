@@ -6,8 +6,9 @@
                 <AnnotatedImage
                     :imagePath="image.filePath"
                     :boundingBoxes="image.boundingBoxes"
-                /> </v-col
-        ></v-row>
+                />
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -46,19 +47,18 @@ export default {
     },
     methods: {
         detectImages() {
-            const imagesPath = this.$store.getters.getPath
-            const weightsPath = this.$store.getters.getWeightsPath
-            const confidence = this.$store.getters.getConfidence
-            const imageSize = this.$store.getters.getImageSize
-
+            const imagesPath = this.$store.getters.getPath;
+            const weightsPath = this.$store.getters.getWeightsPath;
+            const confidence = this.$store.getters.getConfidence;
+            const imageSize = this.$store.getters.getImageSize;
             this.$store.dispatch(
                 "sendWebSocketMessage",
                 JSON.stringify([
                     SOCKET_CHANNELS.DETECT_IMAGES,
                     weightsPath,
                     imagesPath,
-                    confidence/100,
-                    imageSize
+                    confidence / 100,
+                    imageSize,
                 ])
             );
         },
@@ -71,8 +71,11 @@ export default {
             path
         );
 
-        const response = await window.electron.invoke(IPC_CHANNELS.FILESYSTEM, ipcMessage);
-        if(response){
+        const response = await window.electron.invoke(
+            IPC_CHANNELS.FILESYSTEM,
+            ipcMessage
+        );
+        if (response) {
             response.forEach((r) => {
                 this.images.push({
                     image: r,

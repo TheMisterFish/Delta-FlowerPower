@@ -27,6 +27,8 @@ import {
 import * as Datastore from "nedb-promises"
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const userData = app.getPath('userData');
+
 
 DB_NAMES.LOCAL_RESEARCHDB = null;
 DB_NAMES.API_RESEARCHDB = null;
@@ -37,6 +39,9 @@ let pythonProcess = null;
 const PYTHON_DIST_FOLDER = 'backend_dist';
 const PYTHON_FOLDER = 'backend';
 const PYTHON_MODULE = 'api';
+
+console.log("STARTED!");
+console.log(process.env);
 
 /*************************************************************
  * Python process
@@ -175,15 +180,15 @@ if (isDevelopment) {
 
 async function createDbs() {
     DB_NAMES.LOCAL_RESEARCHDB = Datastore.create({
-        filename: path.join(__dirname, "database", "local_researches.db"),
+        filename: path.join(userData, "database", "local_researches.db"),
         autoload: true
     })
     DB_NAMES.API_RESEARCHDB = Datastore.create({
-        filename: path.join(__dirname, "database", "api_researches.db"),
+        filename: path.join(userData, "database", "api_researches.db"),
         autoload: true
     })
     DB_NAMES.MODELDB = Datastore.create({
-        filename: path.join(__dirname, "database", "ai_models.db"),
+        filename: path.join(userData, "database", "ai_models.db"),
         autoload: true
     })
 }
@@ -213,7 +218,7 @@ ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async (event, args) => {
 
 ipcMain.handle(IPC_CHANNELS.DOWNLOAD_WEIGHTS, async (event, args) => {
     const response = await download(BrowserWindow.getFocusedWindow(), args.url, {
-        directory: path.join(__dirname, "weights", args.modelName.toLowerCase())
+        directory: path.join(userData, "weights", args.modelName.toLowerCase())
     })
     return response.getSavePath();
 })
@@ -232,9 +237,9 @@ ipcMain.handle(IPC_CHANNELS.REMOVE_WEIGHT, async (event, args) => {
 ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
     const modelName = args.modelName.toLowerCase();
     try {
-        const response = await fs.promises.readdir(path.join(__dirname, "weights", modelName))
+        const response = await fs.promises.readdir(path.join(userData, "weights", modelName))
         return response.map(w => ({
-            path: path.join(__dirname, "weights", modelName, w),
+            path: path.join(userData, "weights", modelName, w),
             name: w,
             modelName: modelName
         }))

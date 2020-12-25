@@ -1,0 +1,42 @@
+# -*- mode: python ; coding: utf-8 -*-
+
+import sys  
+from PyInstaller.utils.hooks import collect_data_files
+
+sys.setrecursionlimit(5000)
+
+block_cipher = None
+excluded_modules = ['torch.distributions']
+
+a = Analysis(['public\\backend\\api.py'],
+             pathex=['D:\\git_repos\\flowerpower\\field_application'],
+             binaries=[],
+             datas = collect_data_files("scipy.special"),
+             hiddenimports=['pkg_resources.py2_warn', 'yaml', 'torch', 'torchvision', 'scipy', 'scipy.signal', 'models'],
+             hookspath=[],
+             runtime_hooks=[],
+             excludes=excluded_modules,
+             win_no_prefer_redirects=False,
+             win_private_assemblies=False,
+             cipher=block_cipher,
+             noarchive=False)
+pyz = PYZ(a.pure, a.zipped_data,
+             cipher=block_cipher)
+exe = EXE(pyz,
+          a.scripts,
+          [],
+          exclude_binaries=True,
+          name='api',
+          debug=False,
+          bootloader_ignore_signals=False,
+          strip=False,
+          upx=True,
+          console=True )
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               upx_exclude=[],
+               name='api')

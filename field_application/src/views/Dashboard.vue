@@ -203,8 +203,8 @@ export default Vue.extend({
         };
     },
     filters: {
-        dateTime: function (thing) {
-            return window.moment().format("LLL");
+        dateTime: function (time) {
+            return window.moment(time).format("LLL");
         },
     },
     async mounted() {

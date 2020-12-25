@@ -1,13 +1,33 @@
+import numpy
+import cv2
+
 import time
 from pathlib import Path
+
 import sys
 import os
 from socket_message import socket_message
 
+print(" Came here ")
+ 
 sys.path.insert(0, './public/backend/scripts/yolov5')
+sys.path.insert(0, './public/backend_dist/scripts/yolov5')
+sys.path.insert(0, './backend_dist/scripts/yolov5')
+sys.path.insert(0, './scripts/yolov5')
+sys.path.insert(0, './yolov5')
+sys.path.insert(0, './')
 
 import torch
 import torch.backends.cudnn as cudnn
+
+# TEST FOR TORCH
+def script_method(fn, _rcb=None):
+    return fn
+def script(obj, optimize=True, _frames_up=0, _rcb=None):
+    return obj    
+import torch.jit
+torch.jit.script_method = script_method 
+torch.jit.script = script
 
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages

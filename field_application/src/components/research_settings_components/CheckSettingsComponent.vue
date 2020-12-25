@@ -118,7 +118,7 @@
         </div>
         <div v-if="showMap">
             <maps-component
-                :points="points"
+                :points="waypoint_settings.points"
                 :research_settings="research_settings"
             ></maps-component>
         </div>
