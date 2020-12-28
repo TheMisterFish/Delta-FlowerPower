@@ -8,19 +8,10 @@ import sys
 import os
 from socket_message import socket_message
 
-print(" Came here ")
- 
-sys.path.insert(0, './public/backend/scripts/yolov5')
-sys.path.insert(0, './public/backend_dist/scripts/yolov5')
-sys.path.insert(0, './backend_dist/scripts/yolov5')
-sys.path.insert(0, './scripts/yolov5')
-sys.path.insert(0, './yolov5')
-sys.path.insert(0, './')
-
 import torch
 import torch.backends.cudnn as cudnn
 
-# TEST FOR TORCH
+# Without the following code, torch will crash
 def script_method(fn, _rcb=None):
     return fn
 def script(obj, optimize=True, _frames_up=0, _rcb=None):
@@ -29,12 +20,8 @@ import torch.jit
 torch.jit.script_method = script_method 
 torch.jit.script = script
 
-from models.experimental import attempt_load
-from utils.datasets import LoadStreams, LoadImages
-from utils.general import check_img_size, non_max_suppression, apply_classifier, scale_coords, xyxy2xywh, \
-    strip_optimizer, set_logging, increment_path
-from utils.plots import plot_one_box
-from utils.torch_utils import select_device, load_classifier, time_synchronized
+from . import models
+from . import utils
 
 def detect(client, weights, img_size, confidence, source):
     client.sendSocketMessage("Inside the detec function")
