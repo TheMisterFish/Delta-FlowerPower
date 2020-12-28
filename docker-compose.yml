@@ -19,6 +19,8 @@ services:
       NODE_ENV: ${NESTJS_NODE_ENV}
       MONGO_CONNECTION_STRING_DEBUG: ${NESTJS_MONGO_CONNECTION_STRING_DEBUG}
       MONGO_CONNECTION_STRING_PROD: ${NESTJS_MONGO_CONNECTION_STRING_PROD}
+    volumes:
+      - nestjsvol:/app/public
     depends_on:
       - db
     networks:
@@ -62,3 +64,4 @@ services:
       - fp_nestjs
 volumes:
   mongovol:
+  nestjsvol:

@@ -1,13 +1,13 @@
-import { prop, pre } from "@typegoose/typegoose";
+import { prop, pre, Ref } from '@typegoose/typegoose';
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
+import { File } from 'src/common/models/file/file.model';
 
-@pre<Aimodel>('save', function (next) {
+@pre<Aimodel>('save', function(next) {
   if (this.isNew) {
     this.created_at = new Date();
   }
   return next();
 })
-
 export class Aimodel {
   @IsString()
   @IsNotEmpty()
@@ -21,10 +21,8 @@ export class Aimodel {
   @prop()
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @prop()
-  path: string;
+  @prop({ ref: () => File })
+  weights: Ref<File>[];
 
   @IsString()
   @IsNotEmpty()
@@ -35,4 +33,3 @@ export class Aimodel {
   @prop()
   created_at: Date;
 }
-

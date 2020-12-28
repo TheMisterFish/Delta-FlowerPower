@@ -117,10 +117,11 @@ export function deleteModel(_id) {
 
 export function updateModel(_id, area) {
     return Axios({
-        url: `http://localhost:7080/aimodels/${_id}`,
-        data: area,
-        method: "PUT"
-    })
+            url: `http://localhost:7080/aimodels/${_id}`,
+            data: area,
+            method: "PUT"
+        }) <<
+        << << < HEAD
 }
 
 export function addModelWeights(_id, weights) {
@@ -133,7 +134,9 @@ export function addModelWeights(_id, weights) {
 
 export function deleteModelWeights(_id, weightsid) {
     return Axios({
-        url: `http://localhost:7080/aimodels/${_id}/weights/${weightsid}`,
-        method: "DELETE"
-    })
+            url: `http://localhost:7080/aimodels/${_id}/weights/${weightsid}`,
+            method: "DELETE"
+        }) ===
+        === = >>>
+        >>> > origin / master
 }
