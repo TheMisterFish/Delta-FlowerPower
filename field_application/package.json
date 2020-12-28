@@ -12,7 +12,7 @@
         "electron:serve": "vue-cli-service electron:serve",
         "python:build": "pyinstaller api.spec --noconfirm --distpath public/backend_dist",
         "python_py:build": "pyinstaller public/backend/api.py --paths=dir_list --noconfirm --distpath public/backend_dist",
-        "flowerpower:build": "pyinstaller api.spec --paths=dir_list --noconfirm --distpath public/backend_dist && vue-cli-service electron:build",
+        "flowerpower:build": "pyinstaller api.spec --paths='./public/backend/scripts/yolov5' --paths='./public/dist_backend/scripts/yolov5' --noconfirm --distpath public/backend_dist && vue-cli-service electron:build",
         "postinstall": "electron-builder install-app-deps",
         "postuninstall": "electron-builder install-app-deps",
         "rebuild": "electron-rebuild -f -w json-rpc2"
