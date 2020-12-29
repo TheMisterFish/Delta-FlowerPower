@@ -37,10 +37,16 @@ pipeline {
         script {
             try {
                 sh 'docker container stop flowerpower_jenkins_fieldapp'
-                sh 'docker container stop foo-tmp'
                 sh 'docker container rm flowerpower_jenkins_fieldapp'
-                sh 'docker container rm foo-tmp'
             } catch (Exception e) {
+                sh 'echo "nothing happend"'
+            }
+            try {
+                sh 'docker container stop foo-tmp'
+                sh 'docker container rm foo-tmp'
+
+            } catch (Exception e) {
+                sh 'echo "nothing happend"'
             }
         }
         sh 'docker create --name foo-tmp cdrx/pyinstaller-windows'
