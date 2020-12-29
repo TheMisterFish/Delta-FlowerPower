@@ -44,7 +44,7 @@ pipeline {
             }
         }
         sh 'docker run --name flowerpower_jenkins_fieldapp -v "$(pwd):/src/" cdrx/pyinstaller-windows -c "apt-get update -y && apt-get install -y wget && whoami && wine python --version && wine python -m pip --version"'
-        sh 'docker container ls'
+        sh 'docker container ls -a'
         // sh 'ls ~/.'
         // sh 'ls ./'
         // sh 'ls ./winetricks'
