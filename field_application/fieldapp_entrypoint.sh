@@ -9,7 +9,7 @@
 # wine python -m pip list
 apt-get install curl software-properties-common
 curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-apt-get install nodejs -y
-apt-get install npm -y
+apt-get install nodejs -y --fix-missing
+apt-get install npm -y --fix-missing
 node --version
 nodejs --version
