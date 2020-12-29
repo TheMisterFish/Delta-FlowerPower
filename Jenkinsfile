@@ -39,8 +39,6 @@ pipeline {
                 sh 'docker container stop flowerpower_jenkins_fieldapp'
                 sh 'docker container rm flowerpower_jenkins_fieldapp'
             } catch (Exception e) {
-                echo 'Exception occurred: ' + e.toString()
-                sh 'Handle the exception!'
             }
         }
         sh 'docker create --name foo-tmp cdrx/pyinstaller-windows'
