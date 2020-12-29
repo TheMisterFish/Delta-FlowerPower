@@ -43,7 +43,7 @@ pipeline {
                 sh 'Handle the exception!'
             }
         }
-        sh 'docker run --name flowerpower_jenkins_fieldapp --entrypoint "fieldapp_entrypoint.sh" -v "$(pwd):/src/" cdrx/pyinstaller-windows'
+        sh 'docker run --name flowerpower_jenkins_fieldapp --entrypoint /fieldapp_entrypoint.sh -v "$(pwd):/src/" cdrx/pyinstaller-windows'
         sh 'docker container ls -a'
         // sh 'ls ~/.'
         // sh 'ls ./'
