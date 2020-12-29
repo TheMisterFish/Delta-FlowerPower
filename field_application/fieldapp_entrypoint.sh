@@ -1,5 +1,5 @@
 #!/bin/sh
-# apt-get update -y
+apt-get update -y
 # wine python --version
 # wine python -m pip install --upgrade pip
 # wine python -m pip --version
