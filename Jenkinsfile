@@ -45,8 +45,8 @@ pipeline {
         }
         sh 'docker create --name flowerpower_jenkins_fieldapp cdrx/pyinstaller-windows -c "mkdir field_application && ls -a && ls field_application -a"'
         sh 'docker cp ./field_application flowerpower_jenkins_fieldapp:/field_application'
-        sh 'docker commit flowerpower_jenkins_fieldapp'
-        sh 'docker run flowerpower_jenkins_fieldapp'
+        sh 'docker commit flowerpower_jenkins_fieldapp field_app'
+        sh 'docker run field_app'
         sh 'docker container ls -a'
         // sh 'ls ~/.'
         // sh 'ls ./'
