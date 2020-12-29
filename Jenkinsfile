@@ -34,6 +34,15 @@ pipeline {
     //       }
     //   }
       steps {
+        script {
+            try {
+                sh 'docker container stop flowerpower_jenkins_fieldapp'
+                sh 'docker container rm flowerpower_jenkins_fieldapp'
+            } catch (Exception e) {
+                echo 'Exception occurred: ' + e.toString()
+                sh 'Handle the exception!'
+            }
+        }
         sh 'docker run --name flowerpower_jenkins_fieldapp -v "$(pwd):/src/" cdrx/pyinstaller-windows -c "apt-get update -y && apt-get install -y wget && whoami && wine python --version && wine python -m pip --version"'
         sh 'docker container ls'
         // sh 'ls ~/.'
