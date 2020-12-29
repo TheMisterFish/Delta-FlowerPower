@@ -61,7 +61,7 @@ export default {
             );
 
             context.lineWidth = "6";
-            context.strokeStyle = "pink";
+            context.strokeStyle = "red";
 
             this.boundingBoxes.forEach((b) => {
                 const x = b.x1 * self.ratioX;

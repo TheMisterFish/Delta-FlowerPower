@@ -37,13 +37,27 @@
                             </thead>
                             <tbody>
                                 <tr
-                                    v-for="(research, index) in researches"
+                                    v-for="(
+                                        research, index
+                                    ) in computed_researches"
                                     :key="index"
                                 >
-                                    <td>{{ research.name }} </td>
-                                    <td>{{ research.location_id.name }}</td>
+                                    <td>
+                                        {{ research ? research.name : "ERROR" }}
+                                    </td>
+                                    <td>
+                                        {{
+                                            research.location
+                                                ? research.location.name
+                                                : "ERROR"
+                                        }}
+                                    </td>
                                     <td class="text-right">
-                                        <v-btn color="error" small @click="remove(research._id)">
+                                        <v-btn
+                                            color="error"
+                                            small
+                                            @click="remove(research._id)"
+                                        >
                                             <v-icon>mdi-delete</v-icon>
                                         </v-btn>
                                     </td>
@@ -55,6 +69,14 @@
                         </template>
                     </v-simple-table>
                 </v-col>
+                <v-col cols="12 mt-10" sm="12">
+                    <p class="subtitle-2 text-left">
+                        Onderzoeken database resetten
+                    </p>
+                    <v-btn color="error" class="mb-4" @click="resetDatabase()"
+                        >Reset database</v-btn
+                    >
+                </v-col>
             </v-row>
         </v-container>
     </div>
@@ -62,35 +84,63 @@
 
 <script>
 import { ResearchesApi } from "../../api";
-import { DatabaseActions } from "../../actions";
+import { ApiDatabaseActions } from "../../actions";
 export default {
     data() {
         return {
-            searchResearches: null,
+            searchResearches: "",
             downloading: false,
             researches: [],
         };
     },
+    computed: {
+        computed_researches() {
+            var researches = [];
+            this.researches.forEach((research) => {
+                if (
+                    research.name
+                        .toLowerCase()
+                        .includes(this.searchResearches.toLowerCase()) ||
+                    research.location.name
+                        .toLowerCase()
+                        .includes(this.searchResearches.toLowerCase())
+                ) {
+                    researches.push(research);
+                }
+            });
+            return researches;
+        },
+    },
     async mounted() {
-        this.researches = await DatabaseActions.getResearches();
+        this.researches = await ApiDatabaseActions.getResearches();
     },
     methods: {
         downloadResearches() {
             this.downloading = true;
             ResearchesApi.getResearches()
                 .then(async (data) => {
-                    await DatabaseActions.saveResearches(data);
-                    this.researches = await DatabaseActions.getResearches();
+                    await ApiDatabaseActions.saveResearches(data);
+                    this.researches = await ApiDatabaseActions.getResearches();
                     this.downloading = false;
                 })
                 .catch((err) => {
                     console.log("err", err);
                 });
         },
-        async remove(_id){
-            DatabaseActions.removeResearch(_id);
-            this.researches = await DatabaseActions.getResearches();
-        }
+        async remove(_id) {
+            ApiDatabaseActions.removeResearch(_id);
+            this.researches = await ApiDatabaseActions.getResearches();
+        },
+        async resetDatabase() {
+            if (
+                confirm(
+                    "Weet je zeker dat je de lokale database wilt resetten?"
+                )
+            ) {
+                await ApiDatabaseActions.resetApiResearches();
+                this.researches = await ApiDatabaseActions.getResearches();
+            }
+        },
     },
 };
 </script>

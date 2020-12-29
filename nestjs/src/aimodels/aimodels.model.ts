@@ -1,6 +1,6 @@
 import { prop, pre, Ref } from '@typegoose/typegoose';
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
-import { File } from 'src/common/models/file/file.model';
+import { File } from '../common/models/file/file.model';
 
 @pre<Aimodel>('save', function(next) {
   if (this.isNew) {

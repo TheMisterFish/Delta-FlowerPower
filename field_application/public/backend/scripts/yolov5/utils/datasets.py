@@ -14,7 +14,10 @@ from threading import Thread
 import cv2
 import numpy as np
 import torch
-from PIL import Image, ExifTags
+
+from PIL import Image
+# from PIL import ExifTags # Doestn seem to exist???
+
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -27,9 +30,9 @@ img_formats = ['.bmp', '.jpg', '.jpeg', '.png', '.tif', '.tiff', '.dng']
 vid_formats = ['.mov', '.avi', '.mp4', '.mpg', '.mpeg', '.m4v', '.wmv', '.mkv']
 
 # Get orientation exif tag
-for orientation in ExifTags.TAGS.keys():
-    if ExifTags.TAGS[orientation] == 'Orientation':
-        break
+# for orientation in ExifTags.TAGS.keys():
+#     if ExifTags.TAGS[orientation] == 'Orientation':
+#         break
 
 
 def get_hash(files):

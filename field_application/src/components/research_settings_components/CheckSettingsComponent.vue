@@ -1,24 +1,22 @@
 <template>
     <div>
-        <!-- <v-card v-if="sd_research" class="mx-auto card-spacer mb-5">
-            <v-card-text>
-                <h4>Onderzoek: {{ research_settings.name }}</h4>
-                <h4>Model: {{ process_settings.model }}</h4>
-                <h4>
-                    Weights:
-                    {{
-                        process_settings.weights &&
-                        process_settings.weights.name
-                    }}
-                </h4>
-                <h4>Image width: {{ process_settings.image_width }}</h4>
-                <h4>Confidence score: {{ process_settings.confidence }}</h4>
-                <v-btn @click="go_back">Terug</v-btn>
-                <v-btn @click="saveSettings" class="primary"
-                    >Opslaan en verder</v-btn
-                >
-            </v-card-text>
-        </v-card> -->
+        <div  v-if="!sd_research" class="text--primary mb-5">
+            <p class="subtitle-2 text-center">Research instellingen</p>
+            <v-simple-table dense>
+                <template v-slot:default>
+                    <tbody>
+                        <tr>
+                            <td>Onderzoek:</td>
+                            <td>{{ research_settings.research.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Beschrijving:</td>
+                            <td>{{ research_settings.research.description }}</td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
+        </div>
         <div  v-if="!sd_research" class="text--primary mb-5">
             <p class="subtitle-2 text-center">Drone instellingen</p>
             <v-simple-table dense>
@@ -80,15 +78,15 @@
                     <tbody>
                         <tr>
                             <td>AI Model gebruikt voor herkenning:</td>
-                            <td>{{ process_settings.model }}</td>
+                            <td>{{ process_settings.model ? process_settings.model.name : ""}}</td>
                         </tr>
                         <tr>
                             <td>AI Gewichten gebruikt voor herkenning:</td>
-                            <td>{{ process_settings.weight }}</td>
+                            <td>{{ process_settings.weights ? process_settings.weights.name : "" }}</td>
                         </tr>
                         <tr>
                             <td>De grootte van een gesneden afbeelding voor herkenning</td>
-                            <td>{{ process_settings.image_width }} px</td>
+                            <td>{{ process_settings.detect_width }} px</td>
                         </tr>
                         <tr>
                             <td>Hoe zeker de AI moet zijn</td>
@@ -120,7 +118,7 @@
         </div>
         <div v-if="showMap">
             <maps-component
-                :points="points"
+                :points="waypoint_settings.points"
                 :research_settings="research_settings"
             ></maps-component>
         </div>
@@ -131,19 +129,19 @@
                     <tbody>
                         <tr>
                             <td>Aantal waypoints:</td>
-                            <td>{{ points.length }}</td>
+                            <td>{{ waypoint_settings.points.length }}</td>
                         </tr>
                         <tr>
                             <td>Waypoints in de breedte</td>
-                            <td>{{ images_width }}</td>
+                            <td>{{ waypoint_settings.images_width }}</td>
                         </tr>
                         <tr>
                             <td>Waypoints in de hoogte</td>
-                            <td>{{ images_height }}</td>
+                            <td>{{ waypoint_settings.images_height }}</td>
                         </tr>
                         <tr>
                             <td>Drone richting</td>
-                            <td>{{ heading }}°</td>
+                            <td>{{ waypoint_settings.heading }}°</td>
                         </tr>
                     </tbody>
                 </template>
@@ -178,14 +176,10 @@ export default {
             type: Boolean,
             required: false,
         },
-        save_settings: {
-            type: Function,
+        waypoint_settings: {
+            type: Object,
             required: false,
-        },
-        go_back: {
-            type: Function,
-            required: false,
-        },
+        }
     },
     data() {
         return {
@@ -238,33 +232,11 @@ export default {
                 this.m_per_image_width,
                 this.m_per_image_height
             );
-            this.points = data.points
-            this.images_width = data.width;
-            this.images_height = data.height;
-            this.heading = Math.ceil(data.heading);
+            this.waypoint_settings.points = data.points
+            this.waypoint_settings.images_width = data.width;
+            this.waypoint_settings.images_height = data.height;
+            this.waypoint_settings.heading = Math.ceil(data.heading);
             this.pointsCalculated = true;
-        },
-
-        saveSettings() {
-            this.$store.dispatch(
-                "setWeightsPath",
-                this.process_settings.weights.path
-            );
-            this.$store.dispatch("setAiSettings", {
-                confidence: this.process_settings.confidence,
-                image_size: this.process_settings.image_width,
-            });
-
-            this.save_settings();
-            //setAiSettings
-            //setDroneSettings
-            //setResearchSettings
-            // TODO
-            /* 
-                1. Show all settinsg in template above 
-                2. Save all settings to store, go to new page where we start the drone kit and stuff.
-                3. Check if all inputs are set up correct
-            */
         },
     },
 };

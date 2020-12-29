@@ -34,7 +34,7 @@
                     ></select-research-settings>
                     <v-spacer></v-spacer>
 
-                    <v-btn color="primary" @click="e1 = 2"> Verder </v-btn>
+                    <v-btn color="primary" :disabled="!research_settings.research.name" @click="e1 = 2"> Verder </v-btn>
                     <v-btn text @click="cancel()"> Anuleren </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="2">
@@ -67,11 +67,18 @@
                         :photo_settings="photo_settings"
                         :drone_settings="drone_settings"
                         :process_settings="process_settings"
+                        :waypoint_settings="waypoint_settings"
                     ></check-settings>
 
                     <v-spacer></v-spacer>
 
-                    <v-btn color="primary" :disabled="!settings_ready" @click="start()"> Start </v-btn>
+                    <v-btn
+                        color="primary"
+                        :disabled="!settings_ready"
+                        @click="start()"
+                    >
+                        Start
+                    </v-btn>
                     <v-btn text @click="e1 = 3"> Terug </v-btn>
                 </v-stepper-content>
             </v-stepper-items>
@@ -84,6 +91,7 @@ import SelectResearchSettings from "@/components/research_settings_components/Se
 import createFlightSettings from "@/components/research_settings_components/CreateFlightSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_settings_components/CreateProcessSettingsComponent.vue";
 import CheckSettings from "@/components/research_settings_components/CheckSettingsComponent.vue";
+import { LocalDatabaseActions } from "@/actions";
 
 export default {
     name: "DroneResearch",
@@ -91,11 +99,14 @@ export default {
         return {
             e1: 1,
             research_settings: {
-                name: null,
-                pos_x_1: 51.450762458205254, 
+                research: {
+                    name: null,
+                    description: null,
+                },
+                pos_x_1: 51.450762458205254,
                 pos_y_1: 5.454901457596913,
-                pos_x_2: 51.45058745837186, 
-                pos_y_2: 5.455550550835136
+                pos_x_2: 51.45058745837186,
+                pos_y_2: 5.455550550835136,
             },
             photo_settings: {
                 sensor_width: 6.17,
@@ -106,13 +117,21 @@ export default {
             drone_settings: {
                 fly_height: 3,
                 use_ftp: true,
-                connection_url: '127.0.0.1:16670'
+                connection_url: "127.0.0.1:16670",
             },
             process_settings: {
                 model: null,
-                weight: null,
-                image_width: null,
+                weights: {
+                    name: null,
+                },
+                detect_width: 640,
                 confidence: 25,
+            },
+            waypoint_settings: {
+                points: [],
+                images_width: null,
+                images_height: null,
+                heading: null
             }
         };
     },
@@ -127,20 +146,56 @@ export default {
             // TODO: Reset all given settings
             this.$router.push({ path: "Landing" });
         },
-        start(){
+        start() {
             // SAVE ALL DATA AND GO TO THE RESEARCH PAGE
-            console.log("HERE");
+            const active_research = {
+                research_type: "drone",
+                create_date: window.moment(),
+                uploaded: false,
+                upload_date: null,
+                executed: false,
+                executed_date: null,
+                research_settings: this.research_settings,
+                photo_settings: this.photo_settings,
+                drone_settings: this.drone_settings,
+                process_settings: this.process_settings,
+                waypoint_settings: this.waypoint_settings,
+            };
+            LocalDatabaseActions.saveLocalResearch(active_research);
             this.$router.push({ path: "active_drone_research" });
-        }
+        },
+        iterate(obj) {
+            var do_return = true;
+            if (obj == null) {
+                return false;
+            } else {
+                for (const [key, value] of Object.entries(obj)) {
+                    if (typeof value === "object" && key != "made_by") {
+                        if (!this.iterate(obj[key])) {
+                            do_return = false;
+                            break;
+                        }
+                    } else if (value == null) {
+                        do_return = false;
+                        break;
+                    }
+                }
+                return do_return;
+            }
+        },
     },
     computed: {
-        settings_ready: function() {
-            return true;
-        }
-    },
-    created() {
-        this.$store.dispatch("getResearches");
-        this.$store.dispatch("getModels");
+        settings_ready: function () {
+            const ready = [
+                this.iterate(this.research_settings),
+                this.iterate(this.photo_settings),
+                this.iterate(this.drone_settings),
+                this.iterate(this.process_settings),
+                this.iterate(this.waypoint_settings),
+                this.waypoint_settings.points.length > 0
+            ];
+            return ready.every(e => e === true);
+        },
     },
 };
 </script>
