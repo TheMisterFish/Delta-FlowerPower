@@ -1,10 +1,9 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
+import { Location } from "../locations/locations.model";
 import { User } from "../users/users.model";
-import { Aimodel } from "../aimodels/aimodels.model";
-import { Research } from "../researches/researches.model";
 
-@pre<Session>('save', function (next) {
+@pre<Research>('save', function (next) {
   if (!this.isNew) {
       this.updated_at = new Date();
   } else {
@@ -13,7 +12,7 @@ import { Research } from "../researches/researches.model";
   return next();
 })
 
-export class Session {
+export class Research {
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
@@ -26,22 +25,13 @@ export class Session {
   @prop()
   description: string;
 
-  @IsString()
+  @IsNotEmpty()
+  @prop({ ref: Location })
+  location: Ref<Location>;
+
   @IsNotEmpty()
   @prop({ ref: User })
   made_by: Ref<User>;
-
-  @IsNotEmpty()
-  @prop({Ref: Research})
-  research: Ref<Research>
-  
-  @prop()
-  results: any;
-
-  @IsString()
-  @IsNotEmpty()
-  @prop({ ref: Aimodel })
-  aimodel: Ref<Aimodel>;
 
   @IsDate()
   @prop()
