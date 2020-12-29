@@ -11,5 +11,5 @@ apt-get install curl software-properties-common
 curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
 apt-get install nodejs -y
 apt-get install npm -y
-nodejs -v
-npm -v 
+node --version
+nodejs --version
