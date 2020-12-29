@@ -13,6 +13,10 @@ describe('AimodelsService', () => {
           provide: getModelToken('Aimodel'),
           useValue: {},
         },
+        {
+          provide: getModelToken("File"),
+          useValue: {}
+        }
       ],
     }).compile();
 

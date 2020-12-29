@@ -24,9 +24,13 @@ import { UpdateAimodelDto } from './dto/update-aimodel.dto';
 import { CreateaAimodelWeightsDto } from './dto/create-aimodel-weights.dto';
 import { diskStorage } from 'multer';
 import { join } from 'path';
+import { Roles } from '../common/interfaces/roles.interface';
 
 function getUniqueFilename(filename, directory, depth = 0) {
-  const newFilename = depth > 0 ? `${filename.split('.')[0]}(${depth})${filename.split('.')[1]}` : filename;
+  const newFilename =
+    depth > 0
+      ? `${filename.split('.')[0]}(${depth})${filename.split('.')[1]}`
+      : filename;
 
   if (fs.existsSync(join(directory, newFilename))) {
     return getUniqueFilename(filename, directory, depth + 1);
@@ -36,25 +40,22 @@ function getUniqueFilename(filename, directory, depth = 0) {
 }
 
 @Controller('aimodels')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@HasRoles(Roles.researcher)
 export class AimodelsController {
   constructor(private readonly aimodelsService: AimodelsService) {}
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
+
   @Post()
   async create(@Request() req, @Body() createAimodelDto: CreateAimodelDto) {
     createAimodelDto.made_by = req.user._id;
     return await this.aimodelsService.create(createAimodelDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Get()
   async findAll(): Promise<Aimodel[]> {
     return await this.aimodelsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Aimodel> {
     return await this.aimodelsService.findOne(id).catch(err => {
@@ -68,8 +69,7 @@ export class AimodelsController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('admin')
+  @HasRoles(Roles.admin)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.aimodelsService.deleteOne(id).catch(err => {
@@ -83,8 +83,6 @@ export class AimodelsController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -103,8 +101,7 @@ export class AimodelsController {
       });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('admin')
+  @HasRoles(Roles.admin)
   @Delete(':id/weights/:weightsid')
   async deleteWeights(
     @Param('id') id: string,
@@ -123,8 +120,6 @@ export class AimodelsController {
       });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('moderator')
   @Post(':id/weights')
   @UseInterceptors(
     FileInterceptor('weights', {
@@ -148,7 +143,15 @@ export class AimodelsController {
     @Param('id') id: string,
     @Body() createAimodelWeightsDto: CreateaAimodelWeightsDto,
   ) {
-    console.log(weights);
+    if (weights === undefined) {
+      throw new HttpException(
+        {
+          message: 'no weights uploaded',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     createAimodelWeightsDto.weights = {
       fileName: weights.filename,
       filePath: weights.path,

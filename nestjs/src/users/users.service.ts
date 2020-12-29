@@ -42,7 +42,7 @@ export class UsersService {
   }
 
   async changePassword(user: any, update: UpdatePassword){
-    await this.userModel.findById(user.id).select('+password').exec(async function(err, doc) {
+    await this.userModel.findById(user._id).select('+password').exec(async function(err, doc) {
       if (err) return err;
       const valid = await bcrypt.compare(update.password, doc.password);
       if(valid){

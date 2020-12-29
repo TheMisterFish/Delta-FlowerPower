@@ -5,6 +5,7 @@ import { AuthService } from './auth/auth.service';
 import { AppService } from './app.service';
 
 import { HasRoles } from './common/decorators/roles.decorator';
+import { Roles } from './common/interfaces/roles.interface';
 
 @Controller()
 export class AppController {
@@ -24,7 +25,7 @@ export class AppController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @HasRoles('admin')
+  @HasRoles(Roles.admin)
   @Get('me')
   getProfile(@Request() req) {
     return req.user;
