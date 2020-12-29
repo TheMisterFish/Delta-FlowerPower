@@ -53,7 +53,7 @@ pipeline {
         sh 'ls'
         sh 'docker cp ./field_application foo-tmp:/'
         sh 'docker commit foo-tmp foo'
-        sh 'docker run foo ls /'
+        sh 'docker run foo ls -a'
 
 
         // sh 'docker create --name flowerpower_jenkins_fieldapp cdrx/pyinstaller-windows -c "mkdir field_application && ls -a && ls field_application -a"'
