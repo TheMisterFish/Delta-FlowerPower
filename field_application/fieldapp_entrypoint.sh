@@ -8,5 +8,6 @@
 # wine python -m pip install -r /app/public/backend/requirements.txt
 # wine python -m pip list
 apt-get install nodejs -y
-node -v
+apt-get install npm -y
+nodejs -v
 npm -v 
