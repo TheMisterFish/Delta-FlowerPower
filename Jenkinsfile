@@ -51,7 +51,7 @@ pipeline {
         }
         sh 'docker create --name foo-tmp cdrx/pyinstaller-windows'
         sh 'ls'
-        sh 'docker cp ./field_application foo-tmp:./'
+        sh 'docker cp ./field_application foo-tmp:/app/'
         sh 'docker commit foo-tmp foo'
         sh 'docker run foo ls -a'
 
