@@ -48,7 +48,7 @@ pipeline {
         sh 'docker cp ./field_application flowerpower_jenkins_fieldapp:/field_application'
         sh 'docker commit flowerpower_jenkins_fieldapp'
         sh 'docker start flowerpower_jenkins_fieldapp'
-        sh 'docker exec -it flowerpower_jenkins_fieldapp bash -c "ls -a && ls field_application -a && tree -a"'
+        sh 'docker exec flowerpower_jenkins_fieldapp bash -c "ls -a && ls field_application -a && tree -a"'
         sh 'docker container ls -a'
         // sh 'ls ~/.'
         // sh 'ls ./'
