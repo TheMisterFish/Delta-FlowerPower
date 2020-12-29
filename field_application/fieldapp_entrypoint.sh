@@ -7,7 +7,7 @@
 # wine python -m pip install typed_ast‑1.1.0‑cp36‑cp36m‑win_amd64.whl
 # wine python -m pip install -r /app/public/backend/requirements.txt
 # wine python -m pip list
-apt-get install curl software-properties-common
+apt-get install curl software-properties-common -y
 curl -sL https://deb.nodesource.com/setup_12.x | bash -
 apt-get install nodejs -y --fix-missing
 apt-get install npm -y --fix-missing
