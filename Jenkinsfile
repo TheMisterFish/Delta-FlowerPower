@@ -43,8 +43,7 @@ pipeline {
                 sh 'Handle the exception!'
             }
         }
-        sh 'docker build -q -t foo-build cdrx/pyinstaller-windows'
-        sh 'docker create --name foo-tmp foo-build'
+        sh 'docker create --name foo-tmp cdrx/pyinstaller-windows'
         sh 'docker cp /field_application foo-tmp:/'
         sh 'docker commit foo-tmp foo'
         sh 'docker run foo ls /'
