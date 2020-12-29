@@ -15,9 +15,9 @@ apt-get install npm -y --fix-missing
 node --version
 npm --version
 
-npm i --prefix ./app/
+npm i --prefix /app/
 
-npm run flowerpower:build --prefix ./app/
+npm run flowerpower:build --prefix /app/
 
-cp ./app/api_exampel.spec.txt ./app/api.spec
+cp ./app/api_exampel.spec.txt /app/api.spec
 
