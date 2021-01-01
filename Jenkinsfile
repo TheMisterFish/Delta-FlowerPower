@@ -39,7 +39,7 @@ pipeline {
         sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
         sh 'docker cp ./field_application foo-tmp:/app/'
         sh 'docker commit foo-tmp foo'
-        sh 'docker run--name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" --rm foo'
+        sh 'docker run --rm --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" foo'
         sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
         sh 'ls -a'
         sh 'ls ./field_application -a'
