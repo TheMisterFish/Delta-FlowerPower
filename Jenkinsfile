@@ -56,7 +56,7 @@ pipeline {
         sh 'docker commit foo-tmp foo'
         sh 'docker run -v $WORKSPACE:/field_application -u root --entrypoint "/app/fieldapp_entrypoint.sh" foo'
         sh 'ls -a'
-        sh 'ls /field_application -a'
+        sh 'ls ./field_application -a'
 
         // sh 'docker create --name flowerpower_jenkins_fieldapp cdrx/pyinstaller-windows -c "mkdir field_application && ls -a && ls field_application -a"'
         // sh 'docker cp ./field_application flowerpower_jenkins_fieldapp:/field_application'
