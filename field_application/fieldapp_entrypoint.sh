@@ -19,6 +19,6 @@ ls -a /app/
 wine pyinstaller /app/api.spec --noconfirm --distpath /app/public/backend_dist
 # wine pyinstaller
 echo "#####"
-ls -a ./
+ls -a /
 echo "#####"
-ls -a ./field_application
+ls -a /app/
