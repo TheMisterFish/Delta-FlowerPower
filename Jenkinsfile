@@ -28,15 +28,15 @@ pipeline {
         // Run field application python build
         stage('Buid Field Application - Python') {
             steps {
-                sh 'docker create --name field-app-build-tmp cdrx/pyinstaller-windows'
-                sh 'ls'
+                sh 'docker create --name foo-tmp cdrx/pyinstaller-windows'
                 sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-                sh 'docker cp ./field_application field-app-build-tmp:/app/'
-                sh 'docker commit field-app-build-tmp field-app-build'
-                sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" field-app-build'
+                sh 'docker cp ./field_application foo-tmp:/app/'
+                sh 'docker commit foo-tmp foo'
+                sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" foo'
                 sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
             }
         }
+        
         // Run field application electron build
         stage('Buid Field Application - Electron') {
             steps { 
