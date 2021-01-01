@@ -26,30 +26,30 @@ pipeline {
             }
         }
         // Run field application python build
-        //// stage('Buid Field Application - Python') {
-        ////     steps {
-        ////         sh 'docker create --name foo-tmp cdrx/pyinstaller-windows'
-        ////         sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-        ////         sh 'docker cp ./field_application foo-tmp:/app/'
-        ////         sh 'docker commit foo-tmp foo'
-        ////         sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" foo'
-        ////         sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
-        ////     }
-        //// }
-                
-        //// // Run field application electron build
-        //// stage('Buid Field Application - Electron') {
-        ////     steps { 
-        ////         dir("field_application") {
-        ////             writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION'
-        ////             sh 'npm prune'
-        ////             sh 'npm install'
-        ////             sh 'npm run electron:winbuild'
-        ////             sh "ls -a"
-        ////             sh "ls ./dist_electron -a"
-        ////         }
-        ////     }      
-        //// }
+        stage('Buid Field Application - Python') {
+            steps {
+                sh 'docker create --name fieldapp-build-tmp cdrx/pyinstaller-windows'
+                sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
+                sh 'docker cp ./field_application fieldapp-build-tmp:/app/'
+                sh 'docker commit fieldapp-build-tmp fieldapp-build'
+                sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build'
+                sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
+            }
+        }
+        
+        // Run field application electron build
+        stage('Buid Field Application - Electron') {
+            steps { 
+                dir("field_application") {
+                    writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION'
+                    sh 'npm prune'
+                    sh 'npm install'
+                    sh 'npm run electron:winbuild'
+                    sh "ls -a"
+                    sh "ls ./dist_electron -a"
+                }
+            }      
+        }
 
         //Zip the dist_electron
     
@@ -95,10 +95,10 @@ pipeline {
 
                 }
                 try {
-                    sh 'docker container stop field-app-buld-tmp'
-                    sh 'docker container rm field-app-buld-tmp'
+                    sh 'docker container stop fieldapp-build-tmp'
+                    sh 'docker container rm fieldapp-build-tmp'
                 } catch (Exception e) {
-                    sh 'echo "Could not stop/remove field-app-buld-tmp"'
+                    sh 'echo "Could not stop/remove fieldapp-build-tmp"'
                 }
                 if(env.BRANCH_NAME == "master"){
                     sh "docker logs fp_nginx"
