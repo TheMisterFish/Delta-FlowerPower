@@ -55,7 +55,7 @@ pipeline {
         sh 'docker cp ./field_application foo-tmp:/app/'
         sh 'docker commit foo-tmp foo'
         sh 'docker run --entrypoint "/app/fieldapp_entrypoint.sh" foo'
-        sh "docker cp  foo:/app/field_application/public ./field_application/public"
+        sh "docker cp foo:/app/field_application/public ./field_application/public"
         sh 'ls -a'
         sh 'ls ./field_application -a'
         sh 'ls ./field_application/public -a'
