@@ -34,33 +34,33 @@ pipeline {
     //       }
     //   }
       steps {
-        script {
-            try {
-                sh 'docker container stop flowerpower_jenkins_fieldapp'
-                sh 'docker container rm flowerpower_jenkins_fieldapp'
-            } catch (Exception e) {
-                sh 'echo "nothing happend"'
-            }
-            try {
-                sh 'docker container stop foo-tmp'
-                sh 'docker container rm foo-tmp'
-
-            } catch (Exception e) {
-                sh 'echo "nothing happend"'
-            }
-        }
-        sh 'docker create --name foo-tmp cdrx/pyinstaller-windows'
+        sh 'docker create --rm --name foo-tmp cdrx/pyinstaller-windows'
         sh 'ls'
         sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
         sh 'docker cp ./field_application foo-tmp:/app/'
         sh 'docker commit foo-tmp foo'
-        sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" foo'
+        sh 'docker run--name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" --rm foo'
         sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
         sh 'ls -a'
         sh 'ls ./field_application -a'
         sh 'ls ./field_application/public -a'
         sh 'ls ./field_application/public/backend_dist -a'
-        sh 'docker container rm field_app_build'
+        script {
+            try {
+                sh 'docker container stop field_app_build'
+                sh 'docker container rm field_app_build'
+            } catch (Exception e) {
+                sh 'echo "Could not stop/remove field_app_build"'
+
+            }
+            try {
+                sh 'docker container stop foo-tmp'
+                sh 'docker container rm foo-tmp'
+            } catch (Exception e) {
+                sh 'echo "Could not stop/remove foo-tmp"'
+            }
+        }
+        
 
         // sh 'docker create --name flowerpower_jenkins_fieldapp cdrx/pyinstaller-windows -c "mkdir field_application && ls -a && ls field_application -a"'
         // sh 'docker cp ./field_application flowerpower_jenkins_fieldapp:/field_application'
