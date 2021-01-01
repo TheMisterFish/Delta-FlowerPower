@@ -55,11 +55,12 @@ pipeline {
         sh 'docker cp ./field_application foo-tmp:/app/'
         sh 'docker commit foo-tmp foo'
         sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" foo'
-        sh "docker cp field_app_build:/tmp ./field_application/public"
+        sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
         sh 'ls -a'
         sh 'ls ./field_application -a'
         sh 'ls ./field_application/public -a'
-        // sh 'docker container rm field_app_build'
+        sh 'ls ./field_application/public/backend_dist -a'
+        sh 'docker container rm field_app_build'
 
         // sh 'docker create --name flowerpower_jenkins_fieldapp cdrx/pyinstaller-windows -c "mkdir field_application && ls -a && ls field_application -a"'
         // sh 'docker cp ./field_application flowerpower_jenkins_fieldapp:/field_application'
