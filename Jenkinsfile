@@ -28,6 +28,7 @@ pipeline {
         // Run field application python build
         stage('Buid Field Application - Python') {
             steps {
+                echo 'Building python application'
                 sh 'docker create --name fieldapp-build-tmp cdrx/pyinstaller-windows'
                 sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
                 sh 'docker cp ./field_application fieldapp-build-tmp:/app/'
@@ -41,27 +42,51 @@ pipeline {
         stage('Buid Field Application - Electron') {
             steps { 
                 dir("field_application") {
+                    echo 'Building electron application'
                     writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION'
                     sh 'npm prune'
                     sh 'npm install'
                     sh 'npm run electron:winbuild'
-                    sh "ls -a"
-                    sh "ls ./dist_electron -a"
+                    sh "ls ./field_app_build -a"
                 }
             }      
         }
 
         //Zip the dist_electron
-    
+        stage('Zipping and copying build folders') {
+            steps { 
+                script {
+                    try {
+                        sh 'mkdir ./nestjs/public/files/builds'
+                    } catch (Exception e) {
+                        sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
+                    }
+                    sh 'echo "Zipping win-unpacked"'
+                    try {
+                        zip zipFile: './nestjs/public/files/builds/win-unpacked.zip', archive: false, dir: './field_application/field_app_build/win-unpacked', overwrite: true
+                    } catch (Exception e) {
+                        sh 'echo "Could not zip win-unpacked'
+                    }
+                    sh 'Moving setup.exe to nestjs'
+                    try {
+                        sh 'cp "./field_application/field_app_build/field_application Setup 0.1.0.exe"'
+                    } catch (Exception e) {
+                        sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds'
+                    }
+                    sh 'ls ./nestjs/public/files'
+                    sh 'ls ./nestjs/public/files/builds'
+                }
+            }
+        }
         // Run NestJS jest test
         stage('NestJS API Test') {
             steps { 
                 echo 'Testing NestJS API using Jest'
                 sh 'node -v'
                 dir("nestjs") {
-                sh 'npm prune'
-                sh 'npm install'
-                sh 'npm test'
+                    sh 'npm prune'
+                    sh 'npm install'
+                    sh 'npm test'
                 }
             }
         }
