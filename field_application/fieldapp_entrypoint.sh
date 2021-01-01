@@ -16,9 +16,11 @@ ls -a /
 cp /app/api_exampel.spec.txt /app/api.spec
 ls -a /app/
 
-wine pyinstaller /app/api.spec --noconfirm --distpath /app/public/backend_dist
+wine pyinstaller /app/api.spec --noconfirm --distpath /tmp/backend_dist
 # wine pyinstaller
 echo "#####"
 ls -a /
 echo "#####"
 ls -a /app/
+echo "#####"
+ls -a /tmp/
