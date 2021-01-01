@@ -2,10 +2,6 @@
 node_modules
 /dist
 
-
-*/dist_electron
-*/backend_dist
-*/dist
 # local env files
 .env.local
 .env.*.local
@@ -29,6 +25,10 @@ pnpm-debug.log*
 
 #Electron-builder output
 /dist_electron
-
+/field_app_build
+*/field_app_build
+*/dist_electron
+*/backend_dist
+*/dist
 # Temp folder
 /temp

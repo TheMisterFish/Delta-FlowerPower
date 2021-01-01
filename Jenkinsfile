@@ -41,14 +41,17 @@ pipeline {
         stage('Buid Field Application - Electron') {
             steps { 
                 dir("field_application") {
+                    writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION'
                     sh 'npm prune'
                     sh 'npm install'
                     sh 'npm run electron:winbuild'
                     sh "ls -a"
-                    sh "ls ./release-builds -a"
+                    sh "ls ./field_app_build -a"
                 }
             }      
         }
+
+        //Zip the field_app_build
     
         // Run NestJS jest test
         stage('NestJS API Test') {
