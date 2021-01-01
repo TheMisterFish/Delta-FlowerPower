@@ -18,7 +18,15 @@ ls -a /app/
 
 wine pyinstaller /app/api.spec --noconfirm --distpath /app/public/backend_dist
 # wine pyinstaller
+echo "1"
 ls -a /app/public
+echo "2"
 ls -a /app/public/backend_dist
+echo "3"
+ls -a /app/public/backend_dist/api
+echo "4"
 ls -a .
-ls -a ./output
+echo "5"
+ls -a /
+echo "6"
+ls -a /output
