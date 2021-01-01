@@ -20,3 +20,4 @@ wine pyinstaller /app/api.spec --noconfirm --distpath /app/public/backend_dist
 # wine pyinstaller
 ls -a /app/public
 ls -a /app/public/backend_dist
+ls -a /output
