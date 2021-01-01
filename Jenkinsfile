@@ -45,21 +45,6 @@ pipeline {
         sh 'ls ./field_application -a'
         sh 'ls ./field_application/public -a'
         sh 'ls ./field_application/public/backend_dist -a'
-        script {
-            try {
-                sh 'docker container stop field_app_build'
-                sh 'docker container rm field_app_build'
-            } catch (Exception e) {
-                sh 'echo "Could not stop/remove field_app_build"'
-
-            }
-            try {
-                sh 'docker container stop foo-tmp'
-                sh 'docker container rm foo-tmp'
-            } catch (Exception e) {
-                sh 'echo "Could not stop/remove foo-tmp"'
-            }
-        }
         
 
         // sh 'docker create --name flowerpower_jenkins_fieldapp cdrx/pyinstaller-windows -c "mkdir field_application && ls -a && ls field_application -a"'
@@ -156,14 +141,27 @@ pipeline {
   post { 
       always {
         script {
-          echo env.BRANCH_NAME
-          if(env.BRANCH_NAME == "master"){
-            sh "docker logs fp_nginx"
-            sh "docker logs fp_mongodb"
-            sh "docker logs fp_nestjs"
+            try {
+                sh 'docker container stop field_app_build'
+                sh 'docker container rm field_app_build'
+            } catch (Exception e) {
+                sh 'echo "Could not stop/remove field_app_build"'
 
-            echo currentBuild.currentResult
-          }
+            }
+            try {
+                sh 'docker container stop foo-tmp'
+                sh 'docker container rm foo-tmp'
+            } catch (Exception e) {
+                sh 'echo "Could not stop/remove foo-tmp"'
+            }
+            echo env.BRANCH_NAME
+            if(env.BRANCH_NAME == "master"){
+                sh "docker logs fp_nginx"
+                sh "docker logs fp_mongodb"
+                sh "docker logs fp_nestjs"
+
+                echo currentBuild.currentResult
+            }
         }
       }
       success {
