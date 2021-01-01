@@ -28,12 +28,12 @@ pipeline {
         // Run field application python build
         stage('Buid Field Application - Python') {
             steps {
-                sh 'docker create --name field-app-buld-tmp cdrx/pyinstaller-windows'
+                sh 'docker create --name field-app-build-tmp cdrx/pyinstaller-windows'
                 sh 'ls'
                 sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-                sh 'docker cp ./field_application field-app-buld-tmp:/app/'
-                sh 'docker commit field-app-buld-tmp foo'
-                sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" foo'
+                sh 'docker cp ./field_application field-app-build-tmp:/app/'
+                sh 'docker commit field-app-build-tmp field-app-build'
+                sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" field-app-build'
                 sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
             }
         }
@@ -46,12 +46,12 @@ pipeline {
                     sh 'npm install'
                     sh 'npm run electron:winbuild'
                     sh "ls -a"
-                    sh "ls ./field_app_build -a"
+                    sh "ls ./dist_electron -a"
                 }
             }      
         }
 
-        //Zip the field_app_build
+        //Zip the dist_electron
     
         // Run NestJS jest test
         stage('NestJS API Test') {
