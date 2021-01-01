@@ -29,4 +29,4 @@ ls -a .
 echo "5"
 ls -a /
 echo "6"
-ls -a /output
+ls -a /field_application
