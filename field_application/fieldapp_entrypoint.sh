@@ -12,9 +12,11 @@ apt-get install curl software-properties-common -y --fix-missing
 curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 ls -a /
-ls -a /app/
 
 cp /app/api_exampel.spec.txt /app/api.spec
+ls -a /app/
 
-# wine pyinstaller ./app/api.spec --noconfirm --distpath ./app/public/backend_dist
-wine pyinstaller
+wine pyinstaller /app/api.spec --noconfirm --distpath /app/public/backend_dist
+# wine pyinstaller
+ls -a /app/public
+ls -a /app/public/backend_dist
