@@ -9,6 +9,7 @@
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "electron:build": "vue-cli-service electron:build",
+        "electron:winbuild": "vue-cli-service electron:build --windows",
         "electron:serve": "vue-cli-service electron:serve",
         "python:build": "pyinstaller api.spec --noconfirm --distpath public/backend_dist",
         "python_py:build": "pyinstaller public/backend/api.py --noconfirm --distpath public/backend_dist",

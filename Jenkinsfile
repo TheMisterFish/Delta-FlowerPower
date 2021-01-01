@@ -43,7 +43,7 @@ pipeline {
                 dir("field_application") {
                     sh 'npm prune'
                     sh 'npm install'
-                    sh 'npm run electron:build'
+                    sh 'npm run electron:winbuild'
                     sh "ls -a"
                     sh "ls ./release-builds -a"
                 }
@@ -62,7 +62,7 @@ pipeline {
                 }
             }
         }
-        
+
         // Build & Deploy using docker compose
         stage('Build test') {
             steps {
