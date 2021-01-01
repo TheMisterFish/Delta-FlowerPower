@@ -18,6 +18,6 @@ ls -a /app/
 
 wine pyinstaller /app/api.spec --noconfirm --distpath /app/public/backend_dist
 # wine pyinstaller
-echo "6"
+echo "6"    
 ls -a
-ls -a ./field_application
+ls -a /field_application
