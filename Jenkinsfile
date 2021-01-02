@@ -67,7 +67,7 @@ pipeline {
                     } catch (Exception e) {
                         sh 'echo "Could not zip win-unpacked'
                     }
-                    sh 'Moving setup.exe to nestjs'
+                    sh 'echo "Moving setup.exe to nestjs"'
                     try {
                         sh 'cp "./field_application/field_app_build/field_application Setup 0.1.0.exe" "./nestjs/public/files/builds/field_application Setup 0.1.0.exe"'
                     } catch (Exception e) {
