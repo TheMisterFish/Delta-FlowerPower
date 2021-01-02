@@ -57,7 +57,7 @@ pipeline {
             steps { 
                 script {
                     try {
-                        sh 'mkdir ./nestjs/public/files/builds'
+                        sh 'mkdir -p ./nestjs/public/files/builds'
                     } catch (Exception e) {
                         sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
                     }
