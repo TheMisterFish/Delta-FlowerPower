@@ -60,6 +60,7 @@ pipeline {
                         sh 'mkdir -p ./nestjs/public/files/builds'
                     } catch (Exception e) {
                         sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
+                        println Functions.printThrowable(e)
                     }
                     sh 'echo "Zipping win-unpacked"'
                     try {
@@ -67,14 +68,14 @@ pipeline {
                         sh 'echo "Zipped win-unpacked"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip win-unpacked"'
-                        sh 'echo e'
+                        println Functions.printThrowable(e)
                     }
                     sh 'echo "Moving setup.exe to nestjs"'
                     try {
                         sh 'cp "./field_application/field_app_build/field_application Setup 0.1.0.exe" "./nestjs/public/files/builds/field_application Setup 0.1.0.exe"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
-                        sh 'echo e'
+                        println Functions.printThrowable(e)
                     }
                     sh 'ls ./nestjs/public/files/builds -a'
                 }
@@ -119,6 +120,7 @@ pipeline {
                     sh 'docker container rm field_app_build'
                 } catch (Exception e) {
                     sh 'echo "Could not stop/remove field_app_build"'
+                    println Functions.printThrowable(e)
 
                 }
                 try {
@@ -126,6 +128,7 @@ pipeline {
                     sh 'docker container rm fieldapp-build-tmp'
                 } catch (Exception e) {
                     sh 'echo "Could not stop/remove fieldapp-build-tmp"'
+                    println Functions.printThrowable(e)
                 }
                 if(env.BRANCH_NAME == "master"){
                     sh "docker logs fp_nginx"
