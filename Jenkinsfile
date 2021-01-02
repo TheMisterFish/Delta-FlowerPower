@@ -66,13 +66,13 @@ pipeline {
                         zip zipFile: './nestjs/public/files/builds/win-unpacked.zip', archive: false, dir: './field_application/field_app_build/win-unpacked', overwrite: true
                         sh 'echo "Zipped win-unpacked"'
                     } catch (Exception e) {
-                        sh 'echo "Could not zip win-unpacked'
+                        sh 'echo "Could not zip win-unpacked"'
                     }
                     sh 'echo "Moving setup.exe to nestjs"'
                     try {
                         sh 'cp "./field_application/field_app_build/field_application Setup 0.1.0.exe" "./nestjs/public/files/builds/field_application Setup 0.1.0.exe"'
                     } catch (Exception e) {
-                        sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds'
+                        sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
                     }
                     sh 'ls ./nestjs/public/files/builds -a'
                 }
