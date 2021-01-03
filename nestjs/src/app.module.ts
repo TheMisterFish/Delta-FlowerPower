@@ -14,6 +14,8 @@ import { AimodelsController } from './aimodels/aimodels.controller';
 import { AimodelsModule } from './aimodels/aimodels.module';
 import { LocationsModule } from './locations/locations.module';
 import { ResearchesModule } from './researches/researches.module';
+import { FieldappController } from './fieldapp/fieldapp.controller';
+import { FieldappModule } from './fieldapp/fieldapp.module';
 
 @Module({
   imports: [
@@ -36,8 +38,9 @@ import { ResearchesModule } from './researches/researches.module';
     AimodelsModule,
     LocationsModule,
     ResearchesModule,
+    FieldappModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, FieldappController],
   providers: [AppService],
 })
 export class AppModule {}
