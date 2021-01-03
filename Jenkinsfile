@@ -60,22 +60,19 @@ pipeline {
                         sh 'mkdir -p ./nestjs/public/files/builds'
                     } catch (Exception e) {
                         sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
-                        error "Caught ${e.toString()}" 
                     }
                     sh 'echo "Zipping win-unpacked"'
                     try {
-                        zip zipFile: './nestjs/public/files/builds/win-unpacked.zip', archive: false, dir: './field_application/field_app_build/win-unpacked'
+                        zip zipFile: './nestjs/public/files/builds/win-unpacked-latest.zip', archive: false, dir: './field_application/field_app_build/win-unpacked'
                         sh 'echo "Zipped win-unpacked"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip win-unpacked"'
-                        error "Caught ${e.toString()}" 
                     }
                     sh 'echo "Moving setup.exe to nestjs"'
                     try {
-                        sh 'cp "./field_application/field_app_build/field_application Setup 0.1.0.exe" "./nestjs/public/files/builds/field_application Setup 0.1.0.exe"'
+                        sh 'cp "./field_application/field_app_build/field_application"*".exe" "./nestjs/public/files/builds/field_application-latest.exe"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
-                        error "Caught ${e.toString()}" 
                     }
                     sh 'ls ./nestjs/public/files/builds -a'
                 }
@@ -120,15 +117,12 @@ pipeline {
                     sh 'docker container rm field_app_build'
                 } catch (Exception e) {
                     sh 'echo "Could not stop/remove field_app_build"'
-                    error "Caught ${e.toString()}" 
-
                 }
                 try {
                     sh 'docker container stop fieldapp-build-tmp'
                     sh 'docker container rm fieldapp-build-tmp'
                 } catch (Exception e) {
                     sh 'echo "Could not stop/remove fieldapp-build-tmp"'
-                    error "Caught ${e.toString()}" 
                 }
                 if(env.BRANCH_NAME == "master"){
                     sh "docker logs fp_nginx"
