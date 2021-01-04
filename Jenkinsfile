@@ -102,6 +102,7 @@ pipeline {
                     if (env.BRANCH_NAME == "master"){
                         echo 'Deploying....'
                         sh "docker-compose down"
+                        sh "docker-compose rm"
                         sh "docker-compose up --build --force-recreate -d"
                         sh "docker ps -a"
                     } else {

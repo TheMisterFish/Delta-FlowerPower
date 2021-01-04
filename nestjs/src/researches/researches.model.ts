@@ -1,6 +1,6 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
-import { Session } from "src/sessions/sessions.model";
+import { Session } from "../sessions/sessions.model";
 import { Location } from "../locations/locations.model";
 import { User } from "../users/users.model";
 
