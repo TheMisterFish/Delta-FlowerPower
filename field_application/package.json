@@ -20,6 +20,7 @@
     },
     "main": "background.js",
     "dependencies": {
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@mdi/font": "^3.9.97",
         "@mdi/js": "^5.8.55",
         "axios": "^0.21.0",
