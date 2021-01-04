@@ -16,6 +16,10 @@ export class ResearchesService {
       .find()
       .populate('made_by')
       .populate('location')
+<<<<<<< HEAD
+      .populate('sessions')
+=======
+>>>>>>> origin/master
       .exec();
   }
 
@@ -26,6 +30,10 @@ export class ResearchesService {
     return await research
       .populate('made_by')
       .populate('location')
+<<<<<<< HEAD
+      .populate('sessions')
+=======
+>>>>>>> origin/master
       .execPopulate();
   }
 
@@ -34,6 +42,10 @@ export class ResearchesService {
       .findById(id)
       .populate('made_by')
       .populate('location')
+<<<<<<< HEAD
+      .populate('sessions')
+=======
+>>>>>>> origin/master
       .exec();
   }
 
@@ -43,7 +55,12 @@ export class ResearchesService {
     return await this.researches
       .findByIdAndUpdate(id, { $set: dto }, { new: true })
       .populate('made_by')
+<<<<<<< HEAD
+      .populate('location')
+      .populate('sessions').exec()
+=======
       .populate('location');
+>>>>>>> origin/master
   }
 
   async deleteOne(id: string): Promise<void> {

@@ -1,0 +1,5 @@
+# The following command installs the correct version for python stuff
+pip install pyinstaller autobahn twisted pillow Cython matplotlib==3.2.2 numpy opencv-python PyYAML scipy tensorboard==2.2 tqdm==4.41.0 tornado torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+# this one is only for torch and tensorvision
+pip install torch==1.6.0+cpu torchvision==0.7.0+cpu torchaudio -f https://download.pytorch.org/whl/torch_stable.html
