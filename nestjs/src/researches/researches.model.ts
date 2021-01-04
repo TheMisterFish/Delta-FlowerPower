@@ -1,9 +1,6 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
-<<<<<<< HEAD
 import { Session } from "src/sessions/sessions.model";
-=======
->>>>>>> origin/master
 import { Location } from "../locations/locations.model";
 import { User } from "../users/users.model";
 
@@ -33,12 +30,9 @@ export class Research {
   @prop({ ref: Location })
   location: Ref<Location>;
 
-<<<<<<< HEAD
   @prop({ ref: () => Session })
   sessions: Ref<Session>[];
 
-=======
->>>>>>> origin/master
   @IsNotEmpty()
   @prop({ ref: User })
   made_by: Ref<User>;
