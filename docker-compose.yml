@@ -16,7 +16,6 @@ services:
     environment:
       PORT: ${NESTJS_PORT}
       DEBUG_MODE: ${NESTJS_DEBUG_MODE}
-      NODE_ENV: ${NESTJS_NODE_ENV}
       MONGO_CONNECTION_STRING_DEBUG: ${NESTJS_MONGO_CONNECTION_STRING_DEBUG}
       MONGO_CONNECTION_STRING_PROD: ${NESTJS_MONGO_CONNECTION_STRING_PROD}
     volumes:
@@ -58,6 +57,7 @@ services:
       - flowerpower_bridge
     ports:
       - 7080:7080
+      - 7085:7085
       # - "82:82"
     restart: on-failure
     depends_on:
