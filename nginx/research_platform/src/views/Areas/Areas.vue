@@ -37,7 +37,7 @@ export default {
       { text: "Description", value: "description" },
       { text: "Created at", value: "created_at" },
       { text: "Updated at", value: "updated_at" },
-      { text: "Made by", value: "made_by" },
+      { text: "Made by", value: "made_by.fullname" },
     ],
   }),
   computed: {

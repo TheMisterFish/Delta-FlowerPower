@@ -27,14 +27,14 @@ export function addUser(user) {
 //researches_store
 export function getResearches() {
     return Axios({
-        url: "http://localhost:7080/sessions",
+        url: "http://localhost:7080/researches",
         method: "GET",
     })
 }
 
 export function addResearch(research) {
     return Axios({
-        url: "http://localhost:7080/sessions",
+        url: "http://localhost:7080/researches",
         method: "POST",
         data: research
     })
@@ -42,7 +42,7 @@ export function addResearch(research) {
 
 export function getResearch(_id) {
     return Axios({
-        url: `http://localhost:7080/sessions/${_id}`,
+        url: `http://localhost:7080/researches/${_id}`,
         method: "GET"
     })
 }
@@ -120,5 +120,20 @@ export function updateModel(_id, area) {
         url: `http://localhost:7080/aimodels/${_id}`,
         data: area,
         method: "PUT"
+    })
+}
+
+export function addModelWeights(_id, weights) {
+    return Axios({
+        url: `http://localhost:7080/aimodels/${_id}/weights`,
+        data: weights,
+        method: "POST"
+    })
+}
+
+export function deleteModelWeights(_id, weightsid) {
+    return Axios({
+        url: `http://localhost:7080/aimodels/${_id}/weights/${weightsid}`,
+        method: "DELETE"
     })
 }

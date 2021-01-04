@@ -43,9 +43,13 @@ export class SessionsService {
 
   async create(dto: CreateSessionDto, files: any): Promise<Session> {
     const session = await new this.sessions(dto).save();
+<<<<<<< HEAD
     const research = await this.researches.findById(dto.research).populate('sessions');
     research.sessions.push(session);
     await this.researches.findByIdAndUpdate(research._id, {$set: research}, {new: true})
+=======
+    const research = await this.researches.findById(dto.research);
+>>>>>>> origin/master
 
     //TODO CHECK IF RESEARCH IS NOT NULL
 
