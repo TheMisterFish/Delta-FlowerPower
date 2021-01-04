@@ -23,18 +23,6 @@
             </v-col>
             <v-col cols="12">
               <v-autocomplete
-                v-model="mlitems[0]"
-                chips
-                label="Model"
-                :items="mlitems"
-                item-text="name"
-                item-value="_id"
-                disabled
-              >
-              </v-autocomplete>
-            </v-col>
-            <v-col cols="12">
-              <v-autocomplete
                 v-model="area_id"
                 :items="areas.areas"
                 chips
@@ -62,9 +50,7 @@ export default {
   data: () => ({
     name: "",
     description: "",
-    model_id: "",
     area_id: "",
-    mlitems: [{ name: "Yolo V5", _id: "0" }],
   }),
   computed: {
     ...mapState(["areas"]),
@@ -74,8 +60,7 @@ export default {
       const response = await this.$store.dispatch("addResearch", {
         name: this.name,
         description: this.description,
-        location_id: this.area_id,
-        model_id: this.mlitems[0]._id,
+        location: this.area_id,
       });
 
       if (response.status === STATUS.SUCCESS) {

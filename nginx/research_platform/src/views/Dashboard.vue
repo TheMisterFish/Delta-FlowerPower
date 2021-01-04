@@ -36,6 +36,6 @@ export default {
     drawer: false,
     recentResearches: [],
     recentResearchesHeaders: [],
-  }),
+  })
 };
 </script>
