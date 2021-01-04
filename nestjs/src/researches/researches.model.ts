@@ -1,5 +1,6 @@
 import { prop, pre, Ref } from "@typegoose/typegoose";
 import { IsString, IsNotEmpty, IsDate, MinLength } from 'class-validator';
+import { Session } from "src/sessions/sessions.model";
 import { Location } from "../locations/locations.model";
 import { User } from "../users/users.model";
 
@@ -28,6 +29,9 @@ export class Research {
   @IsNotEmpty()
   @prop({ ref: Location })
   location: Ref<Location>;
+
+  @prop({ ref: () => Session })
+  sessions: Ref<Session>[];
 
   @IsNotEmpty()
   @prop({ ref: User })
