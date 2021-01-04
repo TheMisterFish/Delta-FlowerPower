@@ -13,6 +13,10 @@ describe('AimodelsController', () => {
         {
           provide: getModelToken("Aimodel"),
           useValue: {}
+        },
+        {
+          provide: getModelToken("File"),
+          useValue: {}
         }]
     }).compile();
 
