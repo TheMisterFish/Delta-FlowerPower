@@ -35,9 +35,9 @@ pipeline {
             steps {
                 dir("droneapp") {
                     echo 'Building Droneapp APK'
-                    sh 'echo "<?xml version="1.0" encoding="utf-8"?>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>" >> ./app/src/main/res/values/keys.xml'
                     sh 'echo "<resources>" >> ./app/src/main/res/values/keys.xml'
-                    sh 'echo "    <string name="dji_key">${DJI_KEY}</string>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "    <string name=\"dji_key\">${DJI_KEY}</string>" >> ./app/src/main/res/values/keys.xml'
                     sh 'echo "</resources>" >> ./app/src/main/res/values/keys.xml'
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew compileReleaseSources"
