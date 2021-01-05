@@ -33,7 +33,7 @@ pipeline {
             steps {
                 dir("droneapp") {
                     echo 'Building Droneapp APK'
-                    sh '.\gradlew compileReleaseSources'
+                    sh '.\\gradlew compileReleaseSources'
                 }
             }
         }
