@@ -33,7 +33,6 @@ pipeline {
             steps {
                 dir("droneapp") {
                     echo 'Building Droneapp APK'
-                    sh 'apt install cmake -y'
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew compileReleaseSources"
                 }
