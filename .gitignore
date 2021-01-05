@@ -122,7 +122,6 @@ __pycache__/
 *$py.class
 
 # C extensions
-*.so
 
 # Distribution / packaging
 .Python
@@ -311,3 +310,6 @@ $RECYCLE.BIN/
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 .dbshell
+
+!/droneapp/app/src/main/cpp/lib 
+!/droneapp/app/src/main/cpp/lib/*

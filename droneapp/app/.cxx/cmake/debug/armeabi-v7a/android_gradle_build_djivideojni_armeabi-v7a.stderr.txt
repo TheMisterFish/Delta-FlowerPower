@@ -1,0 +1,1 @@
+ninja: error: '../../../../src/main/cpp/lib/armeabi-v7a/libffmpeg.so', needed by 'libdjivideojni.so', missing and no known rule to make it
