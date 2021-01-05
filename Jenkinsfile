@@ -31,8 +31,10 @@ pipeline {
         // Build android apk
         stage('Buid Droneapp APK - Java') {
             steps {
-                echo 'Building Droneapp APK'
-                
+                dir("droneapp") {
+                    echo 'Building Droneapp APK'
+                    sh '.\gradlew compileReleaseSources'
+                }
             }
         }
         // Run field application python build
