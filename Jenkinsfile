@@ -20,7 +20,7 @@ pipeline {
         NESTJS_MONGO_CONNECTION_STRING_DEBUG="mongodb://localhost:27017/flowerpower"
         NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@fp_mongodb:27018/flowerpower"
 
-        DJI_KEY="1cef472c8af8940e97e78473"
+        DJI_KEY="${env.DJI_KEY}"
     }
     
     stages {
