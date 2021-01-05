@@ -19,5 +19,13 @@ export class UpdateLocationDto {
   @IsLatLong()
   lat_long_point_two: string;
 
+  @IsOptional()
+  @IsLatLong()
+  lat_long_point_three: string;
+
+  @IsOptional()
+  @IsLatLong()
+  lat_long_point_four: string;
+
   updated_at: Date;
 }

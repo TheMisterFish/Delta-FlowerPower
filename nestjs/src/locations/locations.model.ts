@@ -37,6 +37,14 @@ export class Location {
   @IsLatLong()
   lat_long_point_two: string;
 
+  @IsNotEmpty()
+  @IsLatLong()
+  lat_long_point_three: string;
+
+  @IsNotEmpty()
+  @IsLatLong()
+  lat_long_point_four: string;
+
   @IsDate()
   @prop()
   created_at: Date;
