@@ -19,6 +19,8 @@ pipeline {
         NESTJS_NODE_ENV='production'
         NESTJS_MONGO_CONNECTION_STRING_DEBUG="mongodb://localhost:27017/flowerpower"
         NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@fp_mongodb:27018/flowerpower"
+
+        DJI_KEY="1cef472c8af8940e97e78473"
     }
     
     stages {
@@ -33,6 +35,10 @@ pipeline {
             steps {
                 dir("droneapp") {
                     echo 'Building Droneapp APK'
+                    sh 'echo "<?xml version="1.0" encoding="utf-8"?>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "<resources>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "    <string name="dji_key">${DJI_KEY}</string>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "</resources>" >> ./app/src/main/res/values/keys.xml'
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew compileReleaseSources"
                 }
