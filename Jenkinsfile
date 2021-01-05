@@ -33,6 +33,8 @@ pipeline {
             steps {
                 dir("droneapp") {
                     echo 'Building Droneapp APK'
+                    sh 'whoami'
+                    sh 'chown -R $(whoami) $ANDROID_HOME'
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew compileReleaseSources"
                 }
