@@ -10,7 +10,7 @@
           <v-card-subtitle class="pl-0">{{
             area && area.description
           }}</v-card-subtitle>
-          <AreaMap class="my-4" style="min-height: 500px" />
+          <AreaMap :editable="false" class="my-4" style="min-height: 500px" />
           <v-card-actions class="d-flex justify-space-between">
             <v-btn @click="deleteArea" text color="error">
               Delete

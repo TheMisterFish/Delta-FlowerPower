@@ -1,17 +1,11 @@
 <template>
   <gmap-map
     ref="gmap"
-    :center="center"
+    :center="{ lat: 52.370216, lng: 4.895168 }"
     :zoom="9.5"
     style="width: 100%; height: 100%;"
-    :options="{ streetViewControl: false, mapTypeControl: false }"
+    :options="{ streetViewControl: false }"
   >
-    <gmap-marker
-      :key="index"
-      v-for="(m, index) in markers"
-      :position="m.position"
-      @click="center = m.position"
-    ></gmap-marker>
   </gmap-map>
 </template>
 
@@ -23,8 +17,6 @@ export default {
   data: () => ({
     // default to Montreal to keep it simple
     // change this to whatever makes sense
-    center: { lat: 52.370216, lng: 4.895168 },
-    markers: [],
     lastOverlay: null,
     map: null,
     reset: false,
@@ -33,7 +25,8 @@ export default {
   props: {
     angle: Number,
     resetAngle: Function,
-    updateCoordinates: Function
+    updateCoordinates: Function,
+    editable: Boolean,
   },
   computed: {
     google: gmapApi,
@@ -52,7 +45,7 @@ export default {
         self.map = map;
 
         const drawingManager = new this.google.maps.drawing.DrawingManager({
-          drawingControl: true,
+          drawingControl: self.editable,
           drawingControlOptions: {
             position: self.google.maps.ControlPosition.TOP_CENTER,
             drawingModes: [self.google.maps.drawing.OverlayType.RECTANGLE],
@@ -67,16 +60,20 @@ export default {
           function(event) {
             drawingManager.setDrawingMode(null);
             event.overlay.setMap(null);
-            if (self.lastOverlay) { 
+            if (self.lastOverlay) {
               self.resetAngle();
               self.reset = true;
               self.google.maps.event.removeListener(self.polygonListener);
               self.lastOverlay.setMap(null);
             }
             const polygon = self.generatePolygonFromRectangle(event.overlay);
-            self.polygonListener = self.google.maps.event.addListener(polygon, "dragend", (event) => {
-              self.updateCoordinates(self.getPolygonPoints());
-            })
+            self.polygonListener = self.google.maps.event.addListener(
+              polygon,
+              "dragend",
+              (event) => {
+                self.updateCoordinates(self.getPolygonPoints());
+              }
+            );
             polygon.setMap(map);
             self.lastOverlay = polygon;
           }

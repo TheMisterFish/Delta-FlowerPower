@@ -2,7 +2,7 @@
   <v-container>
     <v-card max-width="600" class="fill-height mx-auto py-3">
       <v-list-item>
-          <AreaMap :updateCoordinates="updateCoordinates" :resetAngle="resetAngle" :angle="angle" style="min-height: 500px;" />
+          <AreaMap :editable="true" :updateCoordinates="updateCoordinates" :resetAngle="resetAngle" :angle="angle" style="min-height: 500px;" />
       </v-list-item>
       <v-list-item>
         <v-slider v-model="angle" label="rotatie" max="180" min="0" thumb-label="always"></v-slider>
