@@ -8,12 +8,11 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 import { TypegooseModule } from 'nestjs-typegoose';
-import { SessionsController } from './sessions/sessions.controller';
 import { SessionsModule } from './sessions/sessions.module';
-import { AimodelsController } from './aimodels/aimodels.controller';
 import { AimodelsModule } from './aimodels/aimodels.module';
-import { LocationsController } from './locations/locations.controller';
 import { LocationsModule } from './locations/locations.module';
+import { ResearchesModule } from './researches/researches.module';
+import { FieldappModule } from './fieldapp/fieldapp.module';
 
 @Module({
   imports: [
@@ -35,13 +34,10 @@ import { LocationsModule } from './locations/locations.module';
     SessionsModule,
     AimodelsModule,
     LocationsModule,
+    ResearchesModule,
+    FieldappModule,
   ],
-  controllers: [
-    AppController,
-    SessionsController,
-    AimodelsController,
-    LocationsController,
-  ],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

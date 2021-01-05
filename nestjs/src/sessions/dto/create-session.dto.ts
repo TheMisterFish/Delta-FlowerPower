@@ -1,6 +1,17 @@
-import { IsString, IsNotEmpty, MinLength } from 'class-validator';
+import { plainToClass, Transform, Type } from 'class-transformer';
+import {
+  IsString,
+  IsNotEmpty,
+  MinLength,
+  IsMongoId,
+  IsArray,
+  ValidateNested,
+  ArrayMinSize,
+} from 'class-validator';
+import { SessionResult } from '../../common/models/sessionResult/sessionResult.model';
+import { User } from '../../users/users.model';
 
-export class CreateSessionDto { 
+export class CreateSessionDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
@@ -11,19 +22,29 @@ export class CreateSessionDto {
   @MinLength(10)
   description: string;
 
-  @IsString()
   @IsNotEmpty()
-  location_id: string;
+  @IsMongoId()
+  research: string;
 
-  made_by: string;
-
-  results: JSON;
-
-  @IsString()
   @IsNotEmpty()
-  model_id: string;
+  @IsMongoId()
+  aimodel: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => SessionResult)
+  @Transform(results => {
+    try {
+      return plainToClass(SessionResult, JSON.parse(results));
+    } catch (e) {
+      return results;
+    }
+  })
+  results: SessionResult[];
+
+  made_by: User;
 
   created_at: Date;
-
-  updated_at: Date;
 }
