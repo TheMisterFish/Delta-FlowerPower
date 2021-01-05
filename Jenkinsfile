@@ -56,12 +56,12 @@ pipeline {
         stage('Buid Field Application - Python') {
             steps {
                 echo 'Building python application'
-                sh 'docker create --name fieldapp-build-tmp-${env.BRANCH_NAME}-${currentBuild.number} cdrx/pyinstaller-windows'
+                sh 'docker create --name fieldapp-build-tmp-'+env.BRANCH_NAME+' cdrx/pyinstaller-windows'
                 sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-                sh 'docker cp ./field_application fieldapp-build-tmp-${env.BRANCH_NAME}-${currentBuild.number}:/app/'
-                sh 'docker commit fieldapp-build-tmp-${env.BRANCH_NAME}-${currentBuild.number} fieldapp-build-${env.BRANCH_NAME}-${currentBuild.number}'
-                sh 'docker run --name field_app_build-${env.BRANCH_NAME}-${currentBuild.number} --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build-${env.BRANCH_NAME}-${currentBuild.number}'
-                sh "docker cp field_app_build-${env.BRANCH_NAME}-${currentBuild.number}:/tmp/backend_dist ./field_application/public"
+                sh 'docker cp ./field_application fieldapp-build-tmp-'+env.BRANCH_NAME+':/app/'
+                sh 'docker commit fieldapp-build-tmp-'+env.BRANCH_NAME+' fieldapp-build-'+env.BRANCH_NAME+''
+                sh 'docker run --name field_app_build-'+env.BRANCH_NAME+' --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build-'+env.BRANCH_NAME+''
+                sh "docker cp field_app_build-"+env.BRANCH_NAME+":/tmp/backend_dist ./field_application/public"
             }
         }
         
@@ -147,16 +147,16 @@ pipeline {
             script {
                 echo env.BRANCH_NAME
                 try {
-                    sh 'docker container stop field_app_build-${env.BRANCH_NAME}-${currentBuild.number}'
-                    sh 'docker container rm field_app_build-${env.BRANCH_NAME}-${currentBuild.number}'
+                    sh 'docker container stop field_app_build-'+env.BRANCH_NAME
+                    sh 'docker container rm field_app_build-'+env.BRANCH_NAME
                 } catch (Exception e) {
-                    sh 'echo "Could not stop/remove field_app_build-${env.BRANCH_NAME}-${currentBuild.number}"'
+                    sh 'echo "Could not stop/remove field_app_build"'
                 }
                 try {
-                    sh 'docker container stop fieldapp-build-tmp-${env.BRANCH_NAME}-${currentBuild.number}'
-                    sh 'docker container rm fieldapp-build-tmp-${env.BRANCH_NAME}-${currentBuild.number}'
+                    sh 'docker container stop fieldapp-build-tmp-'+env.BRANCH_NAME
+                    sh 'docker container rm fieldapp-build-tmp-'+env.BRANCH_NAME
                 } catch (Exception e) {
-                    sh 'echo "Could not stop/remove fieldapp-build-tmp-${env.BRANCH_NAME}-${currentBuild.number}"'
+                    sh 'echo "Could not stop/remove fieldapp-build-tmp"'
                 }
                 if(env.BRANCH_NAME == "master"){
                     sh "docker logs fp_nginx"
