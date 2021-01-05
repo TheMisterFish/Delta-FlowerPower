@@ -28,71 +28,78 @@ pipeline {
                 writeFile file: '.env', text: ''
             }
         }
-        // Run field application python build
-        stage('Buid Field Application - Python') {
+        // Build android apk
+        stage('Buid Droneapp APK - Java') {
             steps {
-                echo 'Building python application'
-                sh 'docker create --name fieldapp-build-tmp cdrx/pyinstaller-windows'
-                sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-                sh 'docker cp ./field_application fieldapp-build-tmp:/app/'
-                sh 'docker commit fieldapp-build-tmp fieldapp-build'
-                sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build'
-                sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
+                echo 'Building Droneapp APK'
+                
             }
         }
+        // Run field application python build
+        // stage('Buid Field Application - Python') {
+        //     steps {
+        //         echo 'Building python application'
+        //         sh 'docker create --name fieldapp-build-tmp cdrx/pyinstaller-windows'
+        //         sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
+        //         sh 'docker cp ./field_application fieldapp-build-tmp:/app/'
+        //         sh 'docker commit fieldapp-build-tmp fieldapp-build'
+        //         sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build'
+        //         sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
+        //     }
+        // }
         
-        // Run field application electron build
-        stage('Buid Field Application - Electron') {
-            steps { 
-                dir("field_application") {
-                    echo 'Building electron application'
-                    writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
-                    sh 'npm prune'
-                    sh 'npm install'
-                    sh 'npm run electron:winbuild'
-                    sh "ls ./field_app_build -a"
-                }
-            }      
-        }
+        // // Run field application electron build
+        // stage('Buid Field Application - Electron') {
+        //     steps { 
+        //         dir("field_application") {
+        //             echo 'Building electron application'
+        //             writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
+        //             sh 'npm prune'
+        //             sh 'npm install'
+        //             sh 'npm run electron:winbuild'
+        //             sh "ls ./field_app_build -a"
+        //         }
+        //     }      
+        // }
 
-        //Zip the dist_electron
-        stage('Zipping and copying build folders') {
-            steps { 
-                script {
-                    try {
-                        sh 'mkdir -p ./nestjs/public/files/builds'
-                    } catch (Exception e) {
-                        sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
-                    }
-                    sh 'echo "Zipping win-unpacked"'
-                    try {
-                        zip zipFile: './nestjs/public/files/builds/win-unpacked-latest.zip', archive: false, dir: './field_application/field_app_build/win-unpacked'
-                        sh 'echo "Zipped win-unpacked"'
-                    } catch (Exception e) {
-                        sh 'echo "Could not zip win-unpacked"'
-                    }
-                    sh 'echo "Moving setup.exe to nestjs"'
-                    try {
-                        sh 'cp "./field_application/field_app_build/field_application"*".exe" "./nestjs/public/files/builds/field_application-latest.exe"'
-                    } catch (Exception e) {
-                        sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
-                    }
-                    sh 'ls ./nestjs/public/files/builds -a'
-                }
-            }
-        }
-        // Run NestJS jest test
-        stage('NestJS API Test') {
-            steps { 
-                echo 'Testing NestJS API using Jest'
-                sh 'node -v'
-                dir("nestjs") {
-                    sh 'npm prune'
-                    sh 'npm install'
-                    sh 'npm test'
-                }
-            }
-        }
+        // //Zip the dist_electron
+        // stage('Zipping and copying build folders') {
+        //     steps { 
+        //         script {
+        //             try {
+        //                 sh 'mkdir -p ./nestjs/public/files/builds'
+        //             } catch (Exception e) {
+        //                 sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
+        //             }
+        //             sh 'echo "Zipping win-unpacked"'
+        //             try {
+        //                 zip zipFile: './nestjs/public/files/builds/win-unpacked-latest.zip', archive: false, dir: './field_application/field_app_build/win-unpacked'
+        //                 sh 'echo "Zipped win-unpacked"'
+        //             } catch (Exception e) {
+        //                 sh 'echo "Could not zip win-unpacked"'
+        //             }
+        //             sh 'echo "Moving setup.exe to nestjs"'
+        //             try {
+        //                 sh 'cp "./field_application/field_app_build/field_application"*".exe" "./nestjs/public/files/builds/field_application-latest.exe"'
+        //             } catch (Exception e) {
+        //                 sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
+        //             }
+        //             sh 'ls ./nestjs/public/files/builds -a'
+        //         }
+        //     }
+        // }
+        // // Run NestJS jest test
+        // stage('NestJS API Test') {
+        //     steps { 
+        //         echo 'Testing NestJS API using Jest'
+        //         sh 'node -v'
+        //         dir("nestjs") {
+        //             sh 'npm prune'
+        //             sh 'npm install'
+        //             sh 'npm test'
+        //         }
+        //     }
+        // }
 
         // Build & Deploy using docker compose
         stage('Build test') {
