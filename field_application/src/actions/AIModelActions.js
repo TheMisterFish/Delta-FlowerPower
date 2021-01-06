@@ -1,3 +1,4 @@
+import Axios from "axios";
 import {
     IPC_MESSAGES,
     IPC_CHANNELS,
@@ -74,7 +75,7 @@ const AIModelActions = {
         const models = await this.getModels();
         models.forEach(model => {
             model.weights.forEach(async weight => {
-                if(weight.downloadPath){
+                if (weight.downloadPath) {
                     await window.electron.invoke(IPC_CHANNELS.REMOVE_WEIGHT, {
                         path: weight.downloadPath
                     });
@@ -89,7 +90,7 @@ const AIModelActions = {
     },
     async downloadWeight(weight) {
         const filePath = await window.electron.invoke(IPC_CHANNELS.DOWNLOAD_WEIGHTS, {
-            url: `http://localhost:3000/${weight.filePath.replace('public\\', '')}`,
+            url: `${Axios.defaults.baseURL}/${weight.filePath.replace('public/', '')}`,
             modelName: weight.model
         });
         const model = await this.getModel(weight.model_id);
@@ -104,10 +105,10 @@ const AIModelActions = {
             options: {},
             database: DB_NAMES.MODELDB
         });
-        
+
         // return filePath;
     },
-    async removeWeight(weight){
+    async removeWeight(weight) {
         await window.electron.invoke(IPC_CHANNELS.REMOVE_WEIGHT, {
             path: weight.downloadPath
         });
