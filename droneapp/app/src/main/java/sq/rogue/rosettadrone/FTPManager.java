@@ -14,13 +14,13 @@ public class FTPManager {
     private MainActivity parent;
     private DroneModel mModel;
     private File currentFile;
-    private byte[] currentFileInBytes;
+    private byte[][] currentFileInPacket;
 
     public FTPManager(MainActivity parent, DroneModel mModel) {
         this.parent = parent;
         this.mModel = mModel;
         this.currentFile = null;
-        this.currentFileInBytes = null;
+        this.currentFileInPacket = null;
     }
 
     public int getOffset(short[] payload){
@@ -82,12 +82,29 @@ public class FTPManager {
                 }
                 int byte_offset = 0;
                 int bytesRead;
-                currentFileInBytes = new byte[(int) currentFile.length()];
-                parent.logMessageDJI("Current file in bytes: " + currentFileInBytes.length);
-                while (byte_offset < currentFileInBytes.length
-                        && (bytesRead = is.read(currentFileInBytes, byte_offset, currentFileInBytes.length - byte_offset)) >= 0) {
+                byte[] fetchedFile = new byte[(int) currentFile.length()];
+                parent.logMessageDJI("Current file in bytes: " + currentFileInPacket.length);
+                while (byte_offset < fetchedFile.length
+                        && (bytesRead = is.read(fetchedFile, byte_offset, fetchedFile.length - byte_offset)) >= 0) {
                     byte_offset += bytesRead;
                 }
+
+                int payload_data_size = (251-12);
+                int total_file_size = (int) currentFile.length();
+                int total_packets = total_file_size/payload_data_size;
+                for(int i = 0; i <= total_packets; i++){
+                    int startByte = payload_data_size * i;
+                    int bytes_to_add_size = payload_data_size;
+                    if(startByte + payload_data_size > currentFileInPacket.length){
+                        bytes_to_add_size = (startByte + payload_data_size) - currentFileInPacket.length;
+                    }
+                    for (int j = 0; j < bytes_to_add_size; j++) {
+                        int byte_to_get = startByte + j;
+                        currentFileInPacket[i][j] = fetchedFile[byte_to_get];
+                    }
+                };
+                parent.logMessageDJI("Current file in bytes: " + total_file_size + ", total packets: " + total_packets);
+
             } catch (FileNotFoundException e) {
                 mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
                 parent.logMessageDJI("FileNotFoundException: " + e.toString());
@@ -117,42 +134,31 @@ public class FTPManager {
         };
 //      Set session
         data[2] = (byte)session_id;
-
         if(currentFile == null || currentFile.length() == 0){
             parent.logMessageDJI("File is null, sending error code");
             mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
             return;
         }
-
-        int payload_data_size = (251-12);
-        int startByte = payload_data_size * offset;
-        int bytes_to_add_size = payload_data_size;
-
-        if(startByte + payload_data_size > currentFileInBytes.length){
-            bytes_to_add_size = (startByte + payload_data_size) - currentFileInBytes.length;
-        }
-//      Set bytes to read (size)
-        data[4] = (byte)bytes_to_add_size;
-
-        if(offset > (currentFileInBytes.length/payload_data_size) ){
-            parent.logMessageDJI("offset > (currentFileInBytes.length/payload_data_size)");
+        if(offset > (currentFileInPacket.length) ){
+            parent.logMessageDJI("offset > currentFileInPacket.length");
             mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
             return;
         }
-        if(bytes_to_add_size > 0) {
-            try {
-                for (int i = 0; i < bytes_to_add_size; i++) {
-                    int added = i + 12;
-                    int byte_to_get = startByte + i;
-                    data[added] = currentFileInBytes[byte_to_get];
-                }
-//                parent.logMessageDJI("Sending " + bytes_to_add_size + " bytes using FTP protocol");
-                mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
-            } catch (Exception e) {
-                parent.logMessageDJI(e.toString());
-                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
-            }
-        }
+        int bytes_to_add_size = currentFileInPacket[offset].length;
+        data[4] = (byte)bytes_to_add_size;
 
+        try {
+//          We only need to rewrite byte 12 to bytes_to_add_size (which is the total bytes in currentFileInPacket[packet])
+//          Then we just read a packet byte by using the offset as packet_id and i from bytes_to_add_size
+            for (int i = 0; i < bytes_to_add_size; i++) {
+                int added = i + 12;
+                data[added] = currentFileInPacket[offset][i];
+            }
+//            parent.logMessageDJI("Sending " + bytes_to_add_size + " bytes using FTP protocol");
+            mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
+        } catch (Exception e) {
+            parent.logMessageDJI(e.toString());
+            mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
+        }
     }
 }
