@@ -48,6 +48,7 @@ export class ResearchesService {
       .populate('made_by')
       .populate('location')
       .populate('sessions').exec()
+  }
 
   }
 

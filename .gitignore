@@ -8,7 +8,6 @@
 
 ### Node ###
 # Logs
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -123,7 +122,6 @@ __pycache__/
 *$py.class
 
 # C extensions
-*.so
 
 # Distribution / packaging
 .Python
@@ -133,7 +131,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -313,3 +310,6 @@ $RECYCLE.BIN/
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 .dbshell
+
+!/droneapp/app/src/main/cpp/lib 
+!/droneapp/app/src/main/cpp/lib/*

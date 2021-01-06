@@ -1,0 +1,69 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "D:\\git_repos\\flowerpower\\droneapp",
+      "sdkFolder": "D:\\Java\\ANDROID_SDK_11.0",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\build\\intermediates",
+      "gradleModulePathName": ":app",
+      "moduleRootFolder": "D:\\git_repos\\flowerpower\\droneapp\\app",
+      "makeFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "D:\\git_repos\\flowerpower\\droneapp\\.cxx",
+      "cxxFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx",
+      "ndkFolder": "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle",
+      "ndkVersion": "22.0.6917172-rc1",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "release",
+    "soFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\build\\intermediates\\cmake\\release\\lib",
+    "objFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\build\\intermediates\\cmake\\release\\obj",
+    "jsonFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release",
+    "gradleBuildOutputFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release",
+    "isDebuggableEnabled": false,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "X86",
+  "abiPlatformVersion": 22,
+  "cxxBuildFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release\\x86",
+  "jsonFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release\\x86\\android_gradle_build.json",
+  "gradleBuildOutputFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86",
+  "objFolder": "D:\\git_repos\\flowerpower\\droneapp\\app\\build\\intermediates\\cmake\\release\\obj\\x86",
+  "buildCommandFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release\\x86\\build_command.txt",
+  "buildOutputFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release\\x86\\build_output.txt",
+  "modelOutputFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release\\x86\\build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86\\CMakeLists.txt",
+    "toolchainWrapperFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86\\android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86\\build_generation_state.json",
+    "cacheKeyFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86\\compiler_cache_key.json",
+    "compilerCacheUseFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86\\compiler_cache_use.json",
+    "compilerCacheWriteFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86\\compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cxx\\release\\x86\\compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release\\x86\\json_generation_record.json",
+  "compileCommandsJsonFile": "D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\release\\x86\\compile_commands.json"
+}
