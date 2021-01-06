@@ -126,7 +126,7 @@ pipeline {
         }
 
         // Build & Deploy using docker compose
-        stage('Build test') {
+        stage('Deploy') {
             steps {
                 script {
                     echo "Current branch: " + env.BRANCH_NAME

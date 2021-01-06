@@ -1,0 +1,41 @@
+FROM jenkins/jenkins:lts
+LABEL maintainer="suyash@suyashkumar.com"
+USER jenkins
+WORKDIR /usr/src/work
+COPY get-docker.sh .
+COPY gen_certs.sh .
+USER root
+
+# Install python 3.8
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install -y python3.8 python3.8-distutils
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.8 get-pip.py
+RUN pip3 install virtualenv
+
+# Install Docker CE inside the container
+RUN sh get-docker.sh
+RUN usermod -aG docker jenkins
+# Generate self-signed certs
+
+RUN bash gen_certs.sh
+RUN openssl rsa -in server.key -out privkey-rsa.pem
+RUN mkdir -p /var/lib/jenkins
+RUN cp privkey-rsa.pem /var/lib/jenkins/pk
+RUN cp server.pem /var/lib/jenkins/cert
+RUN chown jenkins:jenkins /var/lib/jenkins/pk
+RUN chown jenkins:jenkins /var/lib/jenkins/cert
+# Install docker compose
+RUN curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
+# Other misc config
+# USER jenkins
+# Install plugins
+ENV JENKINS_UC_DOWNLOAD="http://mirrors.jenkins-ci.org"
+COPY plugins.txt /usr/share/jenkins/plugins.txt
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
+
+USER jenkins
+ENV JENKINS_OPTS --httpPort=-1 --httpsPort=4430 --httpsCertificate=/var/lib/jenkins/cert --httpsPrivateKey=/var/lib/jenkins/pk
+EXPOSE 443
