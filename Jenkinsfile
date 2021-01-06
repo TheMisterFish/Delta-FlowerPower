@@ -105,8 +105,7 @@ pipeline {
                     }
                     sh 'echo "Moving drone app apk from droneapp to nestjs"'
                     try {
-                        sh 'ls ./droneapp/app/build/outputs/apk/release'
-                        sh 'cp "./droneapp/app/build/outputs/apk/release/*.apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
+                        sh 'cp "./droneapp/app/build/outputs/apk/release/"*".apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy droneapp apk to ./nestjs/public/files/builds"'
                     }
