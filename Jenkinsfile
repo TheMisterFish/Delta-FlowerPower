@@ -71,7 +71,7 @@ pipeline {
                 dir("field_application") {
                     echo 'Building electron application'
                     writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
-                    sh 'npm install'
+                    sh 'npm install --force'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
                 }
@@ -116,7 +116,7 @@ pipeline {
                 echo 'Testing NestJS API using Jest'
                 sh 'node -v'
                 dir("nestjs") {
-                    sh 'npm install'
+                    sh 'npm install --force'
                     sh 'npm test'
                 }
             }
