@@ -48,6 +48,11 @@ export class ResearchesService {
       .populate('made_by')
       .populate('location')
       .populate('sessions').exec()
+<<<<<<< HEAD
+=======
+  }
+
+>>>>>>> origin/master
   }
 
   async deleteOne(id: string): Promise<void> {

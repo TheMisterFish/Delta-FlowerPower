@@ -27,6 +27,7 @@ export default {
     resetAngle: Function,
     updateCoordinates: Function,
     editable: Boolean,
+    coordinates: Array,
   },
   computed: {
     google: gmapApi,
@@ -36,6 +37,14 @@ export default {
       if (this.lastOverlay && !this.reset)
         this.rotatePolygon(this.lastOverlay, newAngle - oldAngle);
       this.reset = false;
+    },
+
+    coordinates(newCoordinates, oldCoordinates) {
+      const polygon = new this.google.maps.Polygon({
+        path: newCoordinates,
+      });
+
+      polygon.setMap(this.map);
     },
   },
   mounted: function() {
@@ -51,6 +60,14 @@ export default {
             drawingModes: [self.google.maps.drawing.OverlayType.RECTANGLE],
           },
         });
+
+        if (self.coordinates && self.coordinates.length > 0) {
+          const polygon = new this.google.maps.Polygon({
+            path: self.coordinates,
+          });
+
+          polygon.setMap(this.map);
+        }
 
         drawingManager.setMap(map);
 

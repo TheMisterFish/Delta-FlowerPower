@@ -4,7 +4,7 @@ import * as axios from "axios"
 const ResearchesApi = {
     getResearches() {
         return axios
-            .get("http://localhost:3000/researches")
+            .get("/researches")
             .then(response => response.data)
             .catch(err => {
                 store.dispatch("api_response", {
