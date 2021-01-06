@@ -454,7 +454,11 @@ public class MAVLinkReceiver {
                 switch (((msg_mission_item) msg).command) {
                     case MAV_CMD_NAV_WAYPOINT:
                         parent.logMessageDJI("Received MAV: MAV_GOTO_HOLD_AT_SPECIFIED_POSITION");
+
                         msg_mission_item msg_item = (msg_mission_item) msg;
+                        parent.logMessageDJI("Seq: " + msg_item.seq);
+                        parent.logMessageDJI("mNumGCSWaypoints - 1: " + (mNumGCSWaypoints - 1));
+
 
                         if (mModel.getSystemId() != msg_item.target_system) {
                             break;
