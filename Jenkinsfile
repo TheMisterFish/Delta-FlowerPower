@@ -71,6 +71,8 @@ pipeline {
                 dir("field_application") {
                     echo 'Building electron application'
                     writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
+                    sh 'ls ./'
+                    sh 'cat .env'
                     sh 'npm install --force'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
