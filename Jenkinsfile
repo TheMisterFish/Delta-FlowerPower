@@ -19,6 +19,8 @@ pipeline {
         NESTJS_NODE_ENV='production'
         NESTJS_MONGO_CONNECTION_STRING_DEBUG="mongodb://localhost:27017/flowerpower"
         NESTJS_MONGO_CONNECTION_STRING_PROD="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@fp_mongodb:27018/flowerpower"
+
+        DJI_KEY="${env.DJI_KEY}"
     }
     
     stages {
@@ -28,34 +30,55 @@ pipeline {
                 writeFile file: '.env', text: ''
             }
         }
+        // Build android apk
+        stage('Buid Droneapp APK - Java') {
+            steps {
+                dir("droneapp") {
+                    echo 'Building Droneapp APK.'
+                    script {
+                        try {
+                            sh 'rm -f ./app/src/main/res/values/keys.xml'
+                        } catch (Exception e) {
+                            sh 'echo "Could not remove old keysfile, no error.'
+                        }
+                    }
+                    sh 'echo "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "<resources>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "    <string name=\\"dji_key\\">${DJI_KEY}</string>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'echo "</resources>" >> ./app/src/main/res/values/keys.xml'
+                    sh 'chmod +x ./gradlew'
+                    sh "./gradlew build"
+                    
+                }
+            }
+        }
         // Run field application python build
         stage('Buid Field Application - Python') {
             steps {
                 echo 'Building python application'
-                sh 'docker create --name fieldapp-build-tmp cdrx/pyinstaller-windows'
+                sh 'docker create --name fieldapp-build-tmp-'+env.BRANCH_NAME+' cdrx/pyinstaller-windows'
                 sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-                sh 'docker cp ./field_application fieldapp-build-tmp:/app/'
-                sh 'docker commit fieldapp-build-tmp fieldapp-build'
-                sh 'docker run --name field_app_build --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build'
-                sh "docker cp field_app_build:/tmp/backend_dist ./field_application/public"
+                sh 'docker cp ./field_application fieldapp-build-tmp-'+env.BRANCH_NAME+':/app/'
+                sh 'docker commit fieldapp-build-tmp-'+env.BRANCH_NAME+' fieldapp-build-'+env.BRANCH_NAME+''
+                sh 'docker run --name field_app_build-'+env.BRANCH_NAME+' --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build-'+env.BRANCH_NAME+''
+                sh "docker cp field_app_build-"+env.BRANCH_NAME+":/tmp/backend_dist ./field_application/public"
             }
         }
         
-        // Run field application electron build
+        // // Run field application electron build
         stage('Buid Field Application - Electron') {
             steps { 
                 dir("field_application") {
                     echo 'Building electron application'
-                    writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION'
-                    sh 'npm prune'
-                    sh 'npm install'
+                    writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
+                    sh 'npm install --force'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
                 }
             }      
         }
 
-        //Zip the dist_electron
+        // //Zip the dist_electron
         stage('Zipping and copying build folders') {
             steps { 
                 script {
@@ -64,31 +87,36 @@ pipeline {
                     } catch (Exception e) {
                         sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
                     }
-                    sh 'echo "Zipping win-unpacked"'
+                    sh 'echo "Zipping win-unpacked from field application to nestjs"'
                     try {
                         zip zipFile: './nestjs/public/files/builds/win-unpacked-latest.zip', archive: false, dir: './field_application/field_app_build/win-unpacked'
                         sh 'echo "Zipped win-unpacked"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip win-unpacked"'
                     }
-                    sh 'echo "Moving setup.exe to nestjs"'
+                    sh 'echo "Moving setup.exe from field application to nestjs"'
                     try {
                         sh 'cp "./field_application/field_app_build/field_application"*".exe" "./nestjs/public/files/builds/field_application-latest.exe"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
                     }
+                    sh 'echo "Moving drone app apk from droneapp to nestjs"'
+                    try {
+                        sh 'cp "./droneapp/app/build/outputs/apk/release/*.apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
+                    } catch (Exception e) {
+                        sh 'echo "Could not copy droneapp apk to ./nestjs/public/files/builds"'
+                    }
                     sh 'ls ./nestjs/public/files/builds -a'
                 }
             }
         }
-        // Run NestJS jest test
+        // // Run NestJS jest test
         stage('NestJS API Test') {
             steps { 
                 echo 'Testing NestJS API using Jest'
                 sh 'node -v'
                 dir("nestjs") {
-                    sh 'npm prune'
-                    sh 'npm install'
+                    sh 'npm install --force'
                     sh 'npm test'
                 }
             }
@@ -117,14 +145,14 @@ pipeline {
             script {
                 echo env.BRANCH_NAME
                 try {
-                    sh 'docker container stop field_app_build'
-                    sh 'docker container rm field_app_build'
+                    sh 'docker container stop field_app_build-'+env.BRANCH_NAME
+                    sh 'docker container rm field_app_build-'+env.BRANCH_NAME
                 } catch (Exception e) {
                     sh 'echo "Could not stop/remove field_app_build"'
                 }
                 try {
-                    sh 'docker container stop fieldapp-build-tmp'
-                    sh 'docker container rm fieldapp-build-tmp'
+                    sh 'docker container stop fieldapp-build-tmp-'+env.BRANCH_NAME
+                    sh 'docker container rm fieldapp-build-tmp-'+env.BRANCH_NAME
                 } catch (Exception e) {
                     sh 'echo "Could not stop/remove fieldapp-build-tmp"'
                 }

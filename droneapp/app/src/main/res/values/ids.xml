@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="filename" type="id" />
+    <item name="filetype" type="id" />
+    <item name="fileSize" type="id" />
+    <item name="filetime" type="id" />
+</resources>

@@ -1,0 +1,2 @@
+ninja: Entering directory `D:\git_repos\flowerpower\droneapp\app\.cxx\cmake\debug\x86'
+ninja: no work to do.
