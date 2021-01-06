@@ -48,37 +48,38 @@ pipeline {
                     sh 'echo "</resources>" >> ./app/src/main/res/values/keys.xml'
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew build"
+                    sh "ls ./app/build/outputs/apk/release"
                     
                 }
             }
         }
         // Run field application python build
-        stage('Buid Field Application - Python') {
-            steps {
-                echo 'Building python application'
-                sh 'docker create --name fieldapp-build-tmp-'+env.BRANCH_NAME+' cdrx/pyinstaller-windows'
-                sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-                sh 'docker cp ./field_application fieldapp-build-tmp-'+env.BRANCH_NAME+':/app/'
-                sh 'docker commit fieldapp-build-tmp-'+env.BRANCH_NAME+' fieldapp-build-'+env.BRANCH_NAME+''
-                sh 'docker run --name field_app_build-'+env.BRANCH_NAME+' --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build-'+env.BRANCH_NAME+''
-                sh "docker cp field_app_build-"+env.BRANCH_NAME+":/tmp/backend_dist ./field_application/public"
-            }
-        }
+        // stage('Buid Field Application - Python') {
+        //     steps {
+        //         echo 'Building python application'
+        //         sh 'docker create --name fieldapp-build-tmp-'+env.BRANCH_NAME+' cdrx/pyinstaller-windows'
+        //         sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
+        //         sh 'docker cp ./field_application fieldapp-build-tmp-'+env.BRANCH_NAME+':/app/'
+        //         sh 'docker commit fieldapp-build-tmp-'+env.BRANCH_NAME+' fieldapp-build-'+env.BRANCH_NAME+''
+        //         sh 'docker run --name field_app_build-'+env.BRANCH_NAME+' --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build-'+env.BRANCH_NAME+''
+        //         sh "docker cp field_app_build-"+env.BRANCH_NAME+":/tmp/backend_dist ./field_application/public"
+        //     }
+        // }
         
-        // // Run field application electron build
-        stage('Buid Field Application - Electron') {
-            steps { 
-                dir("field_application") {
-                    echo 'Building electron application'
-                    writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
-                    sh 'ls ./'
-                    sh 'cat .env'
-                    sh 'npm install --force'
-                    sh 'npm run electron:winbuild'
-                    sh "ls ./field_app_build -a"
-                }
-            }      
-        }
+        // // // Run field application electron build
+        // stage('Buid Field Application - Electron') {
+        //     steps { 
+        //         dir("field_application") {
+        //             echo 'Building electron application'
+        //             writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
+        //             sh 'ls ./'
+        //             sh 'cat .env'
+        //             sh 'npm install --force'
+        //             sh 'npm run electron:winbuild'
+        //             sh "ls ./field_app_build -a"
+        //         }
+        //     }      
+        // }
 
         // //Zip the dist_electron
         stage('Zipping and copying build folders') {
@@ -104,6 +105,7 @@ pipeline {
                     }
                     sh 'echo "Moving drone app apk from droneapp to nestjs"'
                     try {
+                        sh 'ls ./droneapp/app/build/outputs/apk/release'
                         sh 'cp "./droneapp/app/build/outputs/apk/release/*.apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy droneapp apk to ./nestjs/public/files/builds"'
