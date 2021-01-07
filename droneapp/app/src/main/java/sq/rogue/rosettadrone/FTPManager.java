@@ -1,5 +1,7 @@
 package sq.rogue.rosettadrone;
 
+import com.MAVLink.common.msg_file_transfer_protocol;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +25,30 @@ public class FTPManager {
         this.currentFileInPacket = null;
     }
 
+    public void manage_ftp(msg_file_transfer_protocol msg_ftp_item){
+        int session_id = new Short(msg_ftp_item.payload[2]).intValue();
+        int opCode = new Short(msg_ftp_item.payload[3]).intValue();
+        int offset = getOffset(msg_ftp_item.payload);
+//                DEBUG
+//                parent.logMessageDJI("opCode: " + opCode);
+//                parent.logMessageDJI("sessionId: " + sessionId);
+//                parent.logMessageDJI("Offset: " + offset);
+//                parent.logMessageDJI("code was " + opCode);
+        switch (opCode) {
+            case 3: // Return list
+                fetchFiles(offset);
+                break;
+            case 4: // Open file for reading
+                int file_id = new Short(msg_ftp_item.payload[12]).intValue();
+                openFile(file_id, session_id);
+                break;
+            case 5: // Read file
+                readFile(session_id, offset, msg_ftp_item.payload);
+                break;
+            case 8: // Remove file
+                break;
+        }
+    }
     public int getOffset(short[] payload){
 //        parent.logMessageDJI("CAME HERE!");
         byte[] byteArray = new byte[4];
@@ -32,6 +58,7 @@ public class FTPManager {
             short x = new Short(payload[added]);
             byteArray[i] = (byte)(x & 0xff);
         };
+
         int offset = ByteBuffer.wrap(byteArray).getInt();
         return offset;
     }
