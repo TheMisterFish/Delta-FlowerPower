@@ -1744,7 +1744,6 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
             if ((currentFileListState == MediaManager.FileListState.SYNCING) || (currentFileListState == MediaManager.FileListState.DELETING)){
                 DJILog.e(TAG, "Media Manager is busy.");
                 logMessageDJI("Media Manager is busy.");
-
             } else {
                 mMediaManager.refreshFileListOfStorageLocation(SettingsDefinitions.StorageLocation.SDCARD, new CommonCallbacks.CompletionCallback() {
                     @Override
@@ -1794,6 +1793,10 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
         public void onFileListStateChange(MediaManager.FileListState state) {
             currentFileListState = state;
             logMessageDJI("Changed state to " + currentFileListState.name());
+            if(currentFileListState == MediaManager.FileListState.UP_TO_DATE){
+                logMessageDJI("getFileList()");
+                getFileList();
+            }
         }
     };
 

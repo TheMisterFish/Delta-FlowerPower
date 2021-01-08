@@ -29,11 +29,11 @@ public class FTPManager {
         int session_id = new Short(msg_ftp_item.payload[2]).intValue();
         int opCode = new Short(msg_ftp_item.payload[3]).intValue();
         int offset = getOffset(msg_ftp_item.payload);
-//                DEBUG
-//                parent.logMessageDJI("opCode: " + opCode);
-//                parent.logMessageDJI("sessionId: " + sessionId);
-//                parent.logMessageDJI("Offset: " + offset);
-//                parent.logMessageDJI("code was " + opCode);
+//      DEBUG
+//        parent.logMessageDJI("opCode: " + opCode);
+//        parent.logMessageDJI("session_id: " + session_id);
+//        parent.logMessageDJI("Offset: " + offset);
+//        parent.logMessageDJI("code was " + opCode);
         switch (opCode) {
             case 3: // Return list
                 fetchFiles(offset);
@@ -92,6 +92,8 @@ public class FTPManager {
             while (parent.currentProgress != -1) ;
         }
         if(!parent.downloadError){
+            parent.logMessageDJI("No error while downloading");
+
             byte[] header = new byte[12];
             header[2] = (byte)session_id;
             header[4] = 4;
@@ -107,30 +109,38 @@ public class FTPManager {
                     mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 1, 0);
                     parent.logMessageDJI("File to big!");
                 }
-                int byte_offset = 0;
-                int bytesRead;
-                byte[] fetchedFile = new byte[(int) currentFile.length()];
-                parent.logMessageDJI("Current file in bytes: " + currentFileInPacket.length);
-                while (byte_offset < fetchedFile.length
-                        && (bytesRead = is.read(fetchedFile, byte_offset, fetchedFile.length - byte_offset)) >= 0) {
-                    byte_offset += bytesRead;
-                }
+                parent.logMessageDJI("read file to bytes...");
+
+                byte[] fetchedFile = readFileToBytes(currentFile);
+
+                parent.logMessageDJI("Current file in bytes: " + fetchedFile.length);
 
                 int payload_data_size = (251-12);
                 int total_file_size = (int) currentFile.length();
-                int total_packets = total_file_size/payload_data_size;
-                for(int i = 0; i <= total_packets; i++){
-                    int startByte = payload_data_size * i;
-                    int bytes_to_add_size = payload_data_size;
-                    if(startByte + payload_data_size > currentFileInPacket.length){
-                        bytes_to_add_size = (startByte + payload_data_size) - currentFileInPacket.length;
+                int total_packets = (int) Math.ceil(total_file_size/payload_data_size);
+                int bytes_to_add_size = 0;
+
+                parent.logMessageDJI("Getting packets: " + total_packets);
+                currentFileInPacket = new byte[total_packets][];
+                try {
+                    for (int i = 0; i <= total_packets; i++) {
+                        bytes_to_add_size = payload_data_size; //231
+                        if ((payload_data_size * i) + payload_data_size > fetchedFile.length) {
+                            bytes_to_add_size = ((payload_data_size * i) + payload_data_size) - fetchedFile.length;
+                        }
+                        currentFileInPacket[i] = new byte[bytes_to_add_size];
+
+                        for (int j = 0; j < bytes_to_add_size; j++) {
+                            currentFileInPacket[i][j] = fetchedFile[(payload_data_size * i) + j];
+                        }
                     }
-                    for (int j = 0; j < bytes_to_add_size; j++) {
-                        int byte_to_get = startByte + j;
-                        currentFileInPacket[i][j] = fetchedFile[byte_to_get];
-                    }
-                };
-                parent.logMessageDJI("Current file in bytes: " + total_file_size + ", total packets: " + total_packets);
+                    byte test = fetchedFile[(payload_data_size * total_packets) + bytes_to_add_size];
+
+                    parent.logMessageDJI("last byte is " + test);
+                    parent.logMessageDJI("Current file in bytes: " + total_file_size + ", total packets: " + total_packets);
+                } catch (Exception e){
+                    parent.logMessageDJI("Exception: " + e.toString());
+                }
 
             } catch (FileNotFoundException e) {
                 mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
@@ -152,40 +162,60 @@ public class FTPManager {
     }
 
     public void readFile(int session_id, int offset, short[] payload){
-        byte[] data = new byte[251];
+        try { //remove this try catch block after debugging
+            int bytes_to_add_size = currentFileInPacket[offset].length;
+            int bytes_with_header_size = bytes_to_add_size + 12;
 
-//      Set offset from original payload
-        for(int i = 8; i <= 12; i++){
-            short x = new Short(payload[i]);
-            data[i] = (byte)(x & 0xff);
-        };
-//      Set session
-        data[2] = (byte)session_id;
-        if(currentFile == null || currentFile.length() == 0){
-            parent.logMessageDJI("File is null, sending error code");
-            mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
-            return;
-        }
-        if(offset > (currentFileInPacket.length) ){
-            parent.logMessageDJI("offset > currentFileInPacket.length");
-            mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
-            return;
-        }
-        int bytes_to_add_size = currentFileInPacket[offset].length;
-        data[4] = (byte)bytes_to_add_size;
+            byte[] data = new byte[bytes_with_header_size];
 
-        try {
+//          Set offset from original payload
+            for (int i = 8; i <= 12; i++) {
+                short x = new Short(payload[i]);
+                data[i] = (byte) (x & 0xff);
+            }
+//          Set session
+            data[2] = (byte) session_id;
+            data[4] = (byte) bytes_to_add_size;
+
+            if (currentFile == null || currentFile.length() == 0) {
+                parent.logMessageDJI("File is null, sending error code");
+                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 10, 0);
+                return;
+            }
+            if (offset > (currentFileInPacket.length)) {
+                parent.logMessageDJI("offset > currentFileInPacket.length");
+                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
+                return;
+            }
+            try {
 //          We only need to rewrite byte 12 to bytes_to_add_size (which is the total bytes in currentFileInPacket[packet])
 //          Then we just read a packet byte by using the offset as packet_id and i from bytes_to_add_size
-            for (int i = 0; i < bytes_to_add_size; i++) {
-                int added = i + 12;
-                data[added] = currentFileInPacket[offset][i];
+                for (int i = 0; i < bytes_to_add_size; i++) {
+                    int added = i + 12;
+                    data[added] = currentFileInPacket[offset][i];
+                }
+                mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
+            } catch (Exception e) {
+                parent.logMessageDJI(e.toString());
+                mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
             }
-//            parent.logMessageDJI("Sending " + bytes_to_add_size + " bytes using FTP protocol");
-            mModel.send_command_ftp_bytes_ack(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, data);
         } catch (Exception e) {
             parent.logMessageDJI(e.toString());
-            mModel.send_command_ftp_nak(MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL, 6, 0);
         }
+    }
+
+    private byte[] readFileToBytes(File file) throws IOException {
+        byte[] bytes = new byte[(int) file.length()];
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            //read file into bytes[]
+            fis.read(bytes);
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+        }
+        return bytes;
     }
 }
