@@ -112,31 +112,33 @@ public class FTPManager {
                 parent.logMessageDJI("read file to bytes...");
 
                 byte[] fetchedFile = readFileToBytes(currentFile);
+                // byte [x,2,e,d,f,ge,e,e,s,df,s]
 
                 parent.logMessageDJI("Current file in bytes: " + fetchedFile.length);
 
                 int payload_data_size = (251-12);
                 int total_file_size = (int) currentFile.length();
-                int total_packets = (int) Math.ceil(total_file_size/payload_data_size);
+                float total_packets_float = (float) total_file_size/payload_data_size;
+                int total_packets = (int) Math.ceil(total_packets_float);
                 int bytes_to_add_size = 0;
+                int current_byte = 0;
 
                 parent.logMessageDJI("Getting packets: " + total_packets);
                 currentFileInPacket = new byte[total_packets][];
                 try {
-                    for (int i = 0; i <= total_packets; i++) {
-                        bytes_to_add_size = payload_data_size; //231
-                        if ((payload_data_size * i) + payload_data_size > fetchedFile.length) {
-                            bytes_to_add_size = ((payload_data_size * i) + payload_data_size) - fetchedFile.length;
+                    for (int i = 0; i < total_packets; i++) {
+                        current_byte = payload_data_size * i; // 5.802.442 (+13 = 5.802.455)
+                        bytes_to_add_size = payload_data_size; //239
+                        if (current_byte + payload_data_size > fetchedFile.length) {
+                            bytes_to_add_size = fetchedFile.length - current_byte;
+                            parent.logMessageDJI("Getting a total of last byte size " + bytes_to_add_size); //13
                         }
                         currentFileInPacket[i] = new byte[bytes_to_add_size];
 
                         for (int j = 0; j < bytes_to_add_size; j++) {
-                            currentFileInPacket[i][j] = fetchedFile[(payload_data_size * i) + j];
+                            currentFileInPacket[i][j] = fetchedFile[current_byte + j];
                         }
                     }
-                    byte test = fetchedFile[(payload_data_size * total_packets) + bytes_to_add_size];
-
-                    parent.logMessageDJI("last byte is " + test);
                     parent.logMessageDJI("Current file in bytes: " + total_file_size + ", total packets: " + total_packets);
                 } catch (Exception e){
                     parent.logMessageDJI("Exception: " + e.toString());
