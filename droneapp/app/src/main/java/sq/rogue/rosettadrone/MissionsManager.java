@@ -109,9 +109,13 @@ public class MissionsManager {
                 mModel.echoLoadedMission();
                 break;
             case MAV_CMD_MISSION_START:
+                parent.logMessageDJI("Received MAV: MAV_CMD_MISSION_START (breaks)");
             case MAV_CMD_NAV_LAND:
+                parent.logMessageDJI("Received MAV: MAV_CMD_NAV_LAND (breaks)");
             case MAV_CMD_NAV_TAKEOFF:
+                parent.logMessageDJI("Received MAV: MAV_CMD_NAV_TAKEOFF (breaks)");
             case MAV_CMD_NAV_RETURN_TO_LAUNCH:
+                parent.logMessageDJI("Received MAV: MAV_CMD_NAV_RETURN_TO_LAUNCH (breaks)");
                 break;
             default:
                 parent.logMessageDJI("MAVLINK_MSG_ID_MISSION_ITEM unkown mission id: " + ((msg_mission_item) msg).command);
@@ -158,7 +162,7 @@ public class MissionsManager {
             switch (m.command) {
 
                 case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
-                    parent.logMessageDJI("Takeoff...");
+                    parent.logMessageDJI("Received MAV: MAV_CMD_NAV_TAKEOFF (breaks)");
                     break;
 
                 case MAV_CMD.MAV_CMD_NAV_WAYPOINT:

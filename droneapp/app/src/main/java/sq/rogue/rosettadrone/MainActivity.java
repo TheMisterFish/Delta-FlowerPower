@@ -1659,7 +1659,7 @@ public class MainActivity extends AppCompatActivity implements DJICodecManager.Y
 //        return;
 //    }
 
-    private void initMediaManager() {
+    public void initMediaManager() {
         if (RDApplication.getProductInstance() == null) {
             mediaFileList.clear();
             DJILog.e(TAG, "Product disconnected");

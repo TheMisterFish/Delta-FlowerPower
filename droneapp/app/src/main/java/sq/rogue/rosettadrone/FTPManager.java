@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 import static com.MAVLink.common.msg_file_transfer_protocol.MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL;
+import static sq.rogue.rosettadrone.util.safeSleep;
 
 public class FTPManager {
     private MainActivity parent;
@@ -64,6 +65,8 @@ public class FTPManager {
     }
 
     public void fetchFiles(int offset){
+        parent.initMediaManager();
+        safeSleep(1500);
         parent.logMessageDJI("Getting files");
         parent.getFilesDir();
         if(parent.mediaFileList.size() < offset) {
@@ -89,11 +92,16 @@ public class FTPManager {
         if(parent.lastDownloadedIndex != file_id) {
             parent.downloadFileByIndex(file_id);
             // wait for done
-            while (parent.currentProgress != -1) ;
+            while (parent.currentProgress != -1){
+                safeSleep(1000);
+                parent.logMessageDJI("Waiting for current progress: " + parent.currentProgress);
+            };
         }
         if(!parent.downloadError){
             parent.logMessageDJI("No error while downloading");
-
+            currentFileInPacket = new byte[0][0];
+            currentFile = null;
+            parent.logMessageDJI("Reset currentfile and currentfileinpackets");
             byte[] header = new byte[12];
             header[2] = (byte)session_id;
             header[4] = 4;
