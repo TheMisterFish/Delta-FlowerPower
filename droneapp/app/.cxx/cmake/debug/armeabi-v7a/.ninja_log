@@ -1,7 +1,3 @@
 # ninja log v5
-1	587	627933633	CMakeFiles/djivideojni.dir/src/main/cpp/dji_video_jni.c.o	22268a02b241e14c
-590	943	627933633	libdjivideojni.so	6a72bbda3546d852
-40	731	628089127	CMakeFiles/djivideojni.dir/src/main/cpp/dji_video_jni.c.o	22268a02b241e14c
-731	1378	628089128	libdjivideojni.so	6a72bbda3546d852
-1	10562	631581598	CMakeFiles/djivideojni.dir/src/main/cpp/dji_video_jni.c.o	22268a02b241e14c
-10562	17227	631581605	libdjivideojni.so	6a72bbda3546d852
+2	1054	631762426	CMakeFiles/djivideojni.dir/src/main/cpp/dji_video_jni.c.o	f667b7d83ed86125
+1065	2070	631762427	libdjivideojni.so	79c28840233f1215
