@@ -5,6 +5,7 @@ from twisted.internet import reactor
 from twisted.python import log
 from scripts.yolov5.simple_detect import detect
 from scripts.splitter import split_images
+from scripts.drone_script import *
 import threading
 import json
 import sys
@@ -55,6 +56,15 @@ class MyServerProtocol(WebSocketServerProtocol):
         if message[0] == "DETECT_IMAGES":
             thread = threading.Thread(
                 target=simple_detect_action, args=(self, message[1], message[2], float(message[3]), int(float(message[4])))).start()
+        # if message[0] == "INIT_DRONE": # DOESNT WORK YET! _ WONT STOP!
+        #     DroneEngine = threadTest.DroneEngine(client=self)
+        #     DroneEngine.start()
+        #     DroneEngine.onThread(DroneEngine.doSomething)
+        #     DroneEngine.onThread(DroneEngine.doSomethingElse)
+        #     print("DONE")
+        # if message[0] == "STOP_DRONE_THREAD": # HERE THE PROGRAM DOES NOT KNOW WHAT DRONEENGINE IS
+        #     DroneEngine.onThread(DroneEngine.doSomething)
+        #     DroneEngine.onThread(DroneEngine.stop)
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)
