@@ -30,7 +30,7 @@ export class SessionsService {
   ) {}
 
   async findOne(id: string): Promise<Session> | null {
-    return await this.sessions.findById(id).exec();
+    return await this.sessions.findById(id).populate('made_by').populate('aimodel').exec();
   }
 
   async findAll(): Promise<Session[] | null> {
@@ -80,6 +80,8 @@ export class SessionsService {
         }
       });
     });
+
+    await this.sessions.findByIdAndUpdate(session._id, {$set: session});
 
     return session;
   }
