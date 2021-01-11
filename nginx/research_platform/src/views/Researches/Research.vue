@@ -11,13 +11,31 @@
             research && research.description
           }}</v-card-subtitle>
           <v-row v-if="research">
+            <v-data-table
+              :headers="sessionsHeaders"
+              :items="research.sessions"
+              hide-default-footer
+              class="sessions-table"
+              @click:row="openSession"
+            ><template v-slot:[`item.created_at`]="{ item }">
+        <span>{{ new Date(item.created_at).toDateString() }}</span>
+      </template>
+
+      <template v-slot:[`item.updated_at`]="{ item }">
+        <span>{{
+          item.updated_at ? new Date(item.updated_at).toDateString() : ""
+        }}</span>
+      </template></v-data-table>
             <v-col
               v-for="(result, index) in research.results"
               :key="index"
               cols="12"
             >
               <AnnotatedImage
-                :imagePath="'http://localhost:7080/'+result.file.filePath.split(/\/(.+)/)[1]"
+                :imagePath="
+                  'http://localhost:7080/' +
+                    result.file.filePath.split(/\/(.+)/)[1]
+                "
                 :boundingBoxes="result.boundingBoxes"
               />
             </v-col>
@@ -44,6 +62,18 @@ export default {
   components: {
     AnnotatedImage,
   },
+  data: () => ({
+    sessionsHeaders: [
+      { text: "Session", value: "name" },
+      { text: "Created at", value: "created_at" },
+      { text: "Updated at", value: "updated_at" },
+      { text: "Made by", value: "made_by.fullname" },
+      { text: "Images", value: "results.length" },
+      { text: "Confidence", value: "confidence" },
+      { text: "Session type", value: "session_type" },
+      { text: "AI model", value: "aimodel.name" },
+    ],
+  }),
   computed: {
     ...mapState(["researches"]),
     _id() {
@@ -63,6 +93,13 @@ export default {
       } else {
         this.$store.dispatch("showSnackbar", response.message);
       }
+    },
+
+    openSession(session) {
+      this.$router.push({
+        name: "research/:id/:sessionId",
+        params: { id: session.research, sessionId: session._id, title: session.name},
+      });
     },
   },
 
@@ -84,5 +121,9 @@ export default {
 <style scoped>
 .card {
   max-width: 1400px;
+}
+
+.sessions-table >>> tbody tr:hover {
+  cursor: pointer;
 }
 </style>
