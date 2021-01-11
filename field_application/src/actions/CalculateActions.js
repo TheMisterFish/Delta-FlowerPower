@@ -168,10 +168,11 @@ const CalculateActions = {
             revAz = Math.atan2(sinAlpha, -tmp); // final bearing
         return [this.toDegrees(lat2), lon1 + this.toDegrees(L)];
     },
-    calculateGpsCords(my_pos_1, my_pos_2, image_size_width, image_size_height) {
+    calculateGpsCords(my_pos_1, my_pos_2, my_pos_3, my_pos_4, image_size_width, image_size_height) {
         const start_pos = my_pos_1;
-        const pos_1 = [my_pos_1[0], my_pos_2[1]];
-        const pos_2 = [my_pos_2[0], my_pos_1[1]];
+        const pos_1 = [my_pos_2[0], my_pos_2[1]];
+        const pos_2 = [my_pos_3[0], my_pos_3[1]];
+        const pos_3 = [my_pos_4[0], my_pos_4[1]];
 
         // Get longest side
         const length_1 = CalculateActions.distanceInMBetweenEarthCoordinates(

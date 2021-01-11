@@ -11,7 +11,7 @@
             hide-details
         ></v-text-field>
         <br />
-        <div v-if="showCustom">
+        <!-- <div v-if="showCustom">
             <v-text-field
                 v-model="research_settings.research.location.lat_long_point_one"
                 append-icon="mdi-eart"
@@ -41,7 +41,7 @@
                 single-line
                 hide-details
             ></v-text-field>
-        </div>
+        </div> -->
         <br />
         <small>
             <a href="#" @click="downloadResearches">Download onderzoeken</a>
@@ -163,6 +163,14 @@ export default {
         },
         selectResearch(research) {
             this.research_settings.research = research
+            this.research_settings.pos_x_1 = Number(research.location.lat_long_point_one.split(",")[0]);
+            this.research_settings.pos_y_1 = Number(research.location.lat_long_point_one.split(",")[1]);
+            this.research_settings.pos_x_2 = Number(research.location.lat_long_point_two.split(",")[0]);
+            this.research_settings.pos_y_2 = Number(research.location.lat_long_point_two.split(",")[1]);
+            this.research_settings.pos_x_3 = Number(research.location.lat_long_point_three.split(",")[0]);
+            this.research_settings.pos_y_3 = Number(research.location.lat_long_point_three.split(",")[1]);
+            this.research_settings.pos_x_4 = Number(research.location.lat_long_point_four.split(",")[0]);
+            this.research_settings.pos_y_4 = Number(research.location.lat_long_point_four.split(",")[1]);
         },
     },
 };
