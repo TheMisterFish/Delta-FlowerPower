@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Axios from 'axios';
+import AuthApi from "../../api/AuthApi";
 
 const authentication_store = {
     state: {
@@ -8,10 +9,6 @@ const authentication_store = {
         user: {},
     },
     mutations: {
-        auth_request(state) {
-            console.log('loggin in!!')
-            state.status = "loading";
-        },
         auth_success(state, token, user) {
             console.log('succesful login')
             localStorage.setItem("token", token);
@@ -25,32 +22,19 @@ const authentication_store = {
         },
     },
     actions: {
-        login({
+        async login({
             commit
         }, user) {
-            return new Promise((resolve, reject) => {
-                commit("auth_request");
-                Axios({
-                        url: "http://localhost:3000/login",
-                        data: user,
-                        method: "POST",
-                    })
-                    .then((response) => {
-                        const token = response.data.token;
-                        const user = response.data.user;
-                        localStorage.setItem("token", token);
-                        Vue.prototype.$http.defaults.headers.common[
-                            "Authorization"
-                        ] = token;
-                        commit("auth_success", token, user);
-                        resolve(response);
-                    })
-                    .catch((error) => {
-                        commit("auth_error");
-                        localStorage.removeItem("token");
-                        reject(error);
-                    });
-            });
+            const response = await AuthApi.login(user);
+
+            if (response) {
+                Vue.prototype.$http.defaults.headers.common["Authorization"] = `bearer ${response.access_token}`;
+                localStorage.setItem("email", user.email);
+                localStorage.setItem("password", user.password);
+            }
+
+            return response;
+
         },
     },
     modules: {},
