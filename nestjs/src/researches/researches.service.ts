@@ -36,7 +36,10 @@ export class ResearchesService {
       .findById(id)
       .populate('made_by')
       .populate('location')
-      .populate('sessions')
+      .populate({
+        path: 'sessions',
+        populate: [{ path: 'aimodel' }, { path: 'made_by' }],
+      })
       .exec();
   }
 
@@ -48,7 +51,7 @@ export class ResearchesService {
       .populate('made_by')
       .populate('location')
       .populate('sessions')
-      .exec()
+      .exec();
   }
 
   async deleteOne(id: string): Promise<void> {
