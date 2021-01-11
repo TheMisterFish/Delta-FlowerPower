@@ -39,11 +39,19 @@ def stop_drone_script(client):
 def send_drone_message(client, msg, data):
     global DroneEngine
     if(msg == "vehicle_connect"):
+        client.sendSocketMessage("{'info':'Drone connecting'}")
         DroneEngine.onThread(DroneEngine.vehicle_connect)
+        time.sleep(2)
+        client.sendSocketMessage("{'info':'Drone getting files from SD'}")
+        DroneEngine.onThread(DroneEngine.initFileList)
+        time.sleep(2)
+
     elif(msg == "downloadFile"):
         file_id = data[0]
         file_name = data[1]
         DroneEngine.onThread(DroneEngine.downloadFile(file_id, file_name))
+    elif(msg == "downloadUnknownFiles"):
+        DroneEngine.onThread(DroneEngine.downloadUnknownFiles())
     elif(msg == "getFileList"):
         DroneEngine.onThread(DroneEngine.getFileList)
     elif(msg == "initFileList"):

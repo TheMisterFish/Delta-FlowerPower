@@ -1,7 +1,7 @@
 <template>
     <div>
         HIER WORD EEN ACTIEF RESEARCH GETOONT!
-        <heartbeat style="width: 200px"></heartbeat>
+        <!-- <heartbeat style="width: 200px"></heartbeat> -->
     </div>
 </template>
 

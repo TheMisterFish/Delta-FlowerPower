@@ -391,6 +391,11 @@ class DroneEngine(threading.Thread):
     def initFileList(self):
         self.get_file_list()
         self.init_files = self.files
+        
+    def downloadUnknownFiles(self):
+        for i, file in self.files:
+            if file not in self.init_files:
+                self.downloadFile(i)
 
     def downloadFile(self, file_id):
         if(self.done_download):
