@@ -3,7 +3,7 @@ import { IsString, IsNotEmpty, IsDate, MinLength, IsNumber } from 'class-validat
 import { User } from "../users/users.model";
 import { Aimodel } from "../aimodels/aimodels.model";
 import { Research } from "../researches/researches.model";
-import { File } from "src/common/models/file/file.model";
+import { File } from "../common/models/file/file.model";
 
 @pre<Session>('save', function (next) {
   if (!this.isNew) {
