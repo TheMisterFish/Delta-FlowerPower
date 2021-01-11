@@ -26,12 +26,17 @@ def start_drone_script(client):
     DroneEngine = scripts.drone_script.DroneEngine(client=client)
     DroneEngine.start()
 
-def stop_drone_script():
+def safe_stop_drone_script(client):
+    global DroneEngine
+    client.sendSocketMessage("{'info':'(Safe) Stoping drone thread'}")
+    DroneEngine.onThread(DroneEngine.emergency_stop)
+
+def stop_drone_script(client):
     global DroneEngine
     client.sendSocketMessage("{'info':'Stoping drone thread'}")
     DroneEngine.onThread(DroneEngine.stop)
 
-def send_drone_message():
+def send_drone_message(client, msg):
     global DroneEngine
 
 #TODO In the temp folder generate a subfolder for each image instead of putting everything in the root
@@ -78,10 +83,10 @@ class MyServerProtocol(WebSocketServerProtocol):
                 target=start_drone_script, args=[self]).start()
         if message[0] == "STOP_DRONE_THREAD":
             thread = threading.Thread(
-                target=stop_drone_script, args=()).start()
+                target=safe_stop_drone_script, args=[self]).start()
         if message[0] == "DRONE_MESSAGE":
             thread = threading.Thread(
-                target=send_drone_message, args=[message[1]]).start()
+                target=send_drone_message, args=[self, message[1]]).start()
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)

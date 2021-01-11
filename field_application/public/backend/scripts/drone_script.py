@@ -26,7 +26,7 @@ class DroneEngine(threading.Thread):
         self.getting_fileList = False
         self.getting_file = False
         self.getting_download = False
-        self.done_download = False
+        self.done_download = True
         self.downloaded = False
         self.size = 0
         self.files = []
@@ -54,36 +54,26 @@ class DroneEngine(threading.Thread):
             print('Distance to waypoint (%s): %s' % (nextwaypoint, self.distance_to_current_waypoint()))
 
     def vehicle_connect(self):
+        if(self.vehicle != None):
+            self.client.sendSocketMessage("{'error':'vehicle_connect: vehicle was not None'}")
+            return
         try:
             self.vehicle.connect(connection_string, wait_ready=True)
         except expression as identifier:
-            print("e: " + str(identifier))
+            self.client.sendSocketMessage("{'error':'"+str(identifier)+"'}")
 
     def set_vehicle_receivers(self, connection_string):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'set_vehicle_receivers: vehicle is None'}")
+            return
         try:
             self.vehicle.add_message_listener('*', drone_status_receiver)
             self.vehicle.add_message_listener('FILE_TRANSFER_PROTOCOL', ftp_decoder)
         except expression as identifier:
-            pass
+            self.client.sendSocketMessage("{'error':'"+str(identifier)+"'}")
 
     #Callback method for new messages
     def drone_status_receiver(self, name, msg):
-        if (name != "ATTITUDE" 
-        and name != "VIBRATION"
-        and name != "ALTITUDE"
-        and name != "VFR_HUD"
-        and name != "GPS_RAW_INT"
-        and name != "RC_CHANNELS"
-        and name != "BATTERY_STATUS"
-        and name != "HEARTBEAT"
-        and name != "RC_CHANNELS"
-        and name != "POWER_STATUS"
-        and name != "SYS_STATUS"
-        and name != "GLOBAL_POSITION_INT"
-        and name != "RADIO_STATUS"
-        and name != "FILE_TRANSFER_PROTOCOL"):
-            print(msg)
-            pass
         self.client.sendSocketMessage("{'name':'"+str(name)+"','msg':'"+str(msg)+"'}")
 
     def ftp_decoder(self, msg):
@@ -129,12 +119,9 @@ class DroneEngine(threading.Thread):
                 self.downloaded = myOffset
                 self.downloaded_array[myOffset] = list_payload
         else:
-            print("Got a NAK response")
+            self.client.sendSocketMessage("{'error':'Received a NAK message'}")
 
     def download(self):
-        global getting_download
-        global downloaded_array
-
         self.getting_download = True
         packets = int(size) / (251-12)
         packets = math.ceil(packets) - 1
@@ -142,17 +129,16 @@ class DroneEngine(threading.Thread):
         self.downloaded_array = [None] * packets
         to_download = packets
         downloaded_counter = 0
-        print(packets)
         while True:
             if(downloaded + 500 < downloaded_counter):
                 while downloaded + 150 < downloaded_counter:
                     time.sleep(0.025)
-            MAV_download_file(downloaded_counter)
+            self.MAV_download_file(downloaded_counter)
             time.sleep(0.01)
             downloaded_counter = downloaded_counter + 1
             if downloaded_counter == to_download + 1:
                 break
-        redownload()
+        self.redownload()
 
     def redownload(self):
         redownload_list = []
@@ -161,7 +147,7 @@ class DroneEngine(threading.Thread):
                 redownload_list.append(i)
         if len(redownload_list) > 0:
             for i in range(len(redownload_list)):
-                MAV_download_file(redownload_list[i])
+                self.MAV_download_file(redownload_list[i])
                 time.sleep(0.0025)
             time.sleep(2)
             redownload()
@@ -188,8 +174,6 @@ class DroneEngine(threading.Thread):
         payload[9] = offset_bytes[1]
         payload[10] = offset_bytes[2]
         payload[11] = offset_bytes[3]
-
-        print("SEND MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL")
         msg = self.vehicle.message_factory.file_transfer_protocol_encode(
                 0,0,0,payload
             )
@@ -243,7 +227,7 @@ class DroneEngine(threading.Thread):
             fail_counter = fail_counter + 1
             if(fail_counter > 50):
                 fail_counter = 0
-                MAV_open_file(2)
+                self.MAV_open_file(2)
 
     def MAV_pauze(self):
         if(self.vehicle == None):
@@ -269,7 +253,6 @@ class DroneEngine(threading.Thread):
             0,0,0,0,0,0,0 #params 1-7
         )
         self.vehicle.send_mavlink(msg)
-        self.vehicle.flush()
         self.vehicle.flush()
 
     def MAV_return_to_launch(self):
@@ -386,17 +369,30 @@ class DroneEngine(threading.Thread):
         distancetopoint = self.get_distance_metres(vehicle.location.global_frame, targetWaypointLocation)
         return distancetopoint
 
+    # DOWNLOAD
+    def download_file(self, file_id):
+        if(self.done_download):
+            self.client.sendSocketMessage("{'error':'download_file: Download still in progress'}")
+            return
+        self.done_download = False
+        self.MAV_open_file(i)
+        self.download()
+        self.create_image("myFile" + str(i) + ".jpg", downloaded_array)
+        self.done_download = True
+        self.downloaded_array = []
     # STOP
     def emergency_stop(self):
         if(self.vehicle == None):
-            stop()
+            self.stop()
             return
-        MAV_pauze()
-        MAV_clear_mission()
-        MAV_return_to_launch()
-        MAV_land()
+        self.MAV_pauze()
+        self.MAV_clear_mission()
+        self.MAV_return_to_launch()
+        time.sleep(4)
+        self.MAV_land()
+        self.stop()
         
     def stop(self):
         self.do_run = False
-        self.client.sendSocketMessage("Stoping drone thread")
+        self.client.sendSocketMessage("{'info':'Stoping drone thread'}")
         return
