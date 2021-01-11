@@ -71,7 +71,6 @@ const AIModelActions = {
             data: {},
             database: DB_NAMES.MODELDB
         });
-        console.log(w)
         return w
     },
     async getModel(id) {

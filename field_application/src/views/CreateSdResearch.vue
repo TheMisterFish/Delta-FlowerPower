@@ -87,7 +87,7 @@ import { IPC_CHANNELS, IPC_MESSAGES } from "../constants";
 // import Detect from "@/components/research_settings_components/DetectComponent.vue";
 
 export default {
-  name: "DroneResearch",
+  name: "SdResearch",
   data() {
     return {
       e1: 1,
