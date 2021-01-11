@@ -91,7 +91,7 @@ import SelectResearchSettings from "@/components/research_settings_components/Se
 import createFlightSettings from "@/components/research_settings_components/CreateFlightSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_settings_components/CreateProcessSettingsComponent.vue";
 import CheckSettings from "@/components/research_settings_components/CheckSettingsComponent.vue";
-import { LocalDatabaseActions } from "@/actions";
+import { SessionsActions } from "@/actions";
 
 export default {
     name: "DroneResearch",
@@ -117,7 +117,7 @@ export default {
             drone_settings: {
                 fly_height: 3,
                 use_ftp: true,
-                connection_url: "127.0.0.1:16670",
+                connection_url: ":14450",
             },
             process_settings: {
                 model: null,
@@ -147,6 +147,15 @@ export default {
             this.$router.push({ path: "Landing" });
         },
         start() {
+            this.$store.dispatch(
+                "setWeightsPath",
+                this.process_settings.weights.path
+            );
+            this.$store.dispatch("setDroneSettings", {
+                connection_url: this.drone_settings.connection_url,
+                fly_height: this.drone_settings.fly_height,
+                use_ftp: this.drone_settings.use_ftp
+            });
             // SAVE ALL DATA AND GO TO THE RESEARCH PAGE
             const active_research = {
                 research_type: "drone",
@@ -161,7 +170,7 @@ export default {
                 process_settings: this.process_settings,
                 waypoint_settings: this.waypoint_settings,
             };
-            LocalDatabaseActions.saveLocalResearch(active_research);
+            SessionsActions.saveLocalResearch(active_research);
             this.$router.push({ path: "active_drone_research" });
         },
         iterate(obj) {

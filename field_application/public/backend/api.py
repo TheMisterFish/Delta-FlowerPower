@@ -22,29 +22,30 @@ DroneEngine = None
 
 def start_drone_script(client, connection_string, ftp, fly_height):
     global DroneEngine
-    client.sendSocketMessage("{'info':'Starting drone thread'}")
+    client.sendSocketMessage("DRONEINFO", "{'info':'Starting drone thread'}")
     DroneEngine = scripts.drone_script.DroneEngine(client=client, connection_string=connection_string, fly_height=fly_height, ftp=ftp)
     DroneEngine.start()
 
 def safe_stop_drone_script(client):
     global DroneEngine
-    client.sendSocketMessage("{'info':'(Safe) Stoping drone thread'}")
+    client.sendSocketMessage("DRONEINFO", "{'info':'(Safe) Stoping drone thread'}")
     DroneEngine.onThread(DroneEngine.emergency_stop)
 
 def stop_drone_script(client):
     global DroneEngine
-    client.sendSocketMessage("{'info':'Stoping drone thread'}")
+    client.sendSocketMessage("DRONEINFO", "{'info':'Stoping drone thread'}")
     DroneEngine.onThread(DroneEngine.stop)
 
 def send_drone_message(client, msg, data):
     global DroneEngine
     if(msg == "vehicle_connect"):
-        client.sendSocketMessage("{'info':'Drone connecting'}")
+        client.sendSocketMessage("DRONEINFO", "{'info':'Drone connecting'}")
         DroneEngine.onThread(DroneEngine.vehicle_connect)
         time.sleep(2)
-        client.sendSocketMessage("{'info':'Drone getting files from SD'}")
+        client.sendSocketMessage("DRONEINFO", "{'info':'Drone getting files from SD'}")
         DroneEngine.onThread(DroneEngine.initFileList)
         time.sleep(2)
+        client.sendSocketMessage("DRONECONNECTED", "{}")
 
     elif(msg == "downloadFile"):
         file_id = data[0]
@@ -113,13 +114,16 @@ class MyServerProtocol(WebSocketServerProtocol):
         if message[0] == "DETECT_IMAGES":
             thread = threading.Thread(
                 target=simple_detect_action, args=(self, message[1], message[2], float(message[3]), int(float(message[4])))).start()
-        if message[0] == "INIT_DRONE":
+        if message[0] == "DRONE_INIT":
             connection_string = message[1]
             ftp = message[2]
             fly_height = message[3]
             thread = threading.Thread(
                 target=start_drone_script, args=[self, connection_string, ftp, fly_height]).start()
-        if message[0] == "STOP_DRONE_THREAD":
+        if message[0] == "DRONE_EMERGENCY_STOP":
+            thread = threading.Thread(
+                target=safe_stop_drone_script, args=[self]).start()
+        if message[0] == "DRONE_STOP":
             thread = threading.Thread(
                 target=safe_stop_drone_script, args=[self]).start()
         if message[0] == "DRONE_MESSAGE":
