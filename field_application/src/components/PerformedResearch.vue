@@ -7,7 +7,7 @@
             <v-list-item-content>
               <v-list-item-title>Onderzoek:</v-list-item-title>
               <v-list-item-subtitle>
-                {{ research.research_settings.research.name }}
+                {{ session.research.name }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -15,10 +15,10 @@
             <v-list-item-content>
               <v-list-item-title>Locatie:</v-list-item-title>
               <v-list-item-subtitle>
-                {{ research.research_settings.research.location.name }}
+                {{ session.research.location.name }}
               </v-list-item-subtitle>
               <v-list-item-subtitle>
-                {{ research.research_settings.research.location.description }}
+                {{ session.research.location.description }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -30,7 +30,7 @@
             <v-list-item-content>
               <v-list-item-title>Type onderzoek:</v-list-item-title>
               <v-list-item-subtitle>{{
-                research.research_type
+                session.research_type
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -38,7 +38,7 @@
             <v-list-item-content>
               <v-list-item-title>Uitgevoerd:</v-list-item-title>
               <v-list-item-subtitle>{{
-                research.executed ? research.executed_date : "Nee"
+                session.executed ? session.executed_date : "Nee"
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -49,16 +49,16 @@
           <v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title>Aantal waypoints:</v-list-item-title>
-              <v-list-item-subtitle>{{
-                research.waypoint_settings.points.length
+              <v-list-item-subtitle>{{ session.waypoint_settings &&
+                session.waypoint_settings.points.length
               }}</v-list-item-subtitle>
             </v-list-item-content> </v-list-item
           ><v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title>Data geupload:</v-list-item-title>
               <v-list-item-subtitle>{{
-                research.uploaded == true
-                  ? (research.upload_date | dateTime)
+                session.uploaded == true
+                  ? (session.upload_date | dateTime)
                   : "Nee"
               }}</v-list-item-subtitle>
             </v-list-item-content>
@@ -72,7 +72,7 @@
       </v-btn>
       <div class="float-right">
         <small>Gemaakt op:</small><br />
-        {{ research.create_date | dateTime }}
+        {{ session.create_date | dateTime }}
       </div>
     </v-card-actions>
   </v-card>
@@ -82,7 +82,7 @@
 import Vue from "vue";
 export default {
   name: "AnnotatedImage",
-  props: { research: Object },
+  props: { session: Object },
   data: () => ({}),
   filters: {
     dateTime: function(time) {

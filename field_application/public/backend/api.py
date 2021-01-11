@@ -3,7 +3,7 @@ from autobahn.twisted.websocket import WebSocketServerFactory
 from socket_message import socket_message
 from twisted.internet import reactor
 from twisted.python import log
-# from scripts.yolov5.simple_detect import detect
+from scripts.yolov5.simple_detect import detect
 from scripts.splitter import split_images
 import scripts.drone_script
 

@@ -7,13 +7,13 @@ const routes = [{
         path: "/",
         name: "Landing",
         component: () =>
-            import("../views/Dashboard.vue"),
+            import ("../views/Dashboard.vue"),
     },
     {
         path: "/dashboard",
         name: "Dashboard",
         component: () =>
-            import("../views/Dashboard.vue"),
+            import ("../views/Dashboard.vue"),
         meta: {
             researcher: true,
         },
@@ -22,7 +22,7 @@ const routes = [{
         path: "/create_drone_research",
         name: "CreateDroneResearch",
         component: () =>
-            import("../views/CreateDroneResearch.vue"),
+            import ("../views/CreateDroneResearch.vue"),
         meta: {
             researcher: true,
         },
@@ -31,7 +31,7 @@ const routes = [{
         path: "/create_sd_research",
         name: "CreateSdResearch",
         component: () =>
-            import("../views/CreateSdResearch.vue"),
+            import ("../views/CreateSdResearch.vue"),
         meta: {
             researcher: true,
         },
@@ -40,16 +40,16 @@ const routes = [{
         path: "/active_drone_research",
         name: "ActiveDroneResearch",
         component: () =>
-            import("../views/ActiveDroneResearch.vue"),
+            import ("../views/ActiveDroneResearch.vue"),
         meta: {
             researcher: true,
         },
     },
     {
-        path: "/active_sd_research",
+        path: "/active_sd_research/:id",
         name: "ActiveSdResearch",
         component: () =>
-            import("../views/ActiveSdResearch.vue"),
+            import ("../views/ActiveSdResearch.vue"),
         meta: {
             researcher: true,
         },
@@ -58,16 +58,16 @@ const routes = [{
         path: "/settings",
         name: "Settings",
         component: () =>
-            import("../views/Settings.vue"),
+            import ("../views/Settings.vue"),
     },
     {
         path: "*",
         redirect: "/",
         name: "Landing",
         component: () =>
-            import("../views/Landing.vue"),
+            import ("../views/Landing.vue"),
     },
-    
+
 ];
 
 const router = new VueRouter({
@@ -79,10 +79,10 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.researcher)) {
         if (localStorage.getItem("token") == null) {
             next()
-            // next({
-            //                 path: "/landing",
-            //                 params: { nextUrl: to.fullPath },
-            // });
+                // next({
+                //                 path: "/landing",
+                //                 params: { nextUrl: to.fullPath },
+                // });
         } else {
             next();
         }
