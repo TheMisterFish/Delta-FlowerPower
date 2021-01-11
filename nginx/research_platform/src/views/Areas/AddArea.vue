@@ -74,6 +74,8 @@ export default {
         lat_long_point_four: this.coordinates.lat_long_point_four,
       });
 
+      console.log(this.coordinates);
+
       if (response.status === STATUS.SUCCESS) {
         this.$router.push({ name: "areas" });
       } else {

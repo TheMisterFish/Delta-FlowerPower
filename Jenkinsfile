@@ -48,6 +48,7 @@ pipeline {
                     sh 'echo "</resources>" >> ./app/src/main/res/values/keys.xml'
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew build"
+                    sh "ls ./app/build/outputs/apk/release"
                     
                 }
             }
@@ -65,12 +66,22 @@ pipeline {
             }
         }
         
+<<<<<<< HEAD
         // // Run field application electron build
+=======
+        // // // Run field application electron build
+>>>>>>> origin/master
         stage('Buid Field Application - Electron') {
             steps { 
                 dir("field_application") {
                     echo 'Building electron application'
+<<<<<<< HEAD
                     writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="173.249.12.137:7080"'
+=======
+                    writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="http://173.249.12.137:7080"'
+                    sh 'ls ./'
+                    sh 'cat .env'
+>>>>>>> origin/master
                     sh 'npm install --force'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
@@ -102,7 +113,7 @@ pipeline {
                     }
                     sh 'echo "Moving drone app apk from droneapp to nestjs"'
                     try {
-                        sh 'cp "./droneapp/app/build/outputs/apk/release/*.apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
+                        sh 'cp "./droneapp/app/build/outputs/apk/release/"*".apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy droneapp apk to ./nestjs/public/files/builds"'
                     }
@@ -123,7 +134,7 @@ pipeline {
         }
 
         // Build & Deploy using docker compose
-        stage('Build test') {
+        stage('Deploy') {
             steps {
                 script {
                     echo "Current branch: " + env.BRANCH_NAME

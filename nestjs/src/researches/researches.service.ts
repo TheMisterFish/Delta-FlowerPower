@@ -47,11 +47,16 @@ export class ResearchesService {
       .findByIdAndUpdate(id, { $set: dto }, { new: true })
       .populate('made_by')
       .populate('location')
+<<<<<<< HEAD
       .populate('sessions').exec()
 <<<<<<< HEAD
 =======
   }
 
+>>>>>>> origin/master
+=======
+      .populate('sessions')
+      .exec()
 >>>>>>> origin/master
   }
 
