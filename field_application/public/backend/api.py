@@ -20,10 +20,10 @@ TEMP_PATH = os.path.join(BASE_PATH, "temp")
 
 DroneEngine = None
 
-def start_drone_script(client):
+def start_drone_script(client, connection_string, ftp, fly_height):
     global DroneEngine
     client.sendSocketMessage("{'info':'Starting drone thread'}")
-    DroneEngine = scripts.drone_script.DroneEngine(client=client)
+    DroneEngine = scripts.drone_script.DroneEngine(client=client, connection_string=connection_string, fly_height=fly_height, ftp=ftp)
     DroneEngine.start()
 
 def safe_stop_drone_script(client):
@@ -36,8 +36,35 @@ def stop_drone_script(client):
     client.sendSocketMessage("{'info':'Stoping drone thread'}")
     DroneEngine.onThread(DroneEngine.stop)
 
-def send_drone_message(client, msg):
+def send_drone_message(client, msg, data):
     global DroneEngine
+    if(msg == "vehicle_connect"):
+        DroneEngine.onThread(DroneEngine.vehicle_connect)
+    elif(msg == "downloadFile"):
+        file_id = data[0]
+        file_name = data[1]
+        DroneEngine.onThread(DroneEngine.downloadFile(file_id, file_name))
+    elif(msg == "getFileList"):
+        DroneEngine.onThread(DroneEngine.getFileList)
+    elif(msg == "initFileList"):
+        DroneEngine.onThread(DroneEngine.initFileList)
+    elif(msg == "goHome"):
+        DroneEngine.onThread(DroneEngine.goHome)
+    elif(msg == "doLand"):
+        DroneEngine.onThread(DroneEngine.doLand)
+    elif(msg == "aimGimbal"):
+        DroneEngine.onThread(DroneEngine.aimGimbal)
+    elif(msg == "homeGimbal"):
+        DroneEngine.onThread(DroneEngine.homeGimbal)
+    elif(msg == "doPauze"):
+        DroneEngine.onThread(DroneEngine.doPauze)
+    elif(msg == "doResume"):
+        DroneEngine.onThread(DroneEngine.doResume)
+    elif(msg == "doStartMission"):
+        DroneEngine.onThread(DroneEngine.doStartMission)
+    elif(msg == "addWaypoints"):
+        waypoints = data[0]
+        DroneEngine.onThread(DroneEngine.addWaypoints(waypoints))
 
 #TODO In the temp folder generate a subfolder for each image instead of putting everything in the root
 #That way we can trace back the original file name (which is the name of the subfolder)
@@ -79,14 +106,19 @@ class MyServerProtocol(WebSocketServerProtocol):
             thread = threading.Thread(
                 target=simple_detect_action, args=(self, message[1], message[2], float(message[3]), int(float(message[4])))).start()
         if message[0] == "INIT_DRONE":
+            connection_string = message[1]
+            ftp = message[2]
+            fly_height = message[3]
             thread = threading.Thread(
-                target=start_drone_script, args=[self]).start()
+                target=start_drone_script, args=[self, connection_string, ftp, fly_height]).start()
         if message[0] == "STOP_DRONE_THREAD":
             thread = threading.Thread(
                 target=safe_stop_drone_script, args=[self]).start()
         if message[0] == "DRONE_MESSAGE":
+            msg = message[1]
+            data = message[2]
             thread = threading.Thread(
-                target=send_drone_message, args=[self, message[1]]).start()
+                target=send_drone_message, args=[self, msg, data]).start()
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)

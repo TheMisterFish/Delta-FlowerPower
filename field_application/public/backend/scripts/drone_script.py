@@ -12,17 +12,19 @@ from PIL import Image
 import numpy as np
 
 class DroneEngine(threading.Thread):
-    def __init__(self, client, message_que = [], connection_string = ":14450", ftp = False, q = queue.Queue(maxsize=0), loop_time = 1.0/60):
+    def __init__(self, client, message_que = [], connection_string = ":14450", fly_height = 3, ftp = False, q = queue.Queue(maxsize=0), loop_time = 1.0/60):
         self.q = q
         self.timeout = loop_time
         self.do_run = True
         self.message_que = message_que
         self.client = client
 
-        # Globals
+        # Important data
         self.vehicle = None
         self.connection_string = connection_string
         self.ftp = ftp
+        self.fly_height = fly_height
+        # Globals
         self.getting_fileList = False
         self.getting_file = False
         self.getting_download = False
@@ -30,6 +32,8 @@ class DroneEngine(threading.Thread):
         self.downloaded = False
         self.size = 0
         self.files = []
+        self.init_files = []
+        self.downloaded_files = []
         self.downloaded_array = []
         self.download_counter = 0
     
@@ -58,17 +62,18 @@ class DroneEngine(threading.Thread):
             self.client.sendSocketMessage("{'error':'vehicle_connect: vehicle was not None'}")
             return
         try:
-            self.vehicle.connect(connection_string, wait_ready=True)
+            self.vehicle.connect(self.connection_string, wait_ready=True)
+            self.set_vehicle_receivers()
         except expression as identifier:
             self.client.sendSocketMessage("{'error':'"+str(identifier)+"'}")
 
-    def set_vehicle_receivers(self, connection_string):
+    def set_vehicle_receivers(self):
         if(self.vehicle == None):
             self.client.sendSocketMessage("{'error':'set_vehicle_receivers: vehicle is None'}")
             return
         try:
-            self.vehicle.add_message_listener('*', drone_status_receiver)
-            self.vehicle.add_message_listener('FILE_TRANSFER_PROTOCOL', ftp_decoder)
+            self.vehicle.add_message_listener('*', self.drone_status_receiver)
+            self.vehicle.add_message_listener('FILE_TRANSFER_PROTOCOL', self.ftp_decoder)
         except expression as identifier:
             self.client.sendSocketMessage("{'error':'"+str(identifier)+"'}")
 
@@ -106,8 +111,8 @@ class DroneEngine(threading.Thread):
                 items = payload_string.split("\\0F")
                 for item in items:
                     splited_item = item.split("\\t")
-                    if(len(splited_item) > 1) and (splited_item not in files):
-                        files.append(splited_item)
+                    if(len(splited_item) > 1) and (splited_item not in self.files):
+                        self.files.append(splited_item)
                     pass
                 self.getting_fileList = False
             if self.getting_file:
@@ -294,7 +299,7 @@ class DroneEngine(threading.Thread):
         self.vehicle.send_mavlink(msg)
         self.vehicle.flush()
 
-    def MAV_set_gimbal(self):
+    def MAV_set_gimbal(self, servo, val):
         if(self.vehicle == None):
             self.client.sendSocketMessage("{'error':'MAV_set_gimbal: vehicle is None'}")
             return
@@ -370,16 +375,91 @@ class DroneEngine(threading.Thread):
         return distancetopoint
 
     # DOWNLOAD
-    def download_file(self, file_id):
+    def getFileList(self):
+        self.getting_fileList = True
+        self.MAV_get_ftp_list()
+        time.sleep(2)
+        while True:
+            lastLen = self.files.len()
+            self.MAV_get_ftp_list(lastLen)
+            while self.getting_fileList:
+                time.sleep(0.2)
+            if self.files.len() == lastLen:
+                break
+        self.client.sendSocketMessage("{'info':'get_file_list: Got all files.'}")
+
+    def initFileList(self):
+        self.get_file_list()
+        self.init_files = self.files
+
+    def downloadFile(self, file_id):
         if(self.done_download):
             self.client.sendSocketMessage("{'error':'download_file: Download still in progress'}")
+            return
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'downloadFile: vehicle is None'}")
+            return
+        try:
+            file_name = self.files[file_id]
+        except expression as identifier:
+            self.client.sendSocketMessage("{'error':'"+str(identifier)+"'}")
             return
         self.done_download = False
         self.MAV_open_file(i)
         self.download()
-        self.create_image("myFile" + str(i) + ".jpg", downloaded_array)
+        self.create_image(str(file_name), downloaded_array)
+        self.downloaded_files.append(file_name)
         self.done_download = True
         self.downloaded_array = []
+
+    def goHome(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'goHome: vehicle is None'}")
+            return
+        self.MAV_pauze()
+        self.MAV_clear_mission()
+        self.MAV_return_to_launch()
+
+    def doLand(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'doLand: vehicle is None'}")
+            return
+        self.MAV_pauze()
+        self.MAV_land()
+
+    def doPauze(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'doPauze: vehicle is None'}")
+            return
+        self.MAV_pauze()
+
+    def doResume(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'doResume: vehicle is None'}")
+            return
+        self.MAV_resume()
+
+    def aimGimbal(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'aimGimbal: vehicle is None'}")
+            return
+        self.MAV_set_gimbal(0, -90)
+    
+    def homeGimbal(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'homeGimbal: vehicle is None'}")
+            return
+        self.MAV_set_gimbal(0, 0)
+    
+    def doStartMission(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'homeGimbal: vehicle is None'}")
+            return
+        self.MAV_start_mission()
+    
+    def addWaypoints(self, waypoints):
+        print("GOT WAYPOINTS:")
+        print(waypoints)
     # STOP
     def emergency_stop(self):
         if(self.vehicle == None):
@@ -391,7 +471,7 @@ class DroneEngine(threading.Thread):
         time.sleep(4)
         self.MAV_land()
         self.stop()
-        
+
     def stop(self):
         self.do_run = False
         self.client.sendSocketMessage("{'info':'Stoping drone thread'}")
