@@ -48,7 +48,9 @@ class DroneEngine(threading.Thread):
 
     def idle(self):
         time.sleep(1)
-        self.message_que.append([1,2])
+        self.message_que.append()
+        nextwaypoint=self.vehicle.commands.next
+        print('Distance to waypoint (%s): %s' % (nextwaypoint, self.distance_to_current_waypoint()))
 
     def vehicle_connect(self):
         try:
@@ -81,6 +83,7 @@ class DroneEngine(threading.Thread):
         and name != "FILE_TRANSFER_PROTOCOL"):
             print(msg)
             pass
+        self.client.sendSocketMessage("{'name':'"+str(name)+"','msg':'"+str(msg)+"'}")
 
     def ftp_decoder(self, msg):
         global getting_fileList
@@ -181,6 +184,9 @@ class DroneEngine(threading.Thread):
 
     # MAV FTP FUNCITONS
     def MAV_get_ftp_list(self, offset = 0):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_get_ftp_list: vehicle is None'}")
+            return
         payload = bytearray(251)
         # Command = get list
         payload[3] = 3
@@ -200,6 +206,9 @@ class DroneEngine(threading.Thread):
         time.sleep(2)
 
     def MAV_download_file(self, offset):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_download_file: vehicle is None'}")
+            return
         payload = bytearray(251)
         # Command = download file
         payload[3] = 5
@@ -218,6 +227,9 @@ class DroneEngine(threading.Thread):
         self.vehicle.flush()
 
     def MAV_open_file(self, file_id):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_open_file: vehicle is None'}")
+            return
         global size
         global getting_file
         size = 0
@@ -243,28 +255,157 @@ class DroneEngine(threading.Thread):
                 fail_counter = 0
                 MAV_open_file(2)
 
-    # MAV IMPORTANT DRONE FUNCTIONS
-    # def MAV_upload_waypoints(self):
-        # TODO
+    def MAV_pauze(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_pauze: vehicle is None'}")
+            return
+        msg = self.vehicle.message_factory.command_long_encode(
+            0, 0,    # target system, target component
+            mavutil.mavlink.MAV_CMD_OVERRIDE_GOTO, #command
+            0, #confirmation
+            mavutil.mavlink.MAV_GOTO_DO_HOLD, 0, 0, 0, 0, 0, 0 #params 1-7
+        )
+        self.vehicle.send_mavlink(msg)
+        self.vehicle.flush()
 
-    # def MAV_pauze(self):
-    #     payload = bytearray(251)
-    #     msg = self.vehicle.message_factory.file_transfer_protocol_encode(
-    #             0,0,0,payload
-    #         )
-    #     vehicle.send_mavlink(msg)
-    #     vehicle.flush()
-    #     time.sleep(2)
+    def MAV_resume(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_resume: vehicle is None'}")
+            return
+        msg = self.vehicle.message_factory.command_long_encode(
+            0, 0,    # target system, target component
+            mavutil.mavlink.MAV_CMD_MISSION_START  , #command
+            0, #confirmation
+            0,0,0,0,0,0,0 #params 1-7
+        )
+        self.vehicle.send_mavlink(msg)
+        self.vehicle.flush()
+        self.vehicle.flush()
 
-    # def MAV_resume(self):
-    #     # TODO
+    def MAV_return_to_launch(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_return_to_launch: vehicle is None'}")
+            return
+        msg = self.vehicle.message_factory.command_long_encode(
+            0, 0,    # target system, target component
+            mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH, #command
+            0, #confirmation
+            0, 0, 0, 0, 0, 0, 0 #params 1-7
+        )
+        self.vehicle.send_mavlink(msg)
+        self.vehicle.flush()
 
-    # def MAV_go_home(self):
-    #     # TODO
+    def MAV_land(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_land: vehicle is None'}")
+            return
+        msg = self.vehicle.message_factory.command_long_encode(
+            0, 0,    # target system, target component
+            mavutil.mavlink.MAV_CMD_NAV_LAND, #command
+            0, #confirmation
+            0, 0, 0, 0, 0, 0, 0 #params 1-7
+        )
+        self.vehicle.send_mavlink(msg)
+        self.vehicle.flush()
         
-    # def MAV_start_mission(self):
-    #     # TODO
+    def MAV_start_mission(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_start_mission: vehicle is None'}")
+            return
+        msg = self.vehicle.message_factory.command_long_encode(
+            0, 0,    # target system, target component
+            mavutil.mavlink.MAV_CMD_MISSION_START  , #command
+            0, #confirmation
+            0,0,0,0,0,0,0 #params 1-7
+        )
+        self.vehicle.send_mavlink(msg)
+        self.vehicle.flush()
 
+    def MAV_set_gimbal(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_set_gimbal: vehicle is None'}")
+            return
+        msg = self.vehicle.message_factory.command_long_encode(
+            0, # time_boot_ms (not used)
+            0,  # target system, target component
+            mavutil.mavlink.MAV_CMD_DO_SET_SERVO, 
+            0, 
+            servo, # RC channel...
+            1500+(val*5.5), # RC value
+            0, 0, 0, 0, 0)
+        self.vehicle.send_mavlink(msg)
+        self.vehicle.flush()
+
+    def MAV_clear_mission(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_clear_mission: vehicle is None'}")
+            return
+        cmds = self.vehicle.commands
+        cmds.download()
+        cmds.wait_ready()
+        cmds.clear() 
+
+    def MAV_takeoff(self, alt):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_takeoff: vehicle is None'}")
+            return
+        self.vehicle.simple_takeoff(alt)
+    
+    def MAV_gethome(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_gethome: vehicle is None'}")
+            return
+        while not self.vehicle.home_location:
+            self.vehicle.commands.download()
+            self.vehicle.commands.wait_ready()
+            time.sleep(0.2)
+
+    # MAV IMPORTANT DRONE FUNCTIONS
+    def MAV_upload_waypoints(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'MAV_upload_waypoints: vehicle is None'}")
+            return
+
+
+    # GETTER FUNCITONS FOR INFO
+    def get_location_metres(self, original_location, dNorth, dEast):
+        earth_radius=6378137.0 #Radius of "spherical" earth
+        #Coordinate offsets in radians
+        dLat = dNorth/earth_radius
+        dLon = dEast/(earth_radius*math.cos(math.pi*original_location.lat/180))
+
+        #New position in decimal degrees
+        newlat = original_location.lat + (dLat * 180/math.pi)
+        newlon = original_location.lon + (dLon * 180/math.pi)
+        return LocationGlobal(newlat, newlon,original_location.alt)
+
+    def get_distance_metres(self, aLocation1, aLocation2):
+        dlat = aLocation2.lat - aLocation1.lat
+        dlong = aLocation2.lon - aLocation1.lon
+        return math.sqrt((dlat*dlat) + (dlong*dlong)) * 1.113195e5
+
+    def distance_to_current_waypoint(self):
+        nextwaypoint = self.vehicle.commands.next
+        if nextwaypoint==0:
+            return None
+        missionitem = self.vehicle.commands[nextwaypoint-1] #commands are zero indexed
+        lat = missionitem.x
+        lon = missionitem.y
+        alt = missionitem.z
+        targetWaypointLocation = LocationGlobalRelative(lat,lon,alt)
+        distancetopoint = self.get_distance_metres(vehicle.location.global_frame, targetWaypointLocation)
+        return distancetopoint
+
+    # STOP
+    def emergency_stop(self):
+        if(self.vehicle == None):
+            self.client.sendSocketMessage("{'error':'emergency_stop: vehicle is None'}")
+            return
+        self.MAV_pauze()
+        self.MAV_clear_mission()
+        self.MAV_return_to_launch()
+        self.MAV_land()
+        self.
     def stop(self):
         self.do_run = False
         self.client.sendSocketMessage("Stoping drone thread")
