@@ -2,26 +2,18 @@ import { plainToClass, Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
-  MinLength,
   IsMongoId,
   IsArray,
   ValidateNested,
   ArrayMinSize,
+  IsInt,
+  IsNumber,
+  IsNumberString,
 } from 'class-validator';
 import { SessionResult } from '../../common/models/sessionResult/sessionResult.model';
 import { User } from '../../users/users.model';
 
 export class CreateSessionDto {
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(5)
-  name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(10)
-  description: string;
-
   @IsNotEmpty()
   @IsMongoId()
   research: string;
@@ -29,6 +21,18 @@ export class CreateSessionDto {
   @IsNotEmpty()
   @IsMongoId()
   aimodel: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  weights: string;
+
+  @IsNotEmpty()
+  @IsString()
+  session_type: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
+  confidence: number;
 
   @IsNotEmpty()
   @IsArray()
