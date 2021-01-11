@@ -31,18 +31,22 @@ export class Location {
 
   @IsNotEmpty()
   @IsLatLong()
+  @prop()
   lat_long_point_one: string;
 
   @IsNotEmpty()
   @IsLatLong()
+  @prop()
   lat_long_point_two: string;
 
   @IsNotEmpty()
   @IsLatLong()
+  @prop()
   lat_long_point_three: string;
 
   @IsNotEmpty()
   @IsLatLong()
+  @prop()
   lat_long_point_four: string;
 
   @IsDate()
