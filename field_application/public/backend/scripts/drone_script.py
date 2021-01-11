@@ -29,6 +29,7 @@ class DroneEngine(threading.Thread):
         self.done_download = False
         self.downloaded = False
         self.size = 0
+        self.files = []
         self.downloaded_array = []
         self.download_counter = 0
     
@@ -39,7 +40,7 @@ class DroneEngine(threading.Thread):
 
     def run(self):
         while self.do_run:
-            print("do_run:", str(self.do_run))
+            print("Drone thread running, do_run:", str(self.do_run))
             try:
                 function, args, kwargs = self.q.get(timeout=self.timeout)
                 function(*args, **kwargs)
@@ -48,9 +49,9 @@ class DroneEngine(threading.Thread):
 
     def idle(self):
         time.sleep(1)
-        self.message_que.append()
-        nextwaypoint=self.vehicle.commands.next
-        print('Distance to waypoint (%s): %s' % (nextwaypoint, self.distance_to_current_waypoint()))
+        if(self.vehicle != None):
+            nextwaypoint=self.vehicle.commands.next
+            print('Distance to waypoint (%s): %s' % (nextwaypoint, self.distance_to_current_waypoint()))
 
     def vehicle_connect(self):
         try:
@@ -86,15 +87,6 @@ class DroneEngine(threading.Thread):
         self.client.sendSocketMessage("{'name':'"+str(name)+"','msg':'"+str(msg)+"'}")
 
     def ftp_decoder(self, msg):
-        global getting_fileList
-        global getting_file
-        global getting_download
-        global done_download
-        global size
-        global downloaded_array
-        global download_counter
-        global image_open
-        global downloaded
         payload = msg.payload
         # text = ""
         if payload[3] == 128:
@@ -108,7 +100,7 @@ class DroneEngine(threading.Thread):
             read_size = payload[4]
 
             counter = 0
-            if(getting_download):
+            if(self.getting_download):
                 for i in range(12, (read_size+12)):
                     real_payload[counter] = payload[i]
                     list_payload.append(payload[i])
@@ -119,7 +111,7 @@ class DroneEngine(threading.Thread):
                     list_payload.append(payload[i])
                     counter = counter + 1
 
-            if getting_fileList:
+            if self.getting_fileList:
                 payload_string = real_payload.decode("utf-8")
                 items = payload_string.split("\\0F")
                 for item in items:
@@ -127,15 +119,15 @@ class DroneEngine(threading.Thread):
                     if(len(splited_item) > 1) and (splited_item not in files):
                         files.append(splited_item)
                     pass
-                getting_fileList = False
-            if getting_file:
+                self.getting_fileList = False
+            if self.getting_file:
                 payload_string = real_payload.decode("utf-8")
-                size = payload_string
-                size = re.search(r'\d+', size).group()
-                getting_file = False
-            if done_download == False and getting_download:
-                downloaded = myOffset
-                downloaded_array[myOffset] = list_payload
+                self.size = payload_string
+                self.size = re.search(r'\d+', self.size).group()
+                self.getting_file = False
+            if self.done_download == False and self.getting_download:
+                self.downloaded = myOffset
+                self.downloaded_array[myOffset] = list_payload
         else:
             print("Got a NAK response")
 
@@ -143,11 +135,11 @@ class DroneEngine(threading.Thread):
         global getting_download
         global downloaded_array
 
-        getting_download = True
+        self.getting_download = True
         packets = int(size) / (251-12)
         packets = math.ceil(packets) - 1
         time.sleep(1)
-        downloaded_array = [None] * packets
+        self.downloaded_array = [None] * packets
         to_download = packets
         downloaded_counter = 0
         print(packets)
@@ -164,8 +156,8 @@ class DroneEngine(threading.Thread):
 
     def redownload(self):
         redownload_list = []
-        for i in range(len(downloaded_array)):
-            if downloaded_array[i] == None:
+        for i in range(len(self.downloaded_array)):
+            if self.downloaded_array[i] == None:
                 redownload_list.append(i)
         if len(redownload_list) > 0:
             for i in range(len(redownload_list)):
@@ -230,11 +222,9 @@ class DroneEngine(threading.Thread):
         if(self.vehicle == None):
             self.client.sendSocketMessage("{'error':'MAV_open_file: vehicle is None'}")
             return
-        global size
-        global getting_file
-        size = 0
+        self.size = 0
 
-        getting_file = True
+        self.getting_file = True
         payload = bytearray(251)
         # Command = download file
         payload[3] = 4
@@ -399,13 +389,13 @@ class DroneEngine(threading.Thread):
     # STOP
     def emergency_stop(self):
         if(self.vehicle == None):
-            self.client.sendSocketMessage("{'error':'emergency_stop: vehicle is None'}")
+            stop()
             return
-        self.MAV_pauze()
-        self.MAV_clear_mission()
-        self.MAV_return_to_launch()
-        self.MAV_land()
-        self.
+        MAV_pauze()
+        MAV_clear_mission()
+        MAV_return_to_launch()
+        MAV_land()
+        
     def stop(self):
         self.do_run = False
         self.client.sendSocketMessage("Stoping drone thread")
