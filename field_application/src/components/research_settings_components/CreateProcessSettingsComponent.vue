@@ -145,18 +145,15 @@ export default {
       if (!this.selectedModel) return [];
       const aiModels = [];
       for (let i = 0; i < this.selectedModel.weights.length; i++) {
-        console.log("SELECTED MODEL WEIGHTS", this.selectedModel.weights[i]);
         if (this.selectedModel.weights[i].downloadPath) {
           const element = {
             name: this.selectedModel.weights[i].fileName,
             path: this.selectedModel.weights[i].downloadPath,
+            _id: this.selectedModel.weights[i]._id,
           };
-          console.log("THE ADDED ELEMENT:", element);
           aiModels.push(element);
-          console.log("AIMODELS:", aiModels);
         }
       }
-      console.log(aiModels);
       return aiModels;
     },
   },
@@ -169,6 +166,7 @@ export default {
       this.process_settings.weights = {
         name: ai_weight.name,
         path: ai_weight.path,
+        _id: ai_weight._id
       };
     },
   },
@@ -191,11 +189,8 @@ export default {
       };
 
       let alreadyDownloaded = false;
-      console.log("LOGGING WEIGHTS:");
-      console.log(weight);
 
       this.selectedModel.weights.forEach((w) => {
-        console.log(w);
         if (w.weight_id === weight._id && w.downloadPath) {
           alreadyDownloaded = true;
         }

@@ -11,14 +11,7 @@
             to="create_drone_research"
             block
           >
-            <span
-              style="
-                                white-space: normal;
-                                word-wrap: break-word;
-                                width: 90%;
-                                padding: 10%;
-                            "
-            >
+            <span class="button-text">
               <v-icon color="primary" x-large>mdi-quadcopter</v-icon>
               <br /><br />
               Onderzoek met drone uitvoeren.
@@ -31,14 +24,7 @@
             @click="selectInputFolder"
             block
           >
-            <span
-              style="
-                                white-space: normal;
-                                word-wrap: break-word;
-                                width: 90%;
-                                padding: 10%;
-                            "
-            >
+            <span class="button-text">
               <v-icon color="primary" x-large>mdi-micro-sd</v-icon>
               <br /><br />
               Foto's van SD kaart gebruiken.
@@ -64,9 +50,9 @@
         </v-col>
         <v-col cols="12" sm="12">
           <performed-research
-            v-for="(research, index) in researches"
+            v-for="(session, index) in sessions"
             :key="index"
-            :research="research"
+            :session="session"
           />
         </v-col>
       </v-row>
@@ -82,7 +68,7 @@ import Vue from "vue";
 import { IPC_MESSAGES, IPC_CHANNELS } from "../constants.js";
 import { IpcMessage } from "../IpcMessage.js";
 import { mapState } from "vuex";
-import { LocalDatabaseActions } from "../actions";
+import { ResearchDatabaseActions, SessionsActions } from "../actions";
 import PerformedResearch from "../components/PerformedResearch";
 
 export default Vue.extend({
@@ -93,11 +79,12 @@ export default Vue.extend({
   data() {
     return {
       search_prev_research: null,
-      researches: [],
+      sessions: [],
     };
   },
   async mounted() {
-    this.researches = await LocalDatabaseActions.getLocalResearches();
+    this.sessions = await SessionsActions.getSessions();
+    console.log(this.sessions);
   },
   methods: {
     async selectInputFolder() {
@@ -122,6 +109,13 @@ export default Vue.extend({
   height: 100%;
   min-height: 150px;
   min-width: 200px;
+}
+
+.big-button .button-text {
+  white-space: normal;
+  word-wrap: break-word;
+  width: 90%;
+  padding: 10%;
 }
 
 .card-spacer {
