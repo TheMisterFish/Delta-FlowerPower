@@ -277,4 +277,5 @@ class DroneEngine(threading.Thread):
 
     def stop(self):
         self.do_run = False
+        self.client.sendSocketMessage("Stoping drone thread")
         return

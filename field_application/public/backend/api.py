@@ -17,6 +17,24 @@ log.startLogging(sys.stdout)
 BASE_PATH = os.getcwd()
 TEMP_PATH = os.path.join(BASE_PATH, "temp")
 
+DroneEngine = None
+
+def start_drone_script(client):
+    global DroneEngine
+    client.sendSocketMessage("{'info':'Starting drone thread'}")
+    DroneEngine = threadTest.DroneEngine(client=client)
+    DroneEngine.start()
+    DroneEngine.onThread(DroneEngine.doSomething)
+    DroneEngine.onThread(DroneEngine.doSomethingElse)
+
+def stop_drone_script():
+    global DroneEngine
+    client.sendSocketMessage("{'info':'Stoping drone thread'}")
+    DroneEngine.onThread(DroneEngine.stop)
+
+def send_drone_message():
+    global DroneEngine
+    
 #TODO In the temp folder generate a subfolder for each image instead of putting everything in the root
 #That way we can trace back the original file name (which is the name of the subfolder)
 def simple_detect_action(client, weights_directory, input_directory, confidence, image_size):
@@ -56,15 +74,15 @@ class MyServerProtocol(WebSocketServerProtocol):
         if message[0] == "DETECT_IMAGES":
             thread = threading.Thread(
                 target=simple_detect_action, args=(self, message[1], message[2], float(message[3]), int(float(message[4])))).start()
-        # if message[0] == "INIT_DRONE": # DOESNT WORK YET! _ WONT STOP!
-        #     DroneEngine = threadTest.DroneEngine(client=self)
-        #     DroneEngine.start()
-        #     DroneEngine.onThread(DroneEngine.doSomething)
-        #     DroneEngine.onThread(DroneEngine.doSomethingElse)
-        #     print("DONE")
-        # if message[0] == "STOP_DRONE_THREAD": # HERE THE PROGRAM DOES NOT KNOW WHAT DRONEENGINE IS
-        #     DroneEngine.onThread(DroneEngine.doSomething)
-        #     DroneEngine.onThread(DroneEngine.stop)
+        if message[0] == "INIT_DRONE":
+            thread = threading.Thread(
+                target=start_drone_script, args=[self]).start()
+        if message[0] == "STOP_DRONE_THREAD":
+            thread = threading.Thread(
+                target=stop_drone_script, args=()).start()
+        if message[0] == "DRONE_MESSAGE":
+            thread = threading.Thread(
+                target=send_drone_message, args=[message[1]]).start()
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason), flush=True)
