@@ -1,7 +1,14 @@
 <template>
     <div>
-        HIER WORD EEN ACTIEF RESEARCH GETOONT!
-        <!-- <heartbeat style="width: 200px"></heartbeat> -->
+        <h3>Logs</h3>
+        <v-virtual-scroll
+            height="175"
+            item-height="29"
+        ></v-virtual-scroll>
+        <hr>
+        <h3>Acties</h3>
+        Actie knop 1, 2, 3
+        <hr>
     </div>
 </template>
 

@@ -45,6 +45,9 @@ def send_drone_message(client, msg, data):
         client.sendSocketMessage("DRONEINFO", "{'info':'Drone getting files from SD'}")
         DroneEngine.onThread(DroneEngine.initFileList)
         time.sleep(2)
+        client.sendSocketMessage("DRONEINFO", "{'info':'Lowering gimbal camera'}")
+        DroneEngine.onThread(DroneEngine.aimGimbal)
+        time.sleep(1)
         client.sendSocketMessage("DRONECONNECTED", "{}")
 
     elif(msg == "downloadFile"):
