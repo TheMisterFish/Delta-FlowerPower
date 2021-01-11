@@ -6,21 +6,24 @@ Vue.use(Vuex);
 const waypoints_store = {
     state: {
         waypoints: null,
+        heading: null,
     },
     mutations: {
-        setWaypoints(state, payload) {
+        setWaypointSettings(state, payload) {
             state.waypoints = payload.waypoints;
+            state.heading = payload.heading;
         },
         resetWaypoints(state){
             state.waypoints = null;
+            state.heading = null;
         }
 
     },
     actions: {
-        setWaypoints({
+        setWaypointSettings({
             commit
         }, payload) {
-            commit("setWaypoints", payload);
+            commit("setWaypointSettings", payload);
         },
         resetWaypoints({
             commit
@@ -30,7 +33,10 @@ const waypoints_store = {
     },
     getters: {
         getWaypoints: state => {
-            return state.waypoints
+            return state.waypoints;
+        },
+        getHeading: state => {
+            return state.heading;
         }
     },
 };

@@ -149,6 +149,10 @@ export default {
 
       const session = await SessionsActions.saveSession(session_model);
 
+        this.$store.dispatch("setCurrentSession", {
+            session: session_model
+        });
+        
       const ipcMessage = new IpcMessage(IPC_MESSAGES.COPY_IMAGES_FROM_FOLDER, {
         from: session.images_path,
         to: session._id,

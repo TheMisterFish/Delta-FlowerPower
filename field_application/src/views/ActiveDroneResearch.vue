@@ -8,6 +8,11 @@
         <hr>
         <h3>Acties</h3>
         Actie knop 1, 2, 3
+        <br>
+        <hr>
+        {{ session._id }}
+        <br>
+        {{ session }}
         <hr>
     </div>
 </template>
@@ -25,13 +30,17 @@ export default {
     data() {
         return {
             connected: false,
-            logs: []
+            logs: [],
+            session: {},
         }
     },
     computed: {
         ...mapState({
             messages: (state) => state.socket.messages,
         }),
+    },
+    mounted() {
+        this.session = this.$store.getters.getCurrentSession;
     },
     methods: {
         connectDrone() {
@@ -44,7 +53,7 @@ export default {
                     SOCKET_CHANNELS.DRONE_INIT,
                     getConnectionUrl,
                     ftp,
-                    fly_height
+                    fly_height,
                 ])
             );
         },

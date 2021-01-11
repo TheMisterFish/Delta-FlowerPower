@@ -151,7 +151,7 @@ export default {
             // TODO: Reset all given settings
             this.$router.push({ path: "Landing" });
         },
-        start() {
+        async start() {
             this.$store.dispatch(
                 "setWeightsPath",
                 this.process_settings.weights.path
@@ -161,21 +161,30 @@ export default {
                 fly_height: this.drone_settings.fly_height,
                 use_ftp: this.drone_settings.use_ftp
             });
+            this.$store.dispatch("setWaypointSettings", {
+                waypoints: this.waypoint_settings.points,
+                heading: this.waypoint_settings.heading,
+            });
             // SAVE ALL DATA AND GO TO THE RESEARCH PAGE
-            const active_research = {
-                research_type: "drone",
-                create_date: window.moment(),
+            const session_model = {
+                session_type: "drone",
+                created_at: window.moment(),
                 uploaded: false,
-                upload_date: null,
+                uploaded_at: null,
                 executed: false,
-                executed_date: null,
-                research_settings: this.research_settings,
+                executed_at: null,
+                research: this.research_settings.research,
                 photo_settings: this.photo_settings,
                 drone_settings: this.drone_settings,
                 process_settings: this.process_settings,
                 waypoint_settings: this.waypoint_settings,
             };
-            SessionsActions.saveLocalResearch(active_research);
+            const session = await SessionsActions.saveSession(session_model);
+            session_model.id = session._id;
+            this.$store.dispatch("setCurrentSession", {
+                session: session_model
+            });
+
             this.$router.push({ path: "active_drone_research" });
         },
         iterate(obj) {
