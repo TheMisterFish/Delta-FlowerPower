@@ -56,16 +56,6 @@ class DroneEngine(threading.Thread):
         except expression as identifier:
             print("e: " + str(identifier))
 
-    def doSomething(self):
-        print("do someting")
-        pass
-    def doSomethingElse(self):
-        print("do someting")
-        pass
-
-    def doSomethingReturn(self):
-        return "KAAS"
-
     def set_vehicle_receivers(self, connection_string):
         try:
             self.vehicle.add_message_listener('*', drone_status_receiver)

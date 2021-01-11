@@ -3,9 +3,10 @@ from autobahn.twisted.websocket import WebSocketServerFactory
 from socket_message import socket_message
 from twisted.internet import reactor
 from twisted.python import log
-from scripts.yolov5.simple_detect import detect
+# from scripts.yolov5.simple_detect import detect
 from scripts.splitter import split_images
-from scripts.drone_script import *
+import scripts.drone_script
+
 import threading
 import json
 import sys
@@ -22,10 +23,8 @@ DroneEngine = None
 def start_drone_script(client):
     global DroneEngine
     client.sendSocketMessage("{'info':'Starting drone thread'}")
-    DroneEngine = threadTest.DroneEngine(client=client)
+    DroneEngine = scripts.drone_script.DroneEngine(client=client)
     DroneEngine.start()
-    DroneEngine.onThread(DroneEngine.doSomething)
-    DroneEngine.onThread(DroneEngine.doSomethingElse)
 
 def stop_drone_script():
     global DroneEngine
@@ -34,7 +33,7 @@ def stop_drone_script():
 
 def send_drone_message():
     global DroneEngine
-    
+
 #TODO In the temp folder generate a subfolder for each image instead of putting everything in the root
 #That way we can trace back the original file name (which is the name of the subfolder)
 def simple_detect_action(client, weights_directory, input_directory, confidence, image_size):
