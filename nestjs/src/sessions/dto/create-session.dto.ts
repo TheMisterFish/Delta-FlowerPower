@@ -14,6 +14,8 @@ import { SessionResult } from '../../common/models/sessionResult/sessionResult.m
 import { User } from '../../users/users.model';
 
 export class CreateSessionDto {
+  name: string;
+  
   @IsNotEmpty()
   @IsMongoId()
   research: string;

@@ -37,7 +37,6 @@ export class SessionsController {
       }, HttpStatus.BAD_REQUEST)
     }
     dto.made_by = req.user;
-    console.log(dto);
     return await this.sessionsService.create(dto, files);
   }
 

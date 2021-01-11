@@ -23,12 +23,6 @@ export class Session {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
-  @prop()
-  description: string;
-
-  @IsString()
-  @IsNotEmpty()
   @prop({ ref: User })
   made_by: Ref<User>;
 
