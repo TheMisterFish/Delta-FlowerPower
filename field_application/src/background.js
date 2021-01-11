@@ -248,7 +248,6 @@ ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async(event, args) => {
 })
 
 ipcMain.handle(IPC_CHANNELS.DOWNLOAD_WEIGHTS, async(event, args) => {
-    console.log(args)
     const response = await download(BrowserWindow.getFocusedWindow(), args.url, {
         directory: path.join(userData, "weights", args.modelName.toLowerCase())
     })
