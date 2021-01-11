@@ -367,6 +367,9 @@ public class MAVLinkReceiver {
 
             case MAVLINK_MSG_ID_MISSION_CLEAR_ALL:
                 parent.logMessageDJI("MSN: received clear_all from GCS");
+                if(mModel.mission_started){
+                    mModel.stopWaypointMission();
+                }
                 WaypointMission y = mModel.getWaypointMissionOperator().getLoadedMission();
                 if( y != null){
                     try {

@@ -2,6 +2,7 @@ package sq.rogue.rosettadrone;
 
 import android.util.Log;
 
+import com.MAVLink.common.msg_mission_item;
 import com.MAVLink.enums.MAV_RESULT;
 import com.MAVLink.common.msg_command_long;
 
@@ -19,9 +20,14 @@ import static com.MAVLink.enums.MAV_CMD.MAV_CMD_NAV_LAND;
 import static com.MAVLink.enums.MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM;
 import static com.MAVLink.enums.MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH;
 import static com.MAVLink.enums.MAV_CMD.MAV_CMD_NAV_TAKEOFF;
+import static com.MAVLink.enums.MAV_CMD.MAV_CMD_OVERRIDE_GOTO;
 import static com.MAVLink.enums.MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES;
 import static com.MAVLink.enums.MAV_CMD.MAV_CMD_VIDEO_START_CAPTURE;
 import static com.MAVLink.enums.MAV_CMD.MAV_CMD_VIDEO_STOP_CAPTURE;
+import static com.MAVLink.enums.MAV_GOTO.MAV_GOTO_DO_CONTINUE;
+import static com.MAVLink.enums.MAV_GOTO.MAV_GOTO_DO_HOLD;
+import static com.MAVLink.enums.MAV_GOTO.MAV_GOTO_HOLD_AT_CURRENT_POSITION;
+import static com.MAVLink.enums.MAV_GOTO.MAV_GOTO_HOLD_AT_SPECIFIED_POSITION;
 import static com.MAVLink.enums.MAV_PROTOCOL_CAPABILITY.MAV_PROTOCOL_CAPABILITY_FTP;
 import static sq.rogue.rosettadrone.util.safeSleep;
 
@@ -115,12 +121,60 @@ public class CommandsManager {
                 // DEPRECATED but still used by QGC
                 parent.logMessageDJI("Received MAV: MAV_CMD_DO_DIGICAM_CONTROL");
                 mModel.takePhoto();
+
                 break;
             case MAV_CMD_MISSION_START:
                 parent.logMessageDJI("Received MAV: MAV_CMD_MISSION_START");
-                mModel.startWaypointMission();
+                if(mModel.mission_started){
+                    mModel.resumeWaypointMission();
+                } else {
+                    mModel.startWaypointMission();
+                }
                 break;
+            case MAV_CMD_OVERRIDE_GOTO:
+                parent.logMessageDJI("Received MAV: MAV_CMD_OVERRIDE_GOTO");
+                if (mModel.getSystemId() != msg_cmd.target_system) {
+                    break;
+                }
+                mModel.pauseWaypointMission();
+                if (msg_cmd.param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION) {
+                    int x = (int) mModel.get_current_lat();
+                    int y = (int) mModel.get_current_lon();
+                    int z = (int) mModel.get_current_alt();
 
+                    Log.d(TAG, "Lat = " + x);
+                    Log.d(TAG, "Lon = " + y);
+                    Log.d(TAG, "ALT = " + z);
+                    mModel.do_set_motion_absolute(
+                            (double) x,
+                            (double) y,
+                            z,
+                            msg_cmd.param4,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0b0000111111111000);
+                } else if (msg_cmd.param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION) {
+
+                    Log.d(TAG, "Lat = " + msg_cmd.param5);
+                    Log.d(TAG, "Lon = " + msg_cmd.param6);
+                    Log.d(TAG, "ALT = " + msg_cmd.param7);
+                    mModel.do_set_motion_absolute(
+                            (double) msg_cmd.param5,
+                            (double) msg_cmd.param6,
+                            msg_cmd.param7,
+                            msg_cmd.param4,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0b0000111111111000);
+                }
+                if(msg_cmd.param1 == MAV_GOTO_DO_CONTINUE) {
+                    mModel.resumeWaypointMission();
+                }
+                mModel.send_command_ack(MAV_CMD_OVERRIDE_GOTO, MAV_RESULT.MAV_RESULT_ACCEPTED);
             case MAV_CMD_CONDITION_YAW:
                 parent.logMessageDJI("Yaw = " + msg_cmd.param1);
                 // If absolut yaw...
@@ -140,6 +194,7 @@ public class CommandsManager {
             case MAV_CMD_DO_SET_SERVO:
                 parent.logMessageDJI("Received MAV: MAV_CMD_DO_SET_SERVO");
                 mModel.do_set_Gimbal(msg_cmd.param1, msg_cmd.param2);
+                mModel.send_command_ack(MAV_CMD_DO_SET_SERVO, MAV_RESULT.MAV_RESULT_ACCEPTED);
                 break;
 //                        CUSTOM
             case MAV_PROTOCOL_CAPABILITY_FTP:
