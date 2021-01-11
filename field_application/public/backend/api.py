@@ -75,7 +75,8 @@ def send_drone_message(client, msg, data):
     elif(msg == "doStartMission"):
         DroneEngine.onThread(DroneEngine.doStartMission)
     elif(msg == "addWaypoints"):
-        waypoints = data[0]
+        heading = data[0]
+        waypoints = data[1]
         DroneEngine.onThread(DroneEngine.addWaypoints(waypoints))
 
 #TODO In the temp folder generate a subfolder for each image instead of putting everything in the root

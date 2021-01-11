@@ -72,7 +72,7 @@
       </v-btn>
       <div class="float-right">
         <small>Gemaakt op:</small><br />
-        {{ session.create_date | dateTime }}
+        {{ session.created_at | dateTime }}
       </div>
     </v-card-actions>
   </v-card>
@@ -86,7 +86,9 @@ export default {
   data: () => ({}),
   filters: {
     dateTime: function(time) {
-      return window.moment(time).format("LLL");
+        if(time)
+            return window.moment(time).format("LLL");
+        return "-"
     },
   },
 };
