@@ -31,40 +31,40 @@ pipeline {
             }
         }
         // Build android apk
-        stage('Buid Droneapp APK - Java') {
-            steps {
-                dir("droneapp") {
-                    echo 'Building Droneapp APK.'
-                    script {
-                        try {
-                            sh 'rm -f ./app/src/main/res/values/keys.xml'
-                        } catch (Exception e) {
-                            sh 'echo "Could not remove old keysfile, no error.'
-                        }
-                    }
-                    sh 'echo "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>" >> ./app/src/main/res/values/keys.xml'
-                    sh 'echo "<resources>" >> ./app/src/main/res/values/keys.xml'
-                    sh 'echo "    <string name=\\"dji_key\\">${DJI_KEY}</string>" >> ./app/src/main/res/values/keys.xml'
-                    sh 'echo "</resources>" >> ./app/src/main/res/values/keys.xml'
-                    sh 'chmod +x ./gradlew'
-                    sh "./gradlew build"
-                    sh "ls ./app/build/outputs/apk/release"
+        // stage('Buid Droneapp APK - Java') {
+        //     steps {
+        //         dir("droneapp") {
+        //             echo 'Building Droneapp APK.'
+        //             script {
+        //                 try {
+        //                     sh 'rm -f ./app/src/main/res/values/keys.xml'
+        //                 } catch (Exception e) {
+        //                     sh 'echo "Could not remove old keysfile, no error.'
+        //                 }
+        //             }
+        //             sh 'echo "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>" >> ./app/src/main/res/values/keys.xml'
+        //             sh 'echo "<resources>" >> ./app/src/main/res/values/keys.xml'
+        //             sh 'echo "    <string name=\\"dji_key\\">${DJI_KEY}</string>" >> ./app/src/main/res/values/keys.xml'
+        //             sh 'echo "</resources>" >> ./app/src/main/res/values/keys.xml'
+        //             sh 'chmod +x ./gradlew'
+        //             sh "./gradlew build"
+        //             sh "ls ./app/build/outputs/apk/release"
                     
-                }
-            }
-        }
-        // Run field application python build
-        stage('Buid Field Application - Python') {
-            steps {
-                echo 'Building python application'
-                sh 'docker create --name fieldapp-build-tmp-'+env.BRANCH_NAME+' cdrx/pyinstaller-windows'
-                sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
-                sh 'docker cp ./field_application fieldapp-build-tmp-'+env.BRANCH_NAME+':/app/'
-                sh 'docker commit fieldapp-build-tmp-'+env.BRANCH_NAME+' fieldapp-build-'+env.BRANCH_NAME+''
-                sh 'docker run --name field_app_build-'+env.BRANCH_NAME+' --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build-'+env.BRANCH_NAME+''
-                sh "docker cp field_app_build-"+env.BRANCH_NAME+":/tmp/backend_dist ./field_application/public"
-            }
-        }
+        //         }
+        //     }
+        // }
+        // // Run field application python build
+        // stage('Buid Field Application - Python') {
+        //     steps {
+        //         echo 'Building python application'
+        //         sh 'docker create --name fieldapp-build-tmp-'+env.BRANCH_NAME+' cdrx/pyinstaller-windows'
+        //         sh 'chmod +x ./field_application/fieldapp_entrypoint.sh'
+        //         sh 'docker cp ./field_application fieldapp-build-tmp-'+env.BRANCH_NAME+':/app/'
+        //         sh 'docker commit fieldapp-build-tmp-'+env.BRANCH_NAME+' fieldapp-build-'+env.BRANCH_NAME+''
+        //         sh 'docker run --name field_app_build-'+env.BRANCH_NAME+' --entrypoint "/app/fieldapp_entrypoint.sh" fieldapp-build-'+env.BRANCH_NAME+''
+        //         sh "docker cp field_app_build-"+env.BRANCH_NAME+":/tmp/backend_dist ./field_application/public"
+        //     }
+        // }
         
         // // // Run field application electron build
         stage('Buid Field Application - Electron') {
@@ -75,14 +75,15 @@ pipeline {
                     script {
                         try {
                             sh 'rm -rf node_modules'
-                            sh 'rm -rf package-lock.json'
+                            // sh 'rm -rf package-lock.json'
 
                         } catch (Exception e) {
                             sh 'echo "Could not rm -rf node_modules'
                             echo e
                         }
                     }
-                    sh 'npm i'
+                    sh 'npm run clean'
+                    sh 'npm install --save --legacy-peer-deps'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
                 }
