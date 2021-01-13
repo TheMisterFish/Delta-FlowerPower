@@ -105,7 +105,7 @@ pipeline {
                     }
                     sh 'echo "Moving drone app apk (zipped) from droneapp to nestjs"'
                     try {
-                        zip zipFile: './nestjs/public/files/builds/droneapp.zip', archive: false, dir: './droneapp/app/build/apk/release'
+                        zip zipFile: './nestjs/public/files/builds/droneapp.zip', archive: false, dir: './droneapp/app/build/outputs/apk/release'
                         sh 'echo "Zipped released apk"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip released apk"'
