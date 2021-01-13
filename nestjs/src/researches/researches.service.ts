@@ -36,7 +36,10 @@ export class ResearchesService {
       .findById(id)
       .populate('made_by')
       .populate('location')
-      .populate('sessions')
+      .populate({
+        path: 'sessions',
+        populate: [{ path: 'aimodel' }, { path: 'made_by' }],
+      })
       .exec();
   }
 
@@ -47,17 +50,7 @@ export class ResearchesService {
       .findByIdAndUpdate(id, { $set: dto }, { new: true })
       .populate('made_by')
       .populate('location')
-<<<<<<< HEAD
       .populate('sessions').exec()
-<<<<<<< HEAD
-=======
-  }
-
->>>>>>> origin/master
-=======
-      .populate('sessions')
-      .exec()
->>>>>>> origin/master
   }
 
   async deleteOne(id: string): Promise<void> {

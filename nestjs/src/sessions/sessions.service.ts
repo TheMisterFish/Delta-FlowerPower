@@ -30,7 +30,7 @@ export class SessionsService {
   ) {}
 
   async findOne(id: string): Promise<Session> | null {
-    return await this.sessions.findById(id).exec();
+    return await this.sessions.findById(id).populate('made_by').populate('aimodel').exec();
   }
 
   async findAll(): Promise<Session[] | null> {
@@ -52,15 +52,11 @@ export class SessionsService {
       .findById(dto.research)
       .populate('sessions');
     research.sessions.push(session);
-<<<<<<< HEAD
-    await this.researches.findByIdAndUpdate(research._id, {$set: research}, {new: true})
-=======
     await this.researches.findByIdAndUpdate(
       research._id,
       { $set: research },
       { new: true },
     );
->>>>>>> origin/master
 
     //TODO CHECK IF RESEARCH IS NOT NULL
 
@@ -84,6 +80,8 @@ export class SessionsService {
         }
       });
     });
+
+    await this.sessions.findByIdAndUpdate(session._id, {$set: session});
 
     return session;
   }
