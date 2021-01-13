@@ -50,8 +50,7 @@ export class ResearchesService {
       .findByIdAndUpdate(id, { $set: dto }, { new: true })
       .populate('made_by')
       .populate('location')
-      .populate('sessions')
-      .exec();
+      .populate('sessions').exec()
   }
 
   async deleteOne(id: string): Promise<void> {

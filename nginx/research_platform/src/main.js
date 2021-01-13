@@ -4,7 +4,7 @@ import vuetify from './plugins/vuetify';
 import Axios from "axios";
 import router from "./router";
 import store from "./store";
-import * as VueGoogleMaps from "vue2-google-maps";
+import * as VueGoogleMaps from "gmap-vue";
 
 Vue.config.productionTip = false
 
@@ -16,7 +16,7 @@ if (token) {
 
 Vue.use(VueGoogleMaps, {
     load: {
-        key: "AIzaSyBoQL0WXDWYdlgWW4W0xk96NsoONQ1RC4E",
+        key: "AIzaSyDSEJLDmpxwm0v7NLL3pE2VDNqZkfDoa-8",
         libraries: "drawing"
     }
 });
