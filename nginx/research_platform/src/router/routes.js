@@ -56,9 +56,15 @@ export const routes = [{
                         import ("@/views/Researches/Research.vue"),
                     meta: {
                         title: "View Research",
-                        from: "researches"
-                    }
-                }, ]
+                        from: "researches/:id"
+                    },
+                }, {
+                    path: ":sessionId",
+                    name: "research/:id/:sessionId",
+                    component: () =>
+                        import ("@/views/Researches/ResearchSession.vue"),
+                    meta: { title: "View Session", from: "researches" }
+                }]
             }
         ]
     },

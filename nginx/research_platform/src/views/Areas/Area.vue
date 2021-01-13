@@ -10,7 +10,12 @@
           <v-card-subtitle class="pl-0">{{
             area && area.description
           }}</v-card-subtitle>
-          <AreaMap class="my-4" style="min-height: 500px" />
+          <AreaMap
+            :coordinates="coordinates"
+            :editable="false"
+            class="my-4"
+            style="min-height: 500px"
+          />
           <v-card-actions class="d-flex justify-space-between">
             <v-btn @click="deleteArea" text color="error">
               Delete
@@ -32,6 +37,9 @@ export default {
   components: {
     AreaMap,
   },
+  data: () => ({
+    coordinates: [],
+  }),
   computed: {
     ...mapState(["areas"]),
     _id() {
@@ -40,6 +48,11 @@ export default {
     area: function() {
       const _id = this._id;
       return this.areas.areas.find((area) => area._id === _id);
+    },
+  },
+  watch: {
+    area(newArea, oldArea) {
+      this.parseCoordinates();
     },
   },
   methods: {
@@ -61,6 +74,27 @@ export default {
         params: { _id: _id, title: `Edit ${name}` },
       });
     },
+
+    parseCoordinates() {
+      this.coordinates = [
+        {
+          lat: parseFloat(this.area.lat_long_point_one.split(",")[0]),
+          lng: parseFloat(this.area.lat_long_point_one.split(",")[1]),
+        },
+        {
+          lat: parseFloat(this.area.lat_long_point_two.split(",")[0]),
+          lng: parseFloat(this.area.lat_long_point_two.split(",")[1]),
+        },
+        {
+          lat: parseFloat(this.area.lat_long_point_three.split(",")[0]),
+          lng: parseFloat(this.area.lat_long_point_three.split(",")[1]),
+        },
+        {
+          lat: parseFloat(this.area.lat_long_point_four.split(",")[0]),
+          lng: parseFloat(this.area.lat_long_point_four.split(",")[1]),
+        },
+      ];
+    },
   },
   created: async function() {
     if (!this.area) {
@@ -72,6 +106,10 @@ export default {
       } else {
         this.$store.dispatch("showSnackbar", response.message);
       }
+    } else {
+      console.log("parsing coords");
+      this.parseCoordinates();
+      console.log(this.coordinates);
     }
   },
 };
