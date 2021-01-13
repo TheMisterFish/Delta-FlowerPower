@@ -72,17 +72,17 @@ pipeline {
                 dir("field_application") {
                     echo 'Building electron application'
                     writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="http://173.249.12.137:7080"'
-                    sh 'ls ./'
-                    sh 'cat .env'
                     script {
                         try {
                             sh 'rm -rf node_modules'
+                            sh 'rm -rf package-lock.json'
+
                         } catch (Exception e) {
                             sh 'echo "Could not rm -rf node_modules'
                             echo e
                         }
                     }
-                    sh 'npm install'
+                    sh 'npm i'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
                 }
@@ -105,12 +105,14 @@ pipeline {
                         sh 'echo "Zipped win-unpacked"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip win-unpacked"'
+                        echo e
                     }
                     sh 'echo "Moving setup.exe from field application to nestjs"'
                     try {
                         sh 'cp "./field_application/field_app_build/field_application"*".exe" "./nestjs/public/files/builds/field_application-latest.exe"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
+                        echo e
                     }
                     sh 'echo "Moving drone app apk (zipped) from droneapp to nestjs"'
                     try {
@@ -118,6 +120,7 @@ pipeline {
                         sh 'echo "Zipped released apk"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip released apk"'
+                        echo e
                     }
                     // try {
                     //     sh 'cp "./droneapp/app/build/outputs/apk/release/"*".apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
@@ -134,7 +137,17 @@ pipeline {
                 echo 'Testing NestJS API using Jest'
                 sh 'node -v'
                 dir("nestjs") {
-                    sh 'npm install --force'
+                    script {
+                        try {
+                            sh 'rm -rf node_modules'
+                            sh 'rm -rf package-lock.json'
+
+                        } catch (Exception e) {
+                            sh 'echo "Could not rm -rf node_modules'
+                            echo e
+                        }
+                    }
+                    sh 'npm i'
                     sh 'npm test'
                 }
             }
