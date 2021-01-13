@@ -72,17 +72,16 @@ pipeline {
                 dir("field_application") {
                     echo 'Building electron application'
                     writeFile file: '.env', text: 'VUE_APP_MODE=PRODUCTION\nVUE_APP_BASEURL="http://173.249.12.137:7080"'
-                    sh 'ls ./'
-                    sh 'cat .env'
                     script {
                         try {
                             sh 'rm -rf node_modules'
+                            // sh 'rm -rf package-lock.json'
+
                         } catch (Exception e) {
                             sh 'echo "Could not rm -rf node_modules'
-                            echo e
                         }
                     }
-                    sh 'npm install'
+                    sh 'npm install --save --force'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
                 }
@@ -97,7 +96,6 @@ pipeline {
                         sh 'mkdir -p ./nestjs/public/files/builds'
                     } catch (Exception e) {
                         sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
-                        echo e
                     }
                     sh 'echo "Zipping win-unpacked from field application to nestjs"'
                     try {
@@ -134,7 +132,16 @@ pipeline {
                 echo 'Testing NestJS API using Jest'
                 sh 'node -v'
                 dir("nestjs") {
-                    sh 'npm install --force'
+                    script {
+                        try {
+                            sh 'rm -rf node_modules'
+                            // sh 'rm -rf package-lock.json'
+
+                        } catch (Exception e) {
+                            sh 'echo "Could not rm -rf node_modules'
+                        }
+                    }
+                    sh 'npm install --save --force'
                     sh 'npm test'
                 }
             }
