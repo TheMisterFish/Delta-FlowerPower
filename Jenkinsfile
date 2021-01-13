@@ -141,14 +141,15 @@ pipeline {
                     script {
                         try {
                             sh 'rm -rf node_modules'
-                            sh 'rm -rf package-lock.json'
+                            // sh 'rm -rf package-lock.json'
 
                         } catch (Exception e) {
                             sh 'echo "Could not rm -rf node_modules'
                             echo e
                         }
                     }
-                    sh 'npm i'
+                    sh 'npm run clean'
+                    sh 'npm install --save --legacy-peer-deps'
                     sh 'npm test'
                 }
             }
