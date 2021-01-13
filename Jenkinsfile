@@ -79,10 +79,9 @@ pipeline {
 
                         } catch (Exception e) {
                             sh 'echo "Could not rm -rf node_modules'
-                            echo e
                         }
                     }
-                    sh 'npm install --save --legacy-peer-deps'
+                    sh 'npm install --save --force'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
                 }
@@ -97,7 +96,6 @@ pipeline {
                         sh 'mkdir -p ./nestjs/public/files/builds'
                     } catch (Exception e) {
                         sh 'echo "Could not make builds folder in ./nestjs/public/files/builds'
-                        echo e
                     }
                     sh 'echo "Zipping win-unpacked from field application to nestjs"'
                     try {
@@ -105,14 +103,12 @@ pipeline {
                         sh 'echo "Zipped win-unpacked"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip win-unpacked"'
-                        echo e
                     }
                     sh 'echo "Moving setup.exe from field application to nestjs"'
                     try {
                         sh 'cp "./field_application/field_app_build/field_application"*".exe" "./nestjs/public/files/builds/field_application-latest.exe"'
                     } catch (Exception e) {
                         sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
-                        echo e
                     }
                     sh 'echo "Moving drone app apk (zipped) from droneapp to nestjs"'
                     try {
@@ -120,7 +116,6 @@ pipeline {
                         sh 'echo "Zipped released apk"'
                     } catch (Exception e) {
                         sh 'echo "Could not zip released apk"'
-                        echo e
                     }
                     // try {
                     //     sh 'cp "./droneapp/app/build/outputs/apk/release/"*".apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
@@ -144,10 +139,9 @@ pipeline {
 
                         } catch (Exception e) {
                             sh 'echo "Could not rm -rf node_modules'
-                            echo e
                         }
                     }
-                    sh 'npm install --save --legacy-peer-deps'
+                    sh 'npm install --save --force'
                     sh 'npm test'
                 }
             }
