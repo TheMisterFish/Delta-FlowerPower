@@ -30,9 +30,9 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const userData = app.getPath('userData');
 
 
-DB_NAMES.LOCAL_RESEARCHDB = null;
-DB_NAMES.API_RESEARCHDB = null;
+DB_NAMES.RESEARCHDB = null;
 DB_NAMES.MODELDB = null;
+DB_NAMES.SESSIONSDB = null;
 
 let pythonProcess = null;
 
@@ -41,7 +41,6 @@ const PYTHON_FOLDER = 'backend';
 const PYTHON_MODULE = 'api';
 
 console.log("STARTED!");
-console.log(process.env);
 
 /*************************************************************
  * Python process
@@ -71,11 +70,11 @@ function createPythonProcess() {
         pythonProcess = require('child_process').spawn('python', [script]);
     }
 
-    pythonProcess.stdout.on('data', function (data) {
+    pythonProcess.stdout.on('data', function(data) {
         console.log('PYTHON: stdout:', data.toString());
     })
 
-    pythonProcess.stderr.on('data', function (data) {
+    pythonProcess.stderr.on('data', function(data) {
         //Here is where the error output goes
         console.log('PYTON: stderr:', data.toString());
     });
@@ -117,13 +116,15 @@ async function createWindow() {
         }
     })
 
+    // win.setMenu(null);
+
     if (process.env.WEBPACK_DEV_SERVER_URL) {
         // Load the url of the dev server if in development mode
         await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
         if (!process.env.IS_TEST) win.webContents.openDevTools()
     } else {
         createProtocol('app')
-        // Load the index.html when not in development
+            // Load the index.html when not in development
         win.loadURL('app://./index.html')
     }
 }
@@ -146,7 +147,7 @@ app.on('activate', () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {
+app.on('ready', async() => {
     protocol.registerFileProtocol('file', (request, callback) => {
         const pathname = decodeURI(request.url.replace('file:///', ''));
         callback(pathname)
@@ -179,16 +180,16 @@ if (isDevelopment) {
 
 
 async function createDbs() {
-    DB_NAMES.LOCAL_RESEARCHDB = Datastore.create({
-        filename: path.join(userData, "database", "local_researches.db"),
-        autoload: true
-    })
-    DB_NAMES.API_RESEARCHDB = Datastore.create({
-        filename: path.join(userData, "database", "api_researches.db"),
+    DB_NAMES.RESEARCHDB = Datastore.create({
+        filename: path.join(userData, "database", "researches.db"),
         autoload: true
     })
     DB_NAMES.MODELDB = Datastore.create({
         filename: path.join(userData, "database", "ai_models.db"),
+        autoload: true
+    })
+    DB_NAMES.SESSIONSDB = Datastore.create({
+        filename: path.join(userData, "database", "sessions.db"),
         autoload: true
     })
 }
@@ -196,7 +197,7 @@ async function createDbs() {
 app.on('ready', createDbs)
 
 //--------------------------------------- IPC MAIN PROCESS ---------------------------------------//
-ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async (event, args) => {
+ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async(event, args) => {
     if (args.message === IPC_MESSAGES.SELECT_FOLDER) {
         try {
             const response = await dialog.showOpenDialog({
@@ -213,18 +214,49 @@ ipcMain.handle(IPC_CHANNELS.FILESYSTEM, async (event, args) => {
         } catch (error) {
             console.error(error);
         }
+    } else if (args.message === IPC_MESSAGES.DOWNLOAD_IMAGES_FROM_FOLDER) {
+        try {
+            let images = []
+            const files = await fs.promises.readdir(args.data);
+
+            files.forEach(f => {
+                const image = fs.readFileSync(path.join(args.data, f));
+                images.push({ data: image, name: f });
+            })
+
+            return images;
+        } catch (error) {
+            console.error(error);
+        }
+    } else if (args.message === IPC_MESSAGES.COPY_IMAGES_FROM_FOLDER) {
+        try {
+            const files = fs.readdirSync(args.data.from);
+
+            const destionationFolder = path.join(userData, "sessions", args.data.to);
+
+            if (!fs.existsSync(destionationFolder)) {
+                fs.mkdirSync(destionationFolder, { recursive: true });
+            }
+
+            files.forEach(f => {
+                fs.copyFileSync(path.join(args.data.from, f), path.join(destionationFolder, f));
+            })
+
+            return destionationFolder;
+        } catch (error) {
+            console.log(error);
+        }
     }
 })
 
-ipcMain.handle(IPC_CHANNELS.DOWNLOAD_WEIGHTS, async (event, args) => {
+ipcMain.handle(IPC_CHANNELS.DOWNLOAD_WEIGHTS, async(event, args) => {
     const response = await download(BrowserWindow.getFocusedWindow(), args.url, {
         directory: path.join(userData, "weights", args.modelName.toLowerCase())
     })
     return response.getSavePath();
 })
 
-ipcMain.handle(IPC_CHANNELS.REMOVE_WEIGHT, async (event, args) => {
-    console.log(args.path);
+ipcMain.handle(IPC_CHANNELS.REMOVE_WEIGHT, async(event, args) => {
     try {
         fs.unlinkSync(args.path.toLowerCase())
         return true;
@@ -234,7 +266,7 @@ ipcMain.handle(IPC_CHANNELS.REMOVE_WEIGHT, async (event, args) => {
     }
 })
 
-ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
+ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async(event, args) => {
     const modelName = args.modelName.toLowerCase();
     try {
         const response = await fs.promises.readdir(path.join(userData, "weights", modelName))
@@ -248,17 +280,17 @@ ipcMain.handle(IPC_CHANNELS.GET_WEIGHTS_FROM_FOLDER, async (event, args) => {
     }
 })
 
-ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
+ipcMain.handle(IPC_CHANNELS.DATABASE, async(event, args) => {
     switch (args.message) {
         case IPC_MESSAGES.SAVE_IN_DB:
-            return await DB_NAMES[args.database].insert(args.data, function (err, newDoc) {
+            return await DB_NAMES[args.database].insert(args.data, function(err, newDoc) {
                 if (err) {
                     return err
                 }
                 return newDoc
             });
         case IPC_MESSAGES.UPDATE_IN_DB:
-            return await DB_NAMES[args.database].update(args.to_update, args.data, args.options, function (err, updatedDoc) {
+            return await DB_NAMES[args.database].update(args.to_update, args.data, args.options, function(err, updatedDoc) {
                 if (err)
                     return err
                 return updatedDoc
@@ -270,13 +302,13 @@ ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
                 return docs
             });
         case IPC_MESSAGES.COUNT_IN_DB:
-            return await DB_NAMES[args.database].count(args.data, function (err, count) {
+            return await DB_NAMES[args.database].count(args.data, function(err, count) {
                 if (err)
                     return err
                 return count
             });
         case IPC_MESSAGES.REMOVE_IN_DATABASE:
-            return await DB_NAMES[args.database].remove(args.data, args.options, function (err, numRemoved) {
+            return await DB_NAMES[args.database].remove(args.data, args.options, function(err, numRemoved) {
                 if (err)
                     return err
                 return numRemoved;
@@ -284,8 +316,8 @@ ipcMain.handle(IPC_CHANNELS.DATABASE, async (event, args) => {
         case IPC_MESSAGES.RESET_DATABASE:
             return await DB_NAMES[args.database].remove({}, {
                 multi: true
-            }, function (err, numRemoved) {
-                DB_NAMES[args.database].loadDatabase(function (err) {
+            }, function(err, numRemoved) {
+                DB_NAMES[args.database].loadDatabase(function(err) {
                     if (err)
                         return err
                     return true;

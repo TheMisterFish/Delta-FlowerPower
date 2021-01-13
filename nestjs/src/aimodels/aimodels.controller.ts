@@ -29,7 +29,7 @@ import { Roles } from '../common/interfaces/roles.interface';
 function getUniqueFilename(filename, directory, depth = 0) {
   const newFilename =
     depth > 0
-      ? `${filename.split('.')[0]}(${depth})${filename.split('.')[1]}`
+      ? `${filename.split('.')[0]}(${depth}).${filename.split('.')[1]}`
       : filename;
 
   if (fs.existsSync(join(directory, newFilename))) {

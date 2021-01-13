@@ -3,7 +3,6 @@
     <v-data-table
       :headers="areasHeaders"
       :items="areas.areas"
-      hide-default-footer
       class="area-table"
       @click:row="openArea"
     >

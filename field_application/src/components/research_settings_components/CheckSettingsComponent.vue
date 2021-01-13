@@ -225,10 +225,20 @@ export default {
                 this.research_settings.pos_x_2,
                 this.research_settings.pos_y_2,
             ];
+            let point_3 = [
+                this.research_settings.pos_x_3,
+                this.research_settings.pos_y_3,
+            ];
+            let point_4 = [
+                this.research_settings.pos_x_4,
+                this.research_settings.pos_y_4,
+            ];
             // Get all gps cordinate info from those two points
             const data = CalculateActions.calculateGpsCords(
                 point_1,
                 point_2,
+                point_3,
+                point_4,
                 this.m_per_image_width,
                 this.m_per_image_height
             );

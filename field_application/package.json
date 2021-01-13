@@ -20,9 +20,10 @@
     },
     "main": "background.js",
     "dependencies": {
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@mdi/font": "^3.9.97",
         "@mdi/js": "^5.8.55",
-        "axios": "^0.21.0",
+        "axios": "^0.21.1",
         "core-js": "^3.6.5",
         "d": "^1.0.1",
         "electron-dl": "^3.0.2",

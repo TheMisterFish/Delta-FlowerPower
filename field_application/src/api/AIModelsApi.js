@@ -4,7 +4,7 @@ import * as axios from "axios"
 const AIModelsApi = {
     getModels() {
         return axios
-            .get("http://localhost:3000/aimodels")
+            .get("/aimodels")
             .then(response => response.data)
             .catch(err => {
                 store.dispatch("api_response", {

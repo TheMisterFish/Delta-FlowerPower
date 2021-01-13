@@ -11,25 +11,7 @@ Vue.use(VueGoogleMaps, {
     load: {
         key: 'AIzaSyDSEJLDmpxwm0v7NLL3pE2VDNqZkfDoa-8',
         libraries: 'places', // This is required if you use the Autocomplete plugin
-        // OR: libraries: 'places,drawing'
-        // OR: libraries: 'places,drawing,visualization'
-        // (as you require)
-
-        //// If you want to set the version, you can do so:
-        // v: '3.26',
     },
-
-    //// If you intend to programmatically custom event listener code
-    //// (e.g. `this.$refs.gmap.$on('zoom_changed', someFunc)`)
-    //// instead of going through Vue templates (e.g. `<GmapMap @zoom_changed="someFunc">`)
-    //// you might need to turn this on.
-    // autobindAllEvents: false,
-
-    //// If you want to manually install components, e.g.
-    //// import {GmapMarker} from 'vue2-google-maps/src/components/marker'
-    //// Vue.component('GmapMarker', GmapMarker)
-    //// then disable the following:
-    // installComponents: true,
 })
 
 moment.locale('nl')
@@ -41,12 +23,27 @@ Vue.prototype.$vuetify = {
     rtl: false
 };
 Vue.prototype.$http = Axios;
-localStorage.setItem("token", "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsIl9pZCI6IjVmYTMwM2Q4MzA3MDkxNDkwY2FiZDdlNCIsImlhdCI6MTYwODAyNzY0MCwiZXhwIjoxNzAyNzAwNDQwfQ.Z_wa72GWe1UxUob2MHKSC6r4hEQe1xn1ahTVwRc_8bQ")
+// localStorage.setItem("token", "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidmluY2VudCB2ZW5odWl6ZW4iLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InYudmVuaHVpemVuQGZvbnR5cy5ubCIsIl9pZCI6IjVmYTMwM2Q4MzA3MDkxNDkwY2FiZDdlNCIsImlhdCI6MTYwODAyNzY0MCwiZXhwIjoxNzAyNzAwNDQwfQ.Z_wa72GWe1UxUob2MHKSC6r4hEQe1xn1ahTVwRc_8bQ")
+
 const token = localStorage.getItem("token");
 
 if (token) {
     Vue.prototype.$http.defaults.headers.common["Authorization"] = token;
 }
+Vue.prototype.$http.defaults.baseURL = process.env.VUE_APP_BASEURL;
+
+Axios.interceptors.response.use((response) => {
+    return response;
+}, async(error) => {
+    const email = localStorage.getItem("email")
+    const password = localStorage.getItem("password")
+
+    if (email && password) {
+        await store.dispatch("login", { email: email, password: password });
+    } else {
+        return Promise.reject(error.message);
+    }
+})
 
 Vue.component("alert", require("./components/AlertComponent.vue").default, );
 

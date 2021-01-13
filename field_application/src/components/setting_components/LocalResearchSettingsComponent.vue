@@ -49,7 +49,7 @@ LocalResearchSettingsComponent
 
 <script>
 import { ResearchesApi } from "../../api";
-import { LocalDatabaseActions } from "../../actions";
+import { ResearchDatabaseActions } from "../../actions";
 export default {
     data() {
         return {
@@ -71,7 +71,7 @@ export default {
         },
     },
     async mounted() {
-        this.researches = await LocalDatabaseActions.getLocalResearches();
+        this.researches = await ResearchDatabaseActions.getResearches();
         console.log("R:", this.researches);
     },
     methods: {
@@ -81,7 +81,7 @@ export default {
                     "Weet je zeker dat je de lokale database wilt resetten?"
                 )
             ) {
-                await LocalDatabaseActions.resetLocalResearches();
+                await ResearchDatabaseActions.resetResearches();
             }
         },
     },

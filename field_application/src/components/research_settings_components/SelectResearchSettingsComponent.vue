@@ -11,9 +11,9 @@
             hide-details
         ></v-text-field>
         <br />
-        <div v-if="showCustom">
+        <!-- <div v-if="showCustom">
             <v-text-field
-                v-model="research_settings.pos_x_1"
+                v-model="research_settings.research.location.lat_long_point_one"
                 append-icon="mdi-eart"
                 label="Lat 1"
                 single-line
@@ -41,7 +41,7 @@
                 single-line
                 hide-details
             ></v-text-field>
-        </div>
+        </div> -->
         <br />
         <small>
             <a href="#" @click="downloadResearches">Download onderzoeken</a>
@@ -112,7 +112,7 @@
 
 <script>
 import { mdiEarth } from "@mdi/js";
-import { ApiDatabaseActions } from "../../actions";
+import { ResearchDatabaseActions } from "../../actions";
 import { ResearchesApi } from "../../api";
 
 export default {
@@ -145,15 +145,15 @@ export default {
         },
     },
     async mounted() {
-        this.researches = await ApiDatabaseActions.getResearches();
+        this.researches = await ResearchDatabaseActions.getResearches();
     },
     methods: {
         downloadResearches() {
             this.downloading = true;
             ResearchesApi.getResearches()
                 .then(async (data) => {
-                    await ApiDatabaseActions.saveResearches(data);
-                    this.researches = await ApiDatabaseActions.getResearches();
+                    await ResearchDatabaseActions.saveResearches(data);
+                    this.researches = await ResearchDatabaseActions.getResearches();
                     this.downloading = false;
                 })
                 .catch((err) => {
@@ -162,14 +162,15 @@ export default {
                 });
         },
         selectResearch(research) {
-            //TODO USE LAT LONG FROM LOCATION IN RESEARCH
-            let pos1 = research.location.lat_long_point_one.split(',');
-            let pos2 = research.location.lat_long_point_two.split(',');
-            this.research_settings.pos_x_1 = Number(pos1[0].trim());
-            this.research_settings.pos_y_1 = Number(pos1[1].trim());
-            this.research_settings.pos_x_2 = Number(pos2[0].trim());
-            this.research_settings.pos_y_2 = Number(pos2[1].trim());
             this.research_settings.research = research
+            this.research_settings.pos_x_1 = Number(research.location.lat_long_point_one.split(",")[0]);
+            this.research_settings.pos_y_1 = Number(research.location.lat_long_point_one.split(",")[1]);
+            this.research_settings.pos_x_2 = Number(research.location.lat_long_point_two.split(",")[0]);
+            this.research_settings.pos_y_2 = Number(research.location.lat_long_point_two.split(",")[1]);
+            this.research_settings.pos_x_3 = Number(research.location.lat_long_point_three.split(",")[0]);
+            this.research_settings.pos_y_3 = Number(research.location.lat_long_point_three.split(",")[1]);
+            this.research_settings.pos_x_4 = Number(research.location.lat_long_point_four.split(",")[0]);
+            this.research_settings.pos_y_4 = Number(research.location.lat_long_point_four.split(",")[1]);
         },
     },
 };

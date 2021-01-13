@@ -33,7 +33,7 @@
 <script>
 import { STATUS } from "../store/storeResponse";
 export default {
-  name: "Dashboard",
+  name: "Landing",
   data: () => ({
     email: "",
     password: "",

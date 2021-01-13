@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getModelToken } from 'nestjs-typegoose';
 import { FieldappService } from './fieldapp.service';
 
 describe('FieldappService', () => {
@@ -6,7 +7,13 @@ describe('FieldappService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FieldappService],
+      providers: [
+        FieldappService,
+        {
+          provide: getModelToken('File'),
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<FieldappService>(FieldappService);

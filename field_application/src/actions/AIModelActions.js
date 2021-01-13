@@ -1,3 +1,4 @@
+import Axios from "axios";
 import {
     IPC_MESSAGES,
     IPC_CHANNELS,
@@ -24,9 +25,19 @@ const AIModelActions = {
                     var update = false;
                     model.weights.forEach(async weight => {
                         const found_weight = found.weights.find(x => x._id === weight._id);
+                        const model_weight = model.weights.find(x => x._id === weight._id);
                         if (!found_weight) {
                             found.weights.push(weight)
                             update = true;
+                        } else if (found_weight) {
+                            if (!found_weight.downloadPath && model_weight.downloadPath) {
+                                found.weights.forEach(w => {
+                                    if (w._id === model_weight._id) {
+                                        w.downloadPath = model_weight.downloadPath;
+                                    }
+                                })
+                                update = true;
+                            }
                         }
                     })
                     if (update) {
@@ -55,11 +66,12 @@ const AIModelActions = {
         }
     },
     async getModels() {
-        return await window.electron.invoke(IPC_CHANNELS.DATABASE, {
+        const w = await window.electron.invoke(IPC_CHANNELS.DATABASE, {
             message: IPC_MESSAGES.FIND_IN_DB,
             data: {},
             database: DB_NAMES.MODELDB
         });
+        return w
     },
     async getModel(id) {
         return await window.electron.invoke(IPC_CHANNELS.DATABASE, {
@@ -74,7 +86,7 @@ const AIModelActions = {
         const models = await this.getModels();
         models.forEach(model => {
             model.weights.forEach(async weight => {
-                if(weight.downloadPath){
+                if (weight.downloadPath) {
                     await window.electron.invoke(IPC_CHANNELS.REMOVE_WEIGHT, {
                         path: weight.downloadPath
                     });
@@ -89,25 +101,24 @@ const AIModelActions = {
     },
     async downloadWeight(weight) {
         const filePath = await window.electron.invoke(IPC_CHANNELS.DOWNLOAD_WEIGHTS, {
-            url: `http://localhost:3000/${weight.filePath.replace('public\\', '')}`,
+            url: `${Axios.defaults.baseURL}/${weight.filePath.replace('public\\', '').replace('public//', '')}`,
             modelName: weight.model
         });
         const model = await this.getModel(weight.model_id);
-        const myweight = model[0].weights.find(x => x._id === weight.weight_id);
-        myweight.downloadPath = filePath;
+        model[0].weights.find(x => x._id === weight.weight_id).downloadPath = filePath;
         await window.electron.invoke(IPC_CHANNELS.DATABASE, {
             message: IPC_MESSAGES.UPDATE_IN_DB,
             to_update: {
                 _id: weight.model_id
             },
-            data: model,
+            data: model[0],
             options: {},
             database: DB_NAMES.MODELDB
         });
-        
-        // return filePath;
+
+        return filePath;
     },
-    async removeWeight(weight){
+    async removeWeight(weight) {
         await window.electron.invoke(IPC_CHANNELS.REMOVE_WEIGHT, {
             path: weight.downloadPath
         });

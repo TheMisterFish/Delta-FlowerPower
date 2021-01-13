@@ -1,22 +1,28 @@
 # pip install -r requirements.txt
-pyinstaller
+pyinstaller==4.1
+# Drone ----------------------------------------
+dronekit
+pymavlink
 # base for API ----------------------------------------
-autobahn
-twisted
+autobahn==20.12.3
+twisted==20.3.0
 
 # Comon ----------------------------------------
-pillow
+pillow==8.0.1
 #### YoloV5 ####
-Cython
+Cython==0.29.21
 matplotlib>=3.2.2
-numpy
+numpy==1.19.4
 opencv-python>=4.1.2
 # pillow
-PyYAML
-scipy
+PyYAML==5.3.1
+scipy==1.5.4
 tensorboard>=2.2
-torch
-torchvision
 tqdm>=4.41.0
+-f https://download.pytorch.org/whl/torch_stable.html
+torch==1.7.0+cpu
+-f https://download.pytorch.org/whl/torch_stable.html
+torchvision==0.8.1+cpu
+
 #### F_RCNN ####
 #### Detectron2 ####

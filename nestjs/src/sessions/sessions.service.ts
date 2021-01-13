@@ -30,7 +30,7 @@ export class SessionsService {
   ) {}
 
   async findOne(id: string): Promise<Session> | null {
-    return await this.sessions.findById(id).exec();
+    return await this.sessions.findById(id).populate('made_by').populate('aimodel').exec();
   }
 
   async findAll(): Promise<Session[] | null> {
@@ -42,11 +42,21 @@ export class SessionsService {
   }
 
   async create(dto: CreateSessionDto, files: any): Promise<Session> {
-    const session = await new this.sessions(dto).save();
-    const research = await this.researches.findById(dto.research).populate('sessions');
-    research.sessions.push(session);
-    await this.researches.findByIdAndUpdate(research._id, {$set: research}, {new: true})
+    const sessionCount = (await this.sessions.find({ research: dto.research }))
+      .length;
 
+    dto.name = `Session ${sessionCount + 1}`;
+
+    const session = await new this.sessions(dto).save();
+    const research = await this.researches
+      .findById(dto.research)
+      .populate('sessions');
+    research.sessions.push(session);
+    await this.researches.findByIdAndUpdate(
+      research._id,
+      { $set: research },
+      { new: true },
+    );
 
     //TODO CHECK IF RESEARCH IS NOT NULL
 
@@ -70,6 +80,8 @@ export class SessionsService {
         }
       });
     });
+
+    await this.sessions.findByIdAndUpdate(session._id, {$set: session});
 
     return session;
   }
