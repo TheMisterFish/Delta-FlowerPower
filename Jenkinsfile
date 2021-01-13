@@ -82,7 +82,6 @@ pipeline {
                             echo e
                         }
                     }
-                    sh 'npm run clean'
                     sh 'npm install --save --legacy-peer-deps'
                     sh 'npm run electron:winbuild'
                     sh "ls ./field_app_build -a"
@@ -148,7 +147,6 @@ pipeline {
                             echo e
                         }
                     }
-                    sh 'npm run clean'
                     sh 'npm install --save --legacy-peer-deps'
                     sh 'npm test'
                 }
