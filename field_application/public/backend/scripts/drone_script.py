@@ -232,7 +232,7 @@ class DroneEngine(threading.Thread):
             fail_counter = fail_counter + 1
             if(fail_counter > 50):
                 fail_counter = 0
-                self.MAV_open_file(2)
+                self.MAV_open_file(file_id)
 
     def MAV_pauze(self):
         if(self.vehicle == None):
