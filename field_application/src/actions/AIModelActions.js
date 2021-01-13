@@ -71,7 +71,6 @@ const AIModelActions = {
             data: {},
             database: DB_NAMES.MODELDB
         });
-        console.log(w)
         return w
     },
     async getModel(id) {
@@ -102,7 +101,7 @@ const AIModelActions = {
     },
     async downloadWeight(weight) {
         const filePath = await window.electron.invoke(IPC_CHANNELS.DOWNLOAD_WEIGHTS, {
-            url: `${Axios.defaults.baseURL}/${weight.filePath.replace('public/', '')}`,
+            url: `${Axios.defaults.baseURL}/${weight.filePath.replace('public\\', '').replace('public//', '')}`,
             modelName: weight.model
         });
         const model = await this.getModel(weight.model_id);

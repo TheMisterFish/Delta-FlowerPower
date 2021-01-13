@@ -103,12 +103,18 @@ pipeline {
                     } catch (Exception e) {
                         sh 'echo "Could not copy setup.exe to ./nestjs/public/files/builds"'
                     }
-                    sh 'echo "Moving drone app apk from droneapp to nestjs"'
+                    sh 'echo "Moving drone app apk (zipped) from droneapp to nestjs"'
                     try {
-                        sh 'cp "./droneapp/app/build/outputs/apk/release/"*".apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
+                        zip zipFile: './nestjs/public/files/builds/droneapp.zip', archive: false, dir: './droneapp/app/build/apk/release'
+                        sh 'echo "Zipped released apk"'
                     } catch (Exception e) {
-                        sh 'echo "Could not copy droneapp apk to ./nestjs/public/files/builds"'
+                        sh 'echo "Could not zip released apk"'
                     }
+                    // try {
+                    //     sh 'cp "./droneapp/app/build/outputs/apk/release/"*".apk" "./nestjs/public/files/builds/flowerpower_droneapp.apk"'
+                    // } catch (Exception e) {
+                    //     sh 'echo "Could not copy droneapp apk to ./nestjs/public/files/builds"'
+                    // }
                     sh 'ls ./nestjs/public/files/builds -a'
                 }
             }

@@ -91,7 +91,7 @@ import SelectResearchSettings from "@/components/research_settings_components/Se
 import createFlightSettings from "@/components/research_settings_components/CreateFlightSettingsComponent.vue";
 import CreateProcessSettings from "@/components/research_settings_components/CreateProcessSettingsComponent.vue";
 import CheckSettings from "@/components/research_settings_components/CheckSettingsComponent.vue";
-import { LocalDatabaseActions } from "@/actions";
+import { SessionsActions } from "@/actions";
 
 export default {
     name: "DroneResearch",
@@ -103,10 +103,15 @@ export default {
                     name: null,
                     description: null,
                 },
-                pos_x_1: 51.450762458205254,
-                pos_y_1: 5.454901457596913,
-                pos_x_2: 51.45058745837186,
-                pos_y_2: 5.455550550835136,
+                pos_x_1: null,
+                pos_y_1: null,
+                pos_x_2: null,
+                pos_y_2: null,
+                pos_x_3: null,
+                pos_y_3: null,
+                pos_x_4: null,
+                pos_y_4: null,
+                
             },
             photo_settings: {
                 sensor_width: 6.17,
@@ -117,7 +122,7 @@ export default {
             drone_settings: {
                 fly_height: 3,
                 use_ftp: true,
-                connection_url: "127.0.0.1:16670",
+                connection_url: ":14450",
             },
             process_settings: {
                 model: null,
@@ -146,22 +151,40 @@ export default {
             // TODO: Reset all given settings
             this.$router.push({ path: "Landing" });
         },
-        start() {
+        async start() {
+            this.$store.dispatch(
+                "setWeightsPath",
+                this.process_settings.weights.path
+            );
+            this.$store.dispatch("setDroneSettings", {
+                connection_url: this.drone_settings.connection_url,
+                fly_height: this.drone_settings.fly_height,
+                use_ftp: this.drone_settings.use_ftp
+            });
+            this.$store.dispatch("setWaypointSettings", {
+                waypoints: this.waypoint_settings.points,
+                heading: this.waypoint_settings.heading,
+            });
             // SAVE ALL DATA AND GO TO THE RESEARCH PAGE
-            const active_research = {
-                research_type: "drone",
-                create_date: window.moment(),
+            const session_model = {
+                session_type: "drone",
+                created_at: window.moment(),
                 uploaded: false,
-                upload_date: null,
+                uploaded_at: null,
                 executed: false,
-                executed_date: null,
-                research_settings: this.research_settings,
+                executed_at: null,
+                research: this.research_settings.research,
                 photo_settings: this.photo_settings,
                 drone_settings: this.drone_settings,
                 process_settings: this.process_settings,
                 waypoint_settings: this.waypoint_settings,
             };
-            LocalDatabaseActions.saveLocalResearch(active_research);
+            const session = await SessionsActions.saveSession(session_model);
+            session_model.id = session._id;
+            this.$store.dispatch("setCurrentSession", {
+                session: session_model
+            });
+
             this.$router.push({ path: "active_drone_research" });
         },
         iterate(obj) {

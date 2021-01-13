@@ -18,7 +18,7 @@
 ANDROID_ABI:UNINITIALIZED=armeabi-v7a
 
 //No help, variable specified on the command line.
-ANDROID_NDK:UNINITIALIZED=D:\Java\ANDROID_SDK_11.0\ndk-bundle
+ANDROID_NDK:UNINITIALIZED=D:\Java\ANDROID_SDK_11.0\ndk\22.0.7026061
 
 //No help, variable specified on the command line.
 ANDROID_PLATFORM:UNINITIALIZED=android-22
@@ -27,10 +27,10 @@ ANDROID_PLATFORM:UNINITIALIZED=android-22
 CMAKE_ANDROID_ARCH_ABI:UNINITIALIZED=armeabi-v7a
 
 //No help, variable specified on the command line.
-CMAKE_ANDROID_NDK:UNINITIALIZED=D:\Java\ANDROID_SDK_11.0\ndk-bundle
+CMAKE_ANDROID_NDK:UNINITIALIZED=D:\Java\ANDROID_SDK_11.0\ndk\22.0.7026061
 
 //Archiver
-CMAKE_AR:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-ar.exe
+CMAKE_AR:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-ar.exe
 
 //Flags used by the compiler during all build types.
 CMAKE_ASM_FLAGS:STRING=
@@ -141,19 +141,19 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/arm-linux-androideabi-nm.exe
+CMAKE_NM:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/bin/arm-linux-androideabi-nm.exe
 
 //Path to a program.
-CMAKE_OBJCOPY:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/arm-linux-androideabi-objcopy.exe
+CMAKE_OBJCOPY:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/bin/arm-linux-androideabi-objcopy.exe
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/arm-linux-androideabi-objdump.exe
+CMAKE_OBJDUMP:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/bin/arm-linux-androideabi-objdump.exe
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=Project
 
 //Ranlib
-CMAKE_RANLIB:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-ranlib.exe
+CMAKE_RANLIB:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-ranlib.exe
 
 //Flags used by the linker during the creation of dll's.
 CMAKE_SHARED_LINKER_FLAGS:STRING=
@@ -193,7 +193,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Strip
-CMAKE_STRIP:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-strip.exe
+CMAKE_STRIP:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-strip.exe
 
 //No help, variable specified on the command line.
 CMAKE_SYSTEM_NAME:UNINITIALIZED=Android
@@ -201,8 +201,8 @@ CMAKE_SYSTEM_NAME:UNINITIALIZED=Android
 //No help, variable specified on the command line.
 CMAKE_SYSTEM_VERSION:UNINITIALIZED=22
 
-//No help, variable specified on the command line.
-CMAKE_TOOLCHAIN_FILE:UNINITIALIZED=D:\Java\ANDROID_SDK_11.0\ndk-bundle\build\cmake\android.toolchain.cmake
+//The CMake toolchain file
+CMAKE_TOOLCHAIN_FILE:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/build/cmake/android.toolchain.cmake
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -217,10 +217,10 @@ Project_BINARY_DIR:STATIC=D:/git_repos/flowerpower/droneapp/app/.cxx/cmake/debug
 Project_SOURCE_DIR:STATIC=D:/git_repos/flowerpower/droneapp/app
 
 //Dependencies for the target
-djivideojni_LIB_DEPENDS:STATIC=general;ffmpegjni;general;D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/arm-linux-androideabi/22/liblog.so;
+djivideojni_LIB_DEPENDS:STATIC=general;ffmpegjni;general;D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/arm-linux-androideabi/22/liblog.so;
 
 //Path to a library.
-log-lib:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/arm-linux-androideabi/22/liblog.so
+log-lib:FILEPATH=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/arm-linux-androideabi/22/liblog.so
 
 
 ########################

@@ -26,6 +26,7 @@ def detect(client, weights, img_size, confidence, source):
         
         if len(bounding_boxes) > 0:
             client.sendSocketMessage("BOUNDING_BOXES", {"image": file_name, "boundingBoxes": bounding_boxes})
+    client.sendSocketMessage("DETECTION_FINISHED")
         
 def calcBox(x, y, w, h, width, height, offset_x, offset_y):
-    return {"x1": str(x+offset_x), "y1": str(y+offset_y), "x2": str(w+offset_x), "y2": str(h+offset_y)}
+    return {"x1": int(x+offset_x), "y1": int(y+offset_y), "x2": int(w+offset_x), "y2": int(h+offset_y)}
