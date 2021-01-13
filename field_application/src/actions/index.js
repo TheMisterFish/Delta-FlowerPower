@@ -1,13 +1,13 @@
 import DroneActions from "./DroneActions";
 import CalculateActions from "./CalculateActions";
-import ApiDatabaseActions from "./ApiDatabaseActions";
-import LocalDatabaseActions from "./LocalDatabaseActions"
+import ResearchDatabaseActions from "./researchDatabaseActions";
 import AIModelActions from "./AIModelActions"
+import SessionsActions from "./SessionsActions"
 
 export {
     DroneActions,
     CalculateActions,
-    ApiDatabaseActions,
-    LocalDatabaseActions,
-    AIModelActions
+    ResearchDatabaseActions,
+    AIModelActions,
+    SessionsActions
 };

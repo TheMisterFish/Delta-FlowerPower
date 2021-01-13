@@ -31,6 +31,9 @@ export default {
             messages: (state) => state.socket.messages,
         }),
     },
+    props: {
+        addResult: Function
+    },
     watch: {
         messages(newValue, oldValue) {
             const message = JSON.parse(newValue[newValue.length - 1]);
@@ -42,6 +45,8 @@ export default {
                         i.boundingBoxes = i.boundingBoxes.concat(boundingBoxes);
                     }
                 });
+            } else if(message.message === "DETECTION_FINISHED") {
+                this.addResult(this.images)
             }
         },
     },

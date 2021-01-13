@@ -1,12 +1,12 @@
 {
   "stringTable": {
     "0": "D:/git_repos/flowerpower/droneapp/app/.cxx/cmake/debug/arm64-v8a",
-    "1": "--target=aarch64-none-linux-android22 --gcc-toolchain=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Java/ANDROID_SDK_11.0/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Ddjivideojni_EXPORTS -I../../../../src/main/cpp -I../../../../src/main/cpp/include -I../../../../src/main/cpp/gstreamer-1.0/armv7/include/gstreamer-1.0 -I../../../../src/main/cpp/gstreamer-1.0/armv7/include/glib-2.0 -I../../../../src/main/cpp/gstreamer-1.0/armv7/lib/glib-2.0/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC"
+    "1": "--target=aarch64-none-linux-android22 --gcc-toolchain=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Java/ANDROID_SDK_11.0/ndk/22.0.7026061/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Ddjivideojni_EXPORTS -I../../../../src/main/cpp -I../../../../src/main/cpp/include -I../../../../src/main/cpp/gstreamer-1.0/armv7/include/gstreamer-1.0 -I../../../../src/main/cpp/gstreamer-1.0/armv7/include/glib-2.0 -I../../../../src/main/cpp/gstreamer-1.0/armv7/lib/glib-2.0/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC"
   },
   "buildFiles": [
-    "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\build\\cmake\\platforms.cmake",
-    "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
-    "D:\\git_repos\\flowerpower\\droneapp\\app\\CMakeLists.txt"
+    "D:\\Java\\ANDROID_SDK_11.0\\ndk\\22.0.7026061\\build\\cmake\\platforms.cmake",
+    "D:\\git_repos\\flowerpower\\droneapp\\app\\CMakeLists.txt",
+    "D:\\Java\\ANDROID_SDK_11.0\\ndk\\22.0.7026061\\build\\cmake\\android.toolchain.cmake"
   ],
   "cleanCommands": [
     "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\arm64-v8a\" clean"
@@ -16,7 +16,7 @@
     "djivideojni-Debug-arm64-v8a": {
       "buildCommand": "D:\\Java\\ANDROID_SDK_11.0\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"D:\\git_repos\\flowerpower\\droneapp\\app\\.cxx\\cmake\\debug\\arm64-v8a\" djivideojni",
       "buildType": "debug",
-      "toolchain": "3515727410",
+      "toolchain": "3097201761",
       "abi": "arm64-v8a",
       "artifactName": "djivideojni",
       "files": [
@@ -31,8 +31,8 @@
     }
   },
   "toolchains": {
-    "3515727410": {
-      "cCompilerExecutable": "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe"
+    "3097201761": {
+      "cCompilerExecutable": "D:\\Java\\ANDROID_SDK_11.0\\ndk\\22.0.7026061\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe"
     }
   },
   "cFileExtensions": [

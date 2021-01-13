@@ -22,8 +22,8 @@
                 icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
             />
             <GmapMarker
-                :key="index"
-                v-for="(m, index) in computed_matrixmarkers"
+                :key="m.id"
+                v-for="(m) in computed_matrixmarkers"
                 :position="m.position"
                 :clickable="true"
                 :draggable="false"
@@ -55,14 +55,30 @@ export default {
             homemarkers: [
                 {
                     position: {
+                        id: 0,
                         lat: this.research_settings.pos_x_1,
                         lng: this.research_settings.pos_y_1,
                     },
                 },
                 {
                     position: {
+                        id: 1,
+                        lat: this.research_settings.pos_x_3,
+                        lng: this.research_settings.pos_y_3,
+                    },
+                },
+                {
+                    position: {
+                        id: 2,
                         lat: this.research_settings.pos_x_2,
                         lng: this.research_settings.pos_y_2,
+                    },
+                },
+                {
+                    position: {
+                        id: 3,
+                        lat: this.research_settings.pos_x_4,
+                        lng: this.research_settings.pos_y_4,
                     },
                 },
             ],
@@ -77,16 +93,25 @@ export default {
     mounted() {
         this.updateMap();
     },
+    watch: {
+        points(value){
+            this.updateMap();
+        }
+    },
     methods: {
         updateMap() {
+            var counter = 4;
+            this.matrixmarkers = [];
             this.points.forEach((new_point) => {
                 let object = {
                     position: {
+                        id: counter,
                         lat: new_point[0],
                         lng: new_point[1],
                     },
                 };
                 this.matrixmarkers.push(object);
+                counter -=- 1;
             });
         }
     },
