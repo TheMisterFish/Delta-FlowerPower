@@ -1,5 +1,5 @@
 {
-  "ndkFolder": "D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle",
+  "ndkFolder": "D:\\Java\\ANDROID_SDK_11.0\\ndk\\22.0.7026061",
   "messages": [
     {
       "level": "INFO",
@@ -23,7 +23,15 @@
     },
     {
       "level": "INFO",
-      "message": "No user requested version, choosing D:\\Java\\ANDROID_SDK_11.0\\ndk-bundle which is version 22.0.6917172-rc1"
+      "message": "Considering D:\\Java\\ANDROID_SDK_11.0\\ndk\\20.0.5594570 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering D:\\Java\\ANDROID_SDK_11.0\\ndk\\22.0.7026061 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "No user requested version, choosing D:\\Java\\ANDROID_SDK_11.0\\ndk\\22.0.7026061 which is version 22.0.7026061"
     }
   ]
 }

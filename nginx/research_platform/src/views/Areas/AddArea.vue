@@ -1,46 +1,34 @@
 <template>
-  <v-container class="pa-8 align-start fill-height">
-    <v-row class="fill-height">
-      <v-col cols="12">
-        <v-card class="fill-height px-8">
-          <v-row class="fill-height">
-            <v-col cols="12" md="9">
-              <v-row class="fill-height">
-                <v-col style="min-height: 500px;" cols="12">
-                  <AreaMap />
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    v-model="name"
-                    label="Name"
-                    required
-                  ></v-text-field>
-                </v-col>
-
-                <v-col cols="12">
-                  <v-textarea
-                    outlined
-                    v-model="description"
-                    label="Description"
-                    auto-grow
-                  >
-                  </v-textarea>
-                </v-col>
-
-                <v-col cols="3">
-                  <v-btn @click="addArea" color="primary">Add Area</v-btn>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+  <v-container>
+    <v-card max-width="600" class="fill-height mx-auto py-3">
+      <v-list-item>
+          <AreaMap :editable="true" :updateCoordinates="updateCoordinates" :resetAngle="resetAngle" :angle="angle" style="min-height: 500px;" />
+      </v-list-item>
+      <v-list-item>
+        <v-slider v-model="angle" label="rotatie" max="180" min="0" thumb-label="always"></v-slider>
+      </v-list-item>
+      <v-list-item>
+        <v-text-field
+          outlined
+          v-model="name"
+          label="Name"
+          required
+        ></v-text-field>
+      </v-list-item>
+      <v-list-item>
+        <v-textarea
+          outlined
+          v-model="description"
+          label="Description"
+          auto-grow
+        >
+        </v-textarea>
+      </v-list-item>
+      <v-list-item>
+        <v-spacer></v-spacer>
+          <v-btn @click="addArea" color="primary">Add Area</v-btn>
+      </v-list-item>
+    </v-card>
   </v-container>
 </template>
 
@@ -56,22 +44,37 @@ export default {
   data: () => ({
     name: "",
     description: "",
+    angle: 0,
+    coordinates: [],
   }),
   methods: {
+    resetAngle() {
+      this.angle = 0;
+    },
+
+    updateCoordinates(coordinates) {
+      this.coordinates = {
+        lat_long_point_one: `${coordinates[0].lat},${coordinates[0].lng}`,
+        lat_long_point_two: `${coordinates[1].lat},${coordinates[1].lng}`,
+        lat_long_point_three: `${coordinates[2].lat},${coordinates[2].lng}`,
+        lat_long_point_four: `${coordinates[3].lat},${coordinates[3].lng}`
+      };
+    },
+
     async addArea() {
       const name = this.name;
       const description = this.description;
 
-      //For now this is hardcoded but we are going to fix this!
-      const lat_long_point_one = "5.469722, 51.441643";
-      const lat_long_point_two = "5.469722, 51.441643";
-
       const response = await this.$store.dispatch("addArea", {
         name: name,
         description: description,
-        lat_long_point_one: lat_long_point_one,
-        lat_long_point_two: lat_long_point_two,
+        lat_long_point_one: this.coordinates.lat_long_point_one,
+        lat_long_point_two: this.coordinates.lat_long_point_two,
+        lat_long_point_three: this.coordinates.lat_long_point_three,
+        lat_long_point_four: this.coordinates.lat_long_point_four,
       });
+
+      console.log(this.coordinates);
 
       if (response.status === STATUS.SUCCESS) {
         this.$router.push({ name: "areas" });

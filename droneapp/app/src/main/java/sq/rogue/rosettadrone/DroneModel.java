@@ -209,6 +209,8 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
     public int mAirBorn = 0;
     int mission_loaded = -1;
 
+    public boolean mission_started = true;
+
     DroneModel(MainActivity parent, DatagramSocket socket, boolean sim) {
         this.parent = parent;
         this.socket = socket;
@@ -1554,6 +1556,7 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
 
     void startWaypointMission() {
         mAutonomy = false;
+        mission_started = true;
         parent.logMessageDJI("start WaypointMission()");
         
         if (getWaypointMissionOperator() == null) {
@@ -1581,6 +1584,7 @@ public class DroneModel implements CommonCallbacks.CompletionCallback {
 
     public void stopWaypointMission() {
         mAutonomy = false;
+        mission_started = false;
         if (getWaypointMissionOperator() == null) {
             parent.logMessageDJI("stopWaypointMission() - mWaypointMissionOperator null");
             return;

@@ -84,7 +84,7 @@
 
 <script>
 import { ResearchesApi } from "../../api";
-import { ApiDatabaseActions } from "../../actions";
+import { ResearchDatabaseActions } from "../../actions";
 export default {
     data() {
         return {
@@ -112,15 +112,15 @@ export default {
         },
     },
     async mounted() {
-        this.researches = await ApiDatabaseActions.getResearches();
+        this.researches = await ResearchDatabaseActions.getResearches();
     },
     methods: {
         downloadResearches() {
             this.downloading = true;
             ResearchesApi.getResearches()
                 .then(async (data) => {
-                    await ApiDatabaseActions.saveResearches(data);
-                    this.researches = await ApiDatabaseActions.getResearches();
+                    await ResearchDatabaseActions.saveResearches(data);
+                    this.researches = await ResearchDatabaseActions.getResearches();
                     this.downloading = false;
                 })
                 .catch((err) => {
@@ -128,8 +128,8 @@ export default {
                 });
         },
         async remove(_id) {
-            ApiDatabaseActions.removeResearch(_id);
-            this.researches = await ApiDatabaseActions.getResearches();
+            ResearchDatabaseActions.removeResearch(_id);
+            this.researches = await ResearchDatabaseActions.getResearches();
         },
         async resetDatabase() {
             if (
@@ -137,8 +137,8 @@ export default {
                     "Weet je zeker dat je de lokale database wilt resetten?"
                 )
             ) {
-                await ApiDatabaseActions.resetApiResearches();
-                this.researches = await ApiDatabaseActions.getResearches();
+                await ResearchDatabaseActions.resetApiResearches();
+                this.researches = await ResearchDatabaseActions.getResearches();
             }
         },
     },
