@@ -6,8 +6,8 @@ import { Roles } from '../interfaces/roles.interface'
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) { }
 
-  canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+  canActivate(context: ExecutionContext): boolean {    
+    const roles = this.reflector.getAllAndOverride<string[]>('roles', [context.getHandler(), context.getClass()]);
 
     if (!Roles[roles[0]]) {
       return true;
@@ -19,14 +19,14 @@ export class RolesGuard implements CanActivate {
     const user = request.user;
 
     function hasRole() {
-      if (user.role == Roles.admin) {
+      if (user.role === Roles.admin) {
         return true;
-      } else if (user.role == Roles.moderator && (role == Roles.admin)) {
-          return false;
-      } else if (user.role == Roles.guest && (role == Roles.admin || role == Roles.moderator)) {
-          return false;
+      } else if (user.role == Roles.researcher && role !== Roles.admin) {
+          return true;
+      } else if (user.role === Roles.guest && role === Roles.guest) {
+          return true;
       }
-      return true;
+      return false;
     }
 
     return user && user.role && hasRole();

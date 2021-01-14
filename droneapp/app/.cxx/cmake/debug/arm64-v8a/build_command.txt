@@ -1,0 +1,19 @@
+Executable : D:\Java\ANDROID_SDK_11.0\cmake\3.10.2.4988404\bin\cmake.exe
+arguments : 
+-HD:\git_repos\flowerpower\droneapp\app
+-BD:\git_repos\flowerpower\droneapp\app\.cxx\cmake\debug\arm64-v8a
+-DANDROID_ABI=arm64-v8a
+-DANDROID_PLATFORM=android-22
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=D:\git_repos\flowerpower\droneapp\app\build\intermediates\cmake\debug\obj\arm64-v8a
+-DCMAKE_BUILD_TYPE=Debug
+-DANDROID_NDK=D:\Java\ANDROID_SDK_11.0\ndk\22.0.7026061
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
+-DCMAKE_SYSTEM_VERSION=22
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_ANDROID_NDK=D:\Java\ANDROID_SDK_11.0\ndk\22.0.7026061
+-DCMAKE_TOOLCHAIN_FILE=D:\Java\ANDROID_SDK_11.0\ndk\22.0.7026061\build\cmake\android.toolchain.cmake
+-G Ninja
+-DCMAKE_MAKE_PROGRAM=D:\Java\ANDROID_SDK_11.0\cmake\3.10.2.4988404\bin\ninja.exe
+jvmArgs : 
+
