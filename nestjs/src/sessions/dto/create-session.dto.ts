@@ -43,7 +43,7 @@ export class CreateSessionDto {
   @Type(() => SessionResult)
   @Transform(results => {
     try {
-      return plainToClass(SessionResult, JSON.parse(results));
+      return plainToClass(SessionResult, JSON.parse(JSON.stringify(results)));
     } catch (e) {
       return results;
     }
